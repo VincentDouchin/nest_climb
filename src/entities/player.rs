@@ -1,8 +1,11 @@
 use crate::{AnimationTimer, MyAssets};
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
+
+#[derive(Component)]
+pub struct PlayerController;
 
 pub fn spawn_player(mut commands: Commands, assets: Res<MyAssets>) {
-    println!("ok");
     commands.spawn((
         SpriteSheetBundle {
             transform: Transform {
@@ -13,5 +16,8 @@ pub fn spawn_player(mut commands: Commands, assets: Res<MyAssets>) {
             ..default()
         },
         AnimationTimer::new(None),
+        RigidBody::Dynamic,
+        Collider::cuboid(16.0, 16.0),
+        PlayerController,
     ));
 }

@@ -9,6 +9,7 @@ edition = "2021"
 [dependencies]
 bevy = { version = "0.10.1" }
 bevy_asset_loader = { version = "0.16.0", features = ["2d"] }
+bevy_rapier2d = "0.21.0"
 seldom_fn_plugin = "0.3.0"
 
 [target.'cfg(target_arch = "wasm32-unknown-unknown")'.dependencies]

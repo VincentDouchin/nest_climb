@@ -16,8 +16,4 @@ fn spawn_camera(mut commands: Commands) {
 
 pub fn camera_plugin(app: &mut App) {
     app.add_startup_system(spawn_camera);
-    app.insert_resource(AmbientLight {
-        color: Color::WHITE,
-        brightness: 1.0,
-    });
 }
