@@ -7,7 +7,7 @@ edition = "2021"
 
 
 [dependencies]
-bevy_ecs_ldtk = { version = "0.7.0" }
+bevy_ecs_ldtk = { version = "0.7.0", features = ["atlas"] }
 bevy = { version = "0.10.1" }
 bevy-tnua = { version = "0.3.0", features = ["rapier_2d", "bevy_rapier2d"] }
 bevy_asset_loader = { version = "0.16.0", features = ["2d"] }
