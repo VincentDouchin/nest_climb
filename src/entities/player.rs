@@ -1,7 +1,11 @@
-use crate::{AnimationTimerComponent, CameraTarget, DirectionComponent, MyAssets, SpriteDirection};
+use crate::{
+    get_player_input_map, AnimationTimerComponent, CameraTarget, DirectionComponent, MyAssets,
+    PlayerAction, SpriteDirection,
+};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
+use leafwing_input_manager::prelude::*;
 
 #[derive(Component)]
 pub struct PlayerController {
@@ -28,7 +32,6 @@ pub fn spawn_player(mut commands: Commands, assets: Res<MyAssets>) {
         RigidBody::Dynamic,
         LockedAxes::ROTATION_LOCKED,
         Collider::cuboid(10.0, 12.0),
-        // Collider::capsule_y(10.0, 1.0),
         Velocity::default(),
         PlayerController::default(),
         CameraTarget,
@@ -59,6 +62,10 @@ pub fn spawn_player(mut commands: Commands, assets: Res<MyAssets>) {
                 turning_angvel: 10.0,
             },
             ..default()
+        },
+        InputManagerBundle::<PlayerAction> {
+            action_state: ActionState::default(),
+            input_map: get_player_input_map(),
         },
     ));
 }

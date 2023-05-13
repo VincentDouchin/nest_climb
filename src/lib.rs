@@ -1,6 +1,8 @@
 mod components {
     mod animation_components;
     pub use self::animation_components::*;
+    mod player_controls;
+    pub use self::player_controls::*;
 }
 pub use components::*;
 
