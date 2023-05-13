@@ -31,8 +31,8 @@ fn camera_follow_target(
 ) {
     for target_transform in target_query.iter() {
         for mut camera_transform in camera_query.iter_mut() {
-            camera_transform.target = target_transform.local_y();
-            camera_transform.eye = target_transform.local_y() + Vec3::Z;
+            camera_transform.target.y = target_transform.translation.y;
+            camera_transform.eye.y = target_transform.translation.y;
         }
     }
 }

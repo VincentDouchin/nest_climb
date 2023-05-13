@@ -14,8 +14,8 @@ pub fn move_player_system(
     for (mut controls, mut direction, actions) in player_query.iter_mut() {
         // ! Movement
         if actions.pressed(PlayerAction::MoveLeft) {
-            controls.desired_forward = -Vec3::X;
-            controls.desired_velocity = -Vec3::X;
+            controls.desired_forward = Vec3::NEG_X;
+            controls.desired_velocity = Vec3::NEG_X;
             direction.0 = SpriteDirection::Left;
         } else if actions.pressed(PlayerAction::MoveRight) {
             controls.desired_forward = Vec3::X;
