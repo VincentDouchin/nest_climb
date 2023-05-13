@@ -9,6 +9,8 @@ pub use animation::*;
 mod map {
     mod ground;
     pub use ground::*;
+    mod map;
+    pub use map::*;
 }
 pub use map::*;
 
@@ -21,6 +23,8 @@ mod global {
     pub use self::states::*;
     mod physics;
     pub use self::physics::*;
+    mod init_libs;
+    pub use init_libs::*;
 }
 pub use global::*;
 
@@ -33,3 +37,6 @@ mod player {
     pub use self::player_entity::*;
 }
 pub use player::*;
+
+mod debug;
+pub use debug::*;
