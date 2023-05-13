@@ -10,6 +10,7 @@ edition = "2021"
 bevy = { version = "0.10.1" }
 bevy-tnua = { version = "0.3.0", features = ["rapier_2d", "bevy_rapier2d"] }
 bevy_asset_loader = { version = "0.16.0", features = ["2d"] }
+bevy_ecs_ldtk = "0.7.0"
 bevy_rapier2d = { version = "0.21.0", features = [
 	"simd-stable",
 	"debug-render-2d",
