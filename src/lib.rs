@@ -1,6 +1,6 @@
 mod components {
-    mod animation_timer;
-    pub use self::animation_timer::*;
+    mod animation_components;
+    pub use self::animation_components::*;
 }
 pub use components::*;
 
@@ -29,7 +29,5 @@ mod global {
     pub use self::states::*;
     mod physics;
     pub use self::physics::*;
-    mod inputs;
-    pub use self::inputs::*;
 }
 pub use global::*;

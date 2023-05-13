@@ -5,8 +5,8 @@ use super::GameState;
 
 #[derive(AssetCollection, Resource)]
 pub struct MyAssets {
-    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 4, rows = 1))]
-    #[asset(path = "test_art/bird.png")]
+    #[asset(texture_atlas(tile_size_x = 20.0, tile_size_y = 24.0, columns = 1, rows = 1))]
+    #[asset(path = "characters/bird/bird01Grey.png")]
     pub bird: Handle<TextureAtlas>,
 }
 

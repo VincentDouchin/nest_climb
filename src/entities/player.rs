@@ -1,9 +1,16 @@
-use crate::{AnimationTimer, MyAssets};
+use crate::{AnimationTimerComponent, CameraTarget, DirectionComponent, MyAssets, SpriteDirection};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 #[derive(Component)]
-pub struct PlayerController;
+pub struct PlayerController {
+    pub grounded: bool,
+}
+impl Default for PlayerController {
+    fn default() -> Self {
+        PlayerController { grounded: true }
+    }
+}
 
 pub fn spawn_player(mut commands: Commands, assets: Res<MyAssets>) {
     commands.spawn((
@@ -15,9 +22,13 @@ pub fn spawn_player(mut commands: Commands, assets: Res<MyAssets>) {
             texture_atlas: assets.bird.clone(),
             ..default()
         },
-        AnimationTimer::new(None),
+        AnimationTimerComponent::new(None),
+        DirectionComponent(SpriteDirection::Right),
         RigidBody::Dynamic,
-        Collider::cuboid(16.0, 16.0),
-        PlayerController,
+        LockedAxes::ROTATION_LOCKED,
+        Collider::cuboid(10.0, 12.0),
+        Velocity::zero(),
+        PlayerController::default(),
+        CameraTarget,
     ));
 }
