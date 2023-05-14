@@ -7,7 +7,16 @@ pub struct MainCamera;
 pub struct CameraTarget;
 
 fn spawn_camera(mut commands: Commands) {
-    commands.spawn((Camera2dBundle::default(), MainCamera));
+    commands.spawn((
+        Camera2dBundle {
+            projection: OrthographicProjection {
+                scale: 0.5,
+                ..default()
+            },
+            ..default()
+        },
+        MainCamera,
+    ));
 }
 
 fn camera_follow_target(

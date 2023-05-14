@@ -10,10 +10,16 @@ pub struct Wall;
 pub struct WallBundle {
     wall: Wall,
 }
+
 pub fn map_plugin(app: &mut App) {
     app.register_ldtk_int_cell::<WallBundle>(1);
     app.register_ldtk_int_cell::<WallBundle>(2);
     app.register_ldtk_int_cell::<WallBundle>(3);
+    app.insert_resource(LevelSelection::Index(0));
+    app.insert_resource(LdtkSettings {
+        set_clear_color: SetClearColor::FromLevelBackground,
+        ..Default::default()
+    });
 }
 
 pub fn spawn_map(mut commands: Commands, assets: Res<MyAssets>) {
