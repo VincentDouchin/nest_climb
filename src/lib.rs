@@ -11,6 +11,8 @@ mod map {
     pub use ground::*;
     mod map;
     pub use map::*;
+    mod walls;
+    pub use walls::*;
 }
 pub use map::*;
 

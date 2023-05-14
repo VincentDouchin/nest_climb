@@ -25,7 +25,8 @@ fn camera_follow_target(
 ) {
     for target_transform in target_query.iter() {
         for mut camera_transform in camera_query.iter_mut() {
-            camera_transform.translation.y = target_transform.translation.y
+            camera_transform.translation.y = target_transform.translation.y;
+            camera_transform.translation.x = target_transform.translation.x;
         }
     }
 }

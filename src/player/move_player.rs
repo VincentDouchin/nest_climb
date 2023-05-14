@@ -25,10 +25,7 @@ pub fn move_player_system(
             controls.desired_velocity = Vec3::ZERO
         }
         // ! Jump
-        if actions.just_pressed(PlayerAction::Jump) {
-            controls.jump = Some(1.0);
-        } else {
-            controls.jump = None;
-        }
+
+        controls.jump = actions.just_pressed(PlayerAction::Jump).then(|| 1.0);
     }
 }
