@@ -27,8 +27,6 @@ mod global {
     pub use self::physics::*;
     mod init_libs;
     pub use init_libs::*;
-    mod ui;
-    pub use ui::*;
 }
 pub use global::*;
 
