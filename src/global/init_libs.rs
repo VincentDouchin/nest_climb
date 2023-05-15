@@ -24,7 +24,7 @@ pub fn initialize_libraries(app: &mut App) {
     app.add_plugin(LdtkPlugin);
     // ! Rapier physics engine
     app.add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0));
-    app.add_plugin(RapierDebugRenderPlugin::default());
+
     app.add_startup_system(|mut cfg: ResMut<RapierConfiguration>| {
         cfg.gravity = Vec2::Y * -9.81;
     });

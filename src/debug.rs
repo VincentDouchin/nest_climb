@@ -8,6 +8,7 @@ pub fn toggle_debug(mut debug_config: ResMut<DebugRenderContext>, keys: Res<Inpu
 }
 
 pub fn debug_plugin(app: &mut App) {
+       app.add_plugin(RapierDebugRenderPlugin::default());
     app.add_system(toggle_debug);
     app.add_plugin(ExampleUi);
     app.add_system(track_player);
