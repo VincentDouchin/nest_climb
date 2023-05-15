@@ -27,6 +27,8 @@ mod global {
     pub use self::physics::*;
     mod init_libs;
     pub use init_libs::*;
+    mod ui;
+    pub use ui::*;
 }
 pub use global::*;
 
@@ -42,3 +44,15 @@ pub use player::*;
 
 mod debug;
 pub use debug::*;
+
+mod ui {
+    mod health;
+    pub use health::*;
+}
+pub use ui::*;
+
+mod health {
+    mod health_component;
+    pub use health_component::*;
+}
+pub use health::*;

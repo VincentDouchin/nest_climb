@@ -3,8 +3,8 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
+use kayak_ui::prelude::{widgets::*, *};
 use leafwing_input_manager::prelude::*;
-
 pub fn initialize_libraries(app: &mut App) {
     // ! Default plugins
     app.add_plugins(
@@ -12,23 +12,6 @@ pub fn initialize_libraries(app: &mut App) {
             .set(ImagePlugin::default_nearest())
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    // cursor: (),
-                    // present_mode: (),
-                    // mode: (),
-                    // position: (),
-                    // resolution: (),
-                    // title: (),
-                    // composite_alpha_mode: (),
-                    // resize_constraints: (),
-                    // resizable: (),
-                    // decorations: (),
-                    // transparent: (),
-                    // focused: (),
-                    // window_level: (),
-                    // canvas: (),
-                    // prevent_default_event_handling: (),
-                    // internal: (),
-                    // ime_enabled: (),
                     fit_canvas_to_parent: true,
                     ..default()
                 }),
@@ -48,4 +31,7 @@ pub fn initialize_libraries(app: &mut App) {
     // ! Tnua platformer controls
     app.add_plugin(TnuaRapier2dPlugin);
     app.add_plugin(TnuaPlatformerPlugin);
+    // ! Kayak UI
+    app.add_plugin(KayakContextPlugin);
+    app.add_plugin(KayakWidgets);
 }

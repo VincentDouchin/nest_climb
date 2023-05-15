@@ -1,6 +1,6 @@
 use crate::{
-    get_player_input_map, AnimationTimerComponent, CameraTarget, DirectionComponent, MyAssets,
-    PlayerAction, SpriteDirection,
+    get_player_input_map, AnimationTimerComponent, CameraTarget, DirectionComponent, Health,
+    MyAssets, PlayerAction, SpriteDirection,
 };
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -61,6 +61,7 @@ pub fn spawn_player(
                 action_state: ActionState::default(),
                 input_map: get_player_input_map(),
             },
+            Health::new(5),
         );
         commands.entity(entity).insert(bundle);
     }

@@ -11,7 +11,7 @@ fn main() {
         // ! Libraries
         .fn_plugin(initialize_libraries)
         // ! Debug
-        .fn_plugin(debug_plugin)
+        // .fn_plugin(debug_plugin)
         // ! States
         .add_state::<GameState>()
         // ! Assets
@@ -29,5 +29,6 @@ fn main() {
         .add_system(update_direction)
         // ! Movement
         .add_system(move_player_system)
+        // ! UI
         .run();
 }

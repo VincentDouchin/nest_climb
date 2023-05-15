@@ -12,6 +12,11 @@ pub struct MyAssets {
     // ! Levels
     #[asset(path = "levels/test_level.ldtk")]
     pub test_level: Handle<LdtkAsset>,
+    // ! UI
+    #[asset(path = "ui/heart_empty.png")]
+    pub heart_empty: Handle<Image>,
+    #[asset(path = "ui/heart_full.png")]
+    pub heart_full: Handle<Image>,
 }
 
 pub fn load_assets_plugin(app: &mut App) {

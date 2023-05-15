@@ -1,22 +1,49 @@
 use bevy::prelude::*;
-
+use kayak_ui::{
+    prelude::{widgets::*, *},
+    CameraUIKayak,
+};
 #[derive(Component)]
 pub struct MainCamera;
 
 #[derive(Component)]
 pub struct CameraTarget;
 
-fn spawn_camera(mut commands: Commands) {
-    commands.spawn((
-        Camera2dBundle {
-            projection: OrthographicProjection {
-                scale: 0.5,
+fn spawn_camera(
+    mut commands: Commands,
+    mut font_mapping: ResMut<FontMapping>,
+    asset_server: Res<AssetServer>,
+) {
+    let camera_entity = commands
+        .spawn((
+            Camera2dBundle {
+                projection: OrthographicProjection {
+                    scale: 0.5,
+                    ..default()
+                },
                 ..default()
             },
-            ..default()
-        },
-        MainCamera,
-    ));
+            MainCamera,
+        ))
+        .insert(CameraUIKayak)
+        .id();
+    font_mapping.set_default(asset_server.load("fonts/roboto.kttf"));
+    let mut widget_context = KayakRootContext::new(camera_entity);
+    widget_context.add_plugin(KayakWidgetsContextPlugin);
+    let parent_id = None;
+    rsx! {
+        <KayakAppBundle>
+            <TextWidgetBundle
+                text={TextProps {
+                    content: "Hello World".into(),
+                    size: 20.0,
+                    ..Default::default()
+                }}
+            />
+        </KayakAppBundle>
+    };
+
+    commands.spawn((widget_context, EventDispatcher::default()));
 }
 
 fn camera_follow_target(
