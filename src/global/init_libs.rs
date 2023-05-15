@@ -26,7 +26,7 @@ pub fn initialize_libraries(app: &mut App) {
     app.add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0));
 
     app.add_startup_system(|mut cfg: ResMut<RapierConfiguration>| {
-        cfg.gravity = Vec2::Y * -9.81;
+        cfg.gravity = Vec2::Y * -300.0;
     });
     // ! Tnua platformer controls
     app.add_plugin(TnuaRapier2dPlugin);
