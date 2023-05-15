@@ -11,7 +11,7 @@ fn main() {
         // ! Libraries
         .fn_plugin(initialize_libraries)
         // ! Debug
-        // .fn_plugin(debug_plugin)
+        .fn_plugin(debug_plugin)
         // ! States
         .add_state::<GameState>()
         // ! Assets

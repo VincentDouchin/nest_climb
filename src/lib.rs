@@ -8,11 +8,11 @@ pub use animation::*;
 
 mod map {
     mod ground;
-    pub use ground::*;
+    pub use self::ground::*;
     mod map;
-    pub use map::*;
+    pub use self::map::*;
     mod walls;
-    pub use walls::*;
+    pub use self::walls::*;
 }
 pub use map::*;
 
@@ -26,13 +26,13 @@ mod global {
     mod physics;
     pub use self::physics::*;
     mod init_libs;
-    pub use init_libs::*;
+    pub use self::init_libs::*;
 }
 pub use global::*;
 
 mod player {
     mod player_controls;
-    pub use player_controls::*;
+    pub use self::player_controls::*;
     mod move_player;
     pub use self::move_player::*;
     mod player_entity;
@@ -45,12 +45,12 @@ pub use debug::*;
 
 mod ui {
     mod health;
-    pub use health::*;
+    pub use self::health::*;
 }
 pub use ui::*;
 
 mod health {
     mod health_component;
-    pub use health_component::*;
+    pub use self::health_component::*;
 }
 pub use health::*;
