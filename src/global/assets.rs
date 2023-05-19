@@ -1,8 +1,7 @@
-use super::GameState;
+use crate::*;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-
 #[derive(AssetCollection, Resource)]
 pub struct MyAssets {
     // ! Images
@@ -17,11 +16,14 @@ pub struct MyAssets {
     pub heart_empty: Handle<Image>,
     #[asset(path = "ui/heart_full.png")]
     pub heart_full: Handle<Image>,
+    // ! Fonts
+    #[asset(path = "fonts/roboto.ttf")]
+    pub default_font: Handle<Font>,
 }
 
 pub fn load_assets_plugin(app: &mut App) {
     app.add_loading_state(
-        LoadingState::new(GameState::AssetLoading).continue_to_state(GameState::Run),
+        LoadingState::new(GameState::AssetLoading).continue_to_state(GameState::InitRun),
     );
     app.add_collection_to_loading_state::<_, MyAssets>(GameState::AssetLoading);
 }

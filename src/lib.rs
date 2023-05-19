@@ -7,8 +7,6 @@ mod animation {
 pub use animation::*;
 
 mod map {
-    mod ground;
-    pub use self::ground::*;
     mod map;
     pub use self::map::*;
     mod walls;
@@ -48,6 +46,10 @@ mod ui {
     pub use self::health::*;
     mod run_ui;
     pub use self::run_ui::*;
+    mod pause_ui;
+    pub use self::pause_ui::*;
+    mod ui;
+    pub use self::ui::*;
 }
 pub use ui::*;
 

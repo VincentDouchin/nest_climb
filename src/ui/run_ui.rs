@@ -1,3 +1,4 @@
+use crate::*;
 use bevy::prelude::*;
 
 #[derive(Component)]
@@ -14,5 +15,8 @@ pub fn spawn_run_ui(mut commands: Commands) {
             ..default()
         },
         HeartContainer,
+        StateUi {
+            state: GameState::Run,
+        },
     ));
 }
