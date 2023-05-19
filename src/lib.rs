@@ -46,6 +46,8 @@ pub use debug::*;
 mod ui {
     mod health;
     pub use self::health::*;
+    mod run_ui;
+    pub use self::run_ui::*;
 }
 pub use ui::*;
 

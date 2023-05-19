@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-
 pub fn toggle_debug(mut debug_config: ResMut<DebugRenderContext>, keys: Res<Input<KeyCode>>) {
     if keys.just_pressed(KeyCode::F1) {
         debug_config.enabled = !debug_config.enabled
@@ -204,6 +203,7 @@ fn ui_system(
         Option<&mut CommandAlteringSelectors>,
     )>,
     mut rapier_config: ResMut<RapierConfiguration>,
+    mut player_query:Query<&mut Health,With<Player>>,
     mut commands: Commands,
 ) {
     for (entity, _, _, _, command_altering_selectors) in query.iter_mut() {
@@ -236,6 +236,9 @@ fn ui_system(
             }
         }
     }
+
+
+
     egui::Window::new("Tnua").show(egui_context.ctx_mut(), |ui| {
           
         for (
@@ -244,6 +247,7 @@ fn ui_system(
             plot_source,
             mut platformer_config,
             command_altering_selectors,
+
         ) in query.iter_mut()
         {
             egui::CollapsingHeader::new(name)
@@ -251,6 +255,18 @@ fn ui_system(
                 .show(ui, |ui| {
                     ui.horizontal(|ui| {
                         ui.vertical(|ui| {
+
+                            if let Ok(mut player_health) = player_query.get_single_mut(){
+                                ui.add(
+                                    egui::Slider::new(&mut player_health.max_health, 0..=10)
+                                        .text("Max Health"),
+                                );
+                                ui.add(
+                                    egui::Slider::new(&mut player_health.current_health, 0..=10)
+                                        .text("Current Health"),
+                                );
+                            }
+                            
                             ui.add(
                                 egui::Slider::new(&mut rapier_config.gravity.y, 0.0..=-500.0)
                                     .text("Gravity"),
@@ -416,7 +432,7 @@ use std::collections::VecDeque;
 
 use bevy_egui::egui::plot::{Corner, Legend, Plot};
 
-use crate::Player;
+use crate::{Player, Health};
 
 #[derive(Component, Debug)]
 pub struct PlotSource {

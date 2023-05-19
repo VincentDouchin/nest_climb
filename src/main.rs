@@ -1,10 +1,6 @@
 use bevy::prelude::*;
 
-use nest_climb::{
-    animate_sprites, camera_plugin, debug_plugin, initialize_libraries, load_assets_plugin,
-    map_plugin, move_player_system, spawn_ground, spawn_player, spawn_walls, update_direction,
-    GameState,
-};
+use nest_climb::*;
 use seldom_fn_plugin::FnPluginExt;
 fn main() {
     App::new()
@@ -30,5 +26,7 @@ fn main() {
         // ! Movement
         .add_system(move_player_system)
         // ! UI
+        .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
+        .add_system(display_hearts.in_set(OnUpdate(GameState::Run)))
         .run();
 }
