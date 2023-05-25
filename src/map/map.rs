@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::{GameState, MyAssets};
+use crate::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
 pub struct Wall;
@@ -17,6 +17,8 @@ pub fn map_plugin(app: &mut App) {
     app.register_ldtk_int_cell::<WallBundle>(1);
     app.register_ldtk_int_cell::<WallBundle>(2);
     app.register_ldtk_int_cell::<WallBundle>(3);
+    app.register_ldtk_entity::<PlayerBundle>("Player");
+    app.register_ldtk_entity::<EnemyBundle>("Enemy");
     app.insert_resource(LdtkSettings {
         set_clear_color: SetClearColor::FromLevelBackground,
         ..Default::default()

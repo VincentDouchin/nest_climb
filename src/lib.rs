@@ -33,8 +33,8 @@ mod player {
     pub use self::player_controls::*;
     mod move_player;
     pub use self::move_player::*;
-    mod player_entity;
-    pub use self::player_entity::*;
+    mod spawn_player;
+    pub use self::spawn_player::*;
 }
 pub use player::*;
 
@@ -58,3 +58,15 @@ mod health {
     pub use self::health_component::*;
 }
 pub use health::*;
+
+mod enemies {
+    mod spawn_enemy;
+    pub use self::spawn_enemy::*;
+}
+pub use enemies::*;
+
+mod background {
+    mod parallax;
+    pub use self::parallax::*;
+}
+pub use background::*;

@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-
 #[derive(Component)]
 pub struct MainCamera;
 
@@ -19,7 +18,7 @@ fn spawn_camera(mut commands: Commands) {
     ));
 }
 
-fn camera_follow_target(
+fn move_camera(
     mut camera_query: Query<&mut Transform, (With<MainCamera>, Without<CameraTarget>)>,
     target_query: Query<&Transform, (With<CameraTarget>, Without<MainCamera>)>,
 ) {
@@ -33,5 +32,5 @@ fn camera_follow_target(
 
 pub fn camera_plugin(app: &mut App) {
     app.add_startup_system(spawn_camera);
-    app.add_system(camera_follow_target);
+    app.add_system(move_camera);
 }

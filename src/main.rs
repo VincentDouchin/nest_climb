@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use nest_climb::*;
 use seldom_fn_plugin::FnPluginExt;
+
 fn main() {
     App::new()
         // ! Libraries
@@ -17,14 +18,16 @@ fn main() {
         // !Camera
         .fn_plugin(camera_plugin)
         // ! Level
+        .fn_plugin(parallax_plugin)
         .fn_plugin(map_plugin)
         .add_system(spawn_player.in_set(OnUpdate(GameState::Run)))
+        .add_system(spawn_enemy.in_set(OnUpdate(GameState::Run)))
         .add_system(spawn_walls.in_set(OnUpdate(GameState::Run)))
         // ! Movement
         .add_system(move_player_system.in_set(OnUpdate(GameState::Run)))
         // ! Animation
-        .add_system(animate_sprites)
-        .add_system(update_direction)
+        .add_system(animate_sprites.in_set(OnUpdate(GameState::Run)))
+        .add_system(update_direction.in_set(OnUpdate(GameState::Run)))
         // ! UI
         .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_system(spawn_pause_ui.in_schedule(OnEnter(GameState::Pause)))

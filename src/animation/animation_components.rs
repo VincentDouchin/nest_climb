@@ -12,6 +12,13 @@ impl AnimationTimerComponent {
         }
     }
 }
+impl Default for AnimationTimerComponent {
+    fn default() -> Self {
+        AnimationTimerComponent {
+            timer: Timer::from_seconds(1.0 / 8.0, TimerMode::Repeating),
+        }
+    }
+}
 #[derive(Eq, PartialEq)]
 pub enum SpriteDirection {
     Left,

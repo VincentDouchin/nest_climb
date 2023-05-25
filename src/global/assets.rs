@@ -19,6 +19,17 @@ pub struct MyAssets {
     // ! Fonts
     #[asset(path = "fonts/roboto.ttf")]
     pub default_font: Handle<Font>,
+    // ! Enemies
+    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 3, rows = 1))]
+    #[asset(path = "characters/bushly/idle.png")]
+    pub bushly_idle: Handle<TextureAtlas>,
+    // ! Background
+    #[asset(path = "background/back.png")]
+    pub parallax_back: Handle<Image>,
+    #[asset(path = "background/middle.png")]
+    pub parallax_middle: Handle<Image>,
+    #[asset(path = "background/far.png")]
+    pub parallax_far: Handle<Image>,
 }
 
 pub fn load_assets_plugin(app: &mut App) {

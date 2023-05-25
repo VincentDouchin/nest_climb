@@ -347,21 +347,21 @@ fn ui_system(
                             ui.add(
                                 egui::Slider::new(
                                     &mut platformer_config.jump_start_extra_gravity,
-                                    0.0..=100.0,
+                                    0.0..=900.0,
                                 )
                                 .text("Jump Start Extra Gravity"),
                             );
                             ui.add(
                                 egui::Slider::new(
                                     &mut platformer_config.jump_fall_extra_gravity,
-                                    0.0..=50.0,
+                                    0.0..=900.0,
                                 )
                                 .text("Jump Fall Extra Gravity"),
                             );
                             ui.add(
                                 egui::Slider::new(
                                     &mut platformer_config.jump_shorten_extra_gravity,
-                                    0.0..=100.0,
+                                    0.0..=900.0,
                                 )
                                 .text("Jump Shorten Extra Gravity"),
                             );
@@ -369,7 +369,7 @@ fn ui_system(
                             ui.add(
                                 egui::Slider::new(
                                     &mut platformer_config.jump_peak_prevention_at_upward_velocity,
-                                    0.0..=20.0,
+                                    0.0..=200.0,
                                 )
                                 .text("Jump Peak Prevention At Upward Velocity"),
                             );
@@ -377,7 +377,7 @@ fn ui_system(
                             ui.add(
                                 egui::Slider::new(
                                     &mut platformer_config.jump_peak_prevention_extra_gravity,
-                                    0.0..=100.0,
+                                    0.0..=500.0,
                                 )
                                 .text("Jump Peak Prevention Extra Gravity"),
                             );

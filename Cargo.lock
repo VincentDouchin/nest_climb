@@ -311,6 +311,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy-parallax"
+version = "0.5.0"
+source = "git+https://github.com/VincentDouchin/bevy-parallax.git#5746d067b60f300db027380272fc63394041be1b"
+dependencies = [
+ "bevy",
+ "serde",
+]
+
+[[package]]
 name = "bevy-tnua"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2534,6 +2543,7 @@ name = "nest_climb"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy-parallax",
  "bevy-tnua",
  "bevy_asset_loader",
  "bevy_ecs_ldtk",
