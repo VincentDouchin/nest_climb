@@ -5,9 +5,10 @@ use bevy_rapier2d::prelude::*;
 pub enum GameState {
     #[default]
     AssetLoading,
-    InitRun,
     Run,
     Pause,
+    Start,
+    LevelSelect,
 }
 
 pub fn switch_state(

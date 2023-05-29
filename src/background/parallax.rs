@@ -50,5 +50,5 @@ pub fn parallax_plugin(app: &mut App) {
     app.add_plugin(ParallaxPlugin);
     app.init_resource::<ParallaxResource>();
     app.add_system(target_camera_for_parallax);
-    app.add_system(add_parallax_layers.in_schedule(OnEnter(GameState::InitRun)));
+    app.add_system(add_parallax_layers.in_schedule(OnEnter(GameState::Run)));
 }

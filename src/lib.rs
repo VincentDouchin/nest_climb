@@ -50,6 +50,10 @@ mod ui {
     pub use self::pause_ui::*;
     mod ui;
     pub use self::ui::*;
+    mod start_ui;
+    pub use self::start_ui::*;
+    mod level_select_ui;
+    pub use self::level_select_ui::*;
 }
 pub use ui::*;
 

@@ -18,7 +18,7 @@ fn spawn_camera(mut commands: Commands) {
     ));
 }
 
-fn move_camera(
+pub fn move_camera(
     mut camera_query: Query<&mut Transform, (With<MainCamera>, Without<CameraTarget>)>,
     target_query: Query<&Transform, (With<CameraTarget>, Without<MainCamera>)>,
 ) {

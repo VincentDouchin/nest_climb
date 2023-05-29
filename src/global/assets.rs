@@ -31,10 +31,9 @@ pub struct MyAssets {
     #[asset(path = "background/far.png")]
     pub parallax_far: Handle<Image>,
 }
-
 pub fn load_assets_plugin(app: &mut App) {
     app.add_loading_state(
-        LoadingState::new(GameState::AssetLoading).continue_to_state(GameState::InitRun),
+        LoadingState::new(GameState::AssetLoading).continue_to_state(GameState::Start),
     );
     app.add_collection_to_loading_state::<_, MyAssets>(GameState::AssetLoading);
 }
