@@ -1,6 +1,7 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_parallax::*;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
 use leafwing_input_manager::prelude::*;
@@ -17,6 +18,9 @@ pub fn initialize_libraries(app: &mut App) {
                 ..default()
             }),
     );
+    // ! Parallax
+    app.add_plugin(ParallaxPlugin);
+    app.init_resource::<ParallaxResource>();
     // ! Leafwing inputs
     app.add_plugin(InputManagerPlugin::<PlayerAction>::default());
     // ! LDTK levels

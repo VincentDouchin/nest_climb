@@ -42,5 +42,7 @@ fn main() {
         // ! LEVEL SELECT
         .add_system(spawn_level_select_ui.in_schedule(OnEnter(GameState::LevelSelect)))
         .add_system(select_level.in_set(OnUpdate(GameState::LevelSelect)))
+        // ! PAUSE
+        .add_system(go_back_to_level_select.in_set(OnUpdate(GameState::Pause)))
         .run();
 }

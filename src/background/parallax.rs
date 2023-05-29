@@ -46,9 +46,15 @@ pub fn add_parallax_layers(
     parallax.create_layers(&mut commands, &mut texture_atlases);
 }
 
+fn despawn_parallax_layers(
+    mut commands: Commands,
+    mut parallax_resource: ResMut<ParallaxResource>,
+) {
+    parallax_resource.despawn_layers(&mut commands)
+}
+
 pub fn parallax_plugin(app: &mut App) {
-    app.add_plugin(ParallaxPlugin);
-    app.init_resource::<ParallaxResource>();
     app.add_system(target_camera_for_parallax);
-    app.add_system(add_parallax_layers.in_schedule(OnEnter(GameState::Run)));
+    app.add_system(add_parallax_layers.in_schedule(OnExit(GameState::LevelSelect)));
+    app.add_system(despawn_parallax_layers.in_schedule(OnEnter(GameState::LevelSelect)));
 }
