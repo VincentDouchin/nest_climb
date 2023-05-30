@@ -47,7 +47,7 @@ pub fn spawn_player(
                     held_jump_cooldown: None,
                     jump_start_extra_gravity: 30.0,
                     jump_fall_extra_gravity: 150.0,
-                    jump_shorten_extra_gravity: 150.0,
+                    jump_shorten_extra_gravity: 600.0,
                     jump_peak_prevention_at_upward_velocity: 0.0,
                     jump_peak_prevention_extra_gravity: 20.0,
                     free_fall_behavior: TnuaFreeFallBehavior::LikeJumpShorten,

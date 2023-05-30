@@ -29,13 +29,20 @@ fn main() {
                 .before(move_camera)
                 .in_set(OnUpdate(GameState::Run)),
         )
+        .add_system(patrol.in_set(OnUpdate(GameState::Run)))
+        // ! Damage
+        .fn_plugin(run_timer_plugin)
+        .add_systems(
+            (player_enemy_interaction, kill_entity)
+                .chain()
+                .in_set(OnUpdate(GameState::Run)),
+        )
         // ! Animation
         .add_system(animate_sprites.in_set(OnUpdate(GameState::Run)))
         .add_system(update_direction.in_set(OnUpdate(GameState::Run)))
         // ! UI
-        .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
+        .fn_plugin(run_ui_plugin)
         .add_system(spawn_pause_ui.in_schedule(OnEnter(GameState::Pause)))
-        .add_system(display_hearts.in_set(OnUpdate(GameState::Run)))
         // ! START
         .add_system(spawn_start_ui.in_schedule(OnEnter(GameState::Start)))
         .add_system(start_game.in_set(OnUpdate(GameState::Start)))

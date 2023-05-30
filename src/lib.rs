@@ -42,8 +42,6 @@ mod debug;
 pub use debug::*;
 
 mod ui {
-    mod health;
-    pub use self::health::*;
     mod run_ui;
     pub use self::run_ui::*;
     mod pause_ui;
@@ -58,14 +56,18 @@ mod ui {
 pub use ui::*;
 
 mod health {
-    mod health_component;
-    pub use self::health_component::*;
+    mod health;
+    pub use self::health::*;
 }
 pub use health::*;
 
 mod enemies {
     mod spawn_enemy;
     pub use self::spawn_enemy::*;
+    mod patrol;
+    pub use self::patrol::*;
+    mod damage_player;
+    pub use self::damage_player::*;
 }
 pub use enemies::*;
 

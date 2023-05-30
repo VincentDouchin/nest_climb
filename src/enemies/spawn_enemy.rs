@@ -9,6 +9,10 @@ pub struct Enemy;
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct EnemyBundle {
     enemy: Enemy,
+    #[ldtk_entity]
+    pub patrol: Patrol,
+    #[ldtk_entity]
+    pub health: Health,
 }
 
 pub fn spawn_enemy(
@@ -20,6 +24,7 @@ pub fn spawn_enemy(
         let bundle = (
             assets.bushly_idle.clone(),
             Collider::cuboid(8.0, 8.0),
+            Velocity::default(),
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
             TextureAtlasSprite::default(),
