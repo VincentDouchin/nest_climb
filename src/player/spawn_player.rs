@@ -19,14 +19,19 @@ pub fn spawn_player(
 ) {
     for entity in player_query.iter() {
         let bundle = (
-            assets.bird.clone(),
+            assets.bird_idle.clone(),
+            AnimationSprites {
+                idle: assets.bird_idle.clone(),
+                running: assets.bird_run.clone(),
+                jumping: assets.bird_jump.clone(),
+            },
             TextureAtlasSprite::default(),
             AnimationTimerComponent::default(),
             DirectionComponent(SpriteDirection::Right),
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
-            Collider::cuboid(10.0, 12.0),
-            TnuaRapier2dSensorShape(Collider::cuboid(10.0, 12.0)),
+            Collider::cuboid(16.0, 16.0),
+            TnuaRapier2dSensorShape(Collider::cuboid(16.0, 16.0)),
             Velocity::default(),
             CameraTarget,
             TnuaPlatformerAnimatingOutput::default(),
