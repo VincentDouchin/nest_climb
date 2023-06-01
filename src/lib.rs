@@ -76,3 +76,9 @@ mod background {
     pub use self::parallax::*;
 }
 pub use background::*;
+
+mod collectibles {
+    mod collectibles;
+    pub use self::collectibles::*;
+}
+pub use collectibles::*;
