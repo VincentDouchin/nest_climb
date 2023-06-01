@@ -11,7 +11,7 @@
 	"iid": "b38111a0-ed50-11ed-b45b-3d60761c2154",
 	"jsonVersion": "1.3.3",
 	"appBuildId": 467698,
-	"nextUid": 44,
+	"nextUid": 49,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -524,6 +524,77 @@
 					"tilesetUid": null
 				}
 			]
+		},
+		{
+			"identifier": "Collectible",
+			"uid": 44,
+			"tags": [],
+			"exportToToc": false,
+			"doc": null,
+			"width": 16,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#EAD4AA",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileRenderMode": "FitInside",
+			"tileRect": null,
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 0.5,
+			"fieldDefs": [
+				{
+					"identifier": "Collectible",
+					"doc": null,
+					"__type": "LocalEnum.Collectible",
+					"uid": 48,
+					"type": "F_Enum(47)",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 0,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": ["Coin"]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -548,7 +619,11 @@
 				"averageColors": "00000000e583f583d6930000000057b3c693f583c69357b3000056b328c367b337b347b300000000000000000000000000000000e583f673f744f573d69396a2f563f644f744f644f56396a215a375a316b387a366a300000000000000000000000000000000e744f744f533f744d744f663f965f854f3baf3baf664f663b593a4939382000057793779000000000000000000000000f533c744f744f744f744b744f533f744f63389557955896689556955695569556955486a375af425f4230000000000000000f4230000c744f744b7445877496568665877498800001bba4988695564336433642364330000000000008525c42594250000f3230000f644f633f6440000695599556955495558845884495569556423000055330000142345338525f425f425f42594250000f644f323f322f423f6447955e7440000e7447955000000000000643334233433142374230323e425f525f424f425d4250000f533f322f322f322f6340000ba65ea65c965f4cb42aa42aa0000000064330000453303230000c425f425f425f425b4250000f533f323f322f423f644ba65fa65fa65fa65c9656877f533f4330000000059650000184549550000c425f425b425000000000000f533f533f6440000fa65fa65fa65fa65fa65f423f423f423000039553955185578550844000000000000000000000000f654e655f655d655f6549965fa65fa65fa65b955395219520000000069550000495508440000000000000000000000000000e655f644f744f644d65500009965c965b9550000000000000000000000000000000000000000000000000000000000000000e744f744f533f744d7440000b533e533c533000000008533c533953300000000f433f423f423000000000000000000000000c744f744f744f744b744b533f533f534f533c5338533f533f533f5339533f433f323f322f323f423000000000000000000000000c744f744b7440000f533f534f533f534f533e533f533f423f533d533f423f322f322f322f4230000000000000000000000007592b482948200009533f533f534f533b533c533f533f533f533b533f423f323f322f323f433000000000000000000007592f372f141f372948200009533c533b53300000000c533f533b53300000000f423f423f433000000000000000000000000b372f141f141f141b3728a65aa65aa65fa65f533a744aa658a650000000000000000000000000000000000000000000000007592f372f141f3729482000000000000fa65f53300000000000000000000000000000000000000000000000000000000000000007592b48294827472b36293620000000000000000000000000000000000000000000000000000000000000000000000000000000000007472f352f322f352936200000000000000000000000000000000000000000000000000000000000000000000000000000000b352f322f322f322b352000000000000000000000000000000000000000000000000000000000000000000000000000000007472f352f322f35293620000000000000000000000000000000000000000000000000000000000000000000000000000000000007472b362936200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a482a482a482a482"
 			}
 		}
-	], "enums": [{ "identifier": "Tiles", "uid": 3, "values": [{ "id": "Floor", "tileRect": null, "tileId": -1, "color": 12470831, "__tileSrcRect": null }], "iconTilesetUid": 1, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
+	], "enums": [{ "identifier": "Collectible", "uid": 47, "values": [
+		{ "id": "Coin", "tileRect": null, "tileId": -1, "color": 12470831, "__tileSrcRect": null },
+		{ "id": "BottleCap", "tileRect": null, "tileId": -1, "color": 14120515, "__tileSrcRect": null },
+		{ "id": "Gem", "tileRect": null, "tileId": -1, "color": 15389866, "__tileSrcRect": null }
+	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -648,6 +723,48 @@
 								}] },
 								{ "__identifier": "health", "__type": "Int", "__value": 2, "__tile": null, "defUid": 43, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }
 							]
+						},
+						{
+							"__identifier": "Collectible",
+							"__grid": [11,37],
+							"__pivot": [0.5,0.5],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "0c2a6d70-ed50-11ed-aaff-eb299a95bec4",
+							"width": 16,
+							"height": 16,
+							"defUid": 44,
+							"px": [184,600],
+							"fieldInstances": [{ "__identifier": "Collectible", "__type": "LocalEnum.Collectible", "__value": "Coin", "__tile": null, "defUid": 48, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Collectible",
+							"__grid": [8,22],
+							"__pivot": [0.5,0.5],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "0da4ff80-ed50-11ed-aaff-0902fbe89193",
+							"width": 16,
+							"height": 16,
+							"defUid": 44,
+							"px": [136,360],
+							"fieldInstances": [{ "__identifier": "Collectible", "__type": "LocalEnum.Collectible", "__value": "Coin", "__tile": null, "defUid": 48, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Collectible",
+							"__grid": [6,12],
+							"__pivot": [0.5,0.5],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#EAD4AA",
+							"iid": "0ef9ba10-ed50-11ed-aaff-a956395296e0",
+							"width": 16,
+							"height": 16,
+							"defUid": 44,
+							"px": [104,200],
+							"fieldInstances": [{ "__identifier": "Collectible", "__type": "LocalEnum.Collectible", "__value": "Coin", "__tile": null, "defUid": 48, "realEditorValues": [] }]
 						}
 					]
 				},
