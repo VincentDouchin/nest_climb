@@ -16,27 +16,20 @@ pub fn update_health_timer(mut health_query: Query<&mut Health>, time: Res<Time>
 }
 
 pub fn player_enemy_interaction(
-    mut player_query: Query<(Entity, &Transform, &mut Health), (With<Player>, Without<Enemy>)>,
-    mut enemy_query: Query<
-        (Entity, &Transform, &Collider, &mut Health),
-        (With<Enemy>, Without<Player>),
-    >,
+    mut player_query: Query<(Entity, &mut Health), (With<Player>, Without<Enemy>)>,
+    mut enemy_query: Query<(Entity, &mut Health), (With<Enemy>, Without<Player>)>,
     rapier_context: Res<RapierContext>,
 ) {
-    for (player, player_transform, mut player_health) in player_query.iter_mut() {
-        for (enemy, enemy_transform, enemy_collider, mut enemy_health) in enemy_query.iter_mut() {
+    for (player, mut player_health) in player_query.iter_mut() {
+        for (enemy, mut enemy_health) in enemy_query.iter_mut() {
             if let Some(contact_pair) = rapier_context.contact_pair(player, enemy) {
                 if contact_pair.has_any_active_contacts() {
-                    let enemy_half_size = enemy_collider.as_cuboid().unwrap().half_extents();
-                    let enemy_right = enemy_transform.translation.x + enemy_half_size.x;
-                    let enemy_left = enemy_transform.translation.x - enemy_half_size.x;
-                    if player_transform.translation.x < enemy_right
-                        && player_transform.translation.x > enemy_left
-                        && player_transform.translation.y > enemy_transform.translation.y
-                    {
-                        enemy_health.update_health(1);
-                    } else {
-                        player_health.update_health(1)
+                    if let Some((contact, _)) = contact_pair.find_deepest_contact() {
+                        if contact.normal() == Vec2::new(0.0, -1.0) {
+                            enemy_health.update_health(1);
+                        } else {
+                            player_health.update_health(1)
+                        }
                     }
                 }
             }

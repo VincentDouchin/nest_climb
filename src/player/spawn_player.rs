@@ -24,6 +24,7 @@ pub fn spawn_player(
                 idle: assets.bird_idle.clone(),
                 running: assets.bird_run.clone(),
                 jumping: assets.bird_jump.clone(),
+                hurt: assets.bird_hurt.clone(),
             },
             TextureAtlasSprite::default(),
             AnimationTimerComponent::default(),
@@ -68,6 +69,9 @@ pub fn spawn_player(
             },
             Health::new(5),
         );
-        commands.entity(entity).insert(bundle);
+        commands.entity(entity).insert(bundle).insert((
+            AnimationState::default(),
+            DeathAnimation(assets.bird_death.clone()),
+        ));
     }
 }

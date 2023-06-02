@@ -33,13 +33,18 @@ fn main() {
         // ! Damage
         .fn_plugin(run_timer_plugin)
         .add_systems(
-            (player_enemy_interaction, kill_entity)
+            (player_enemy_interaction, kill_entity, detect_health_changed)
                 .chain()
                 .in_set(OnUpdate(GameState::Run)),
         )
         // ! Animation
-        .add_system(animate_sprites.in_set(OnUpdate(GameState::Run)))
+        .add_systems(
+            (change_animation_atlas, animate_sprites)
+                .chain()
+                .in_set(OnUpdate(GameState::Run)),
+        )
         .add_system(update_direction.in_set(OnUpdate(GameState::Run)))
+        .add_system(update_animation_state.in_set(OnUpdate(GameState::Run)))
         // ! UI
         .fn_plugin(run_ui_plugin)
         .add_system(spawn_pause_ui.in_schedule(OnEnter(GameState::Pause)))

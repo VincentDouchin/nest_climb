@@ -4,6 +4,8 @@ use bevy_ecs_ldtk::prelude::*;
 
 #[derive(Component, Clone, Default)]
 pub struct Health {
+    pub last_health: u32,
+    pub took_damage: bool,
     pub current_health: u32,
     pub max_health: u32,
     pub timer: Option<Timer>,
@@ -14,6 +16,8 @@ impl Health {
             current_health: max_health,
             max_health,
             timer: None,
+            last_health: max_health,
+            took_damage: false,
         };
     }
     pub fn update_health(&mut self, amount: u32) {
@@ -49,15 +53,39 @@ impl LdtkEntity for Health {
         return Health::new(max_health);
     }
 }
-
+pub fn detect_health_changed(mut query: Query<&mut Health>) {
+    for mut health in query.iter_mut() {
+        health.took_damage = health.last_health > health.current_health;
+        health.last_health = health.current_health.clone();
+    }
+}
 pub fn kill_entity(
     mut commands: Commands,
-    query: Query<(Entity, &Health, Option<&Enemy>), Changed<Health>>,
+    query: Query<
+        (
+            Entity,
+            &Health,
+            Option<&Enemy>,
+            &Transform,
+            Option<&DeathAnimation>,
+        ),
+        Changed<Health>,
+    >,
     mut score: ResMut<Score>,
 ) {
-    for (entity, health, is_enemy) in query.iter() {
+    for (entity, health, is_enemy, transform, maybe_death_animation) in query.iter() {
         if health.current_health <= 0 {
             commands.entity(entity).despawn_recursive();
+            if let Some(death_animation) = maybe_death_animation {
+                commands.spawn((
+                    SpriteSheetBundle {
+                        texture_atlas: death_animation.0.clone(),
+                        transform: transform.clone(),
+                        ..default()
+                    },
+                    AnimationTimerComponent::default(),
+                ));
+            }
             if is_enemy.is_some() {
                 score.enemies_killed += 1
             }

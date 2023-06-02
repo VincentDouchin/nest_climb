@@ -8,12 +8,21 @@ pub struct MyAssets {
     #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 2, rows = 1))]
     #[asset(path = "characters/bird/bird_idle.png")]
     pub bird_idle: Handle<TextureAtlas>,
-    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 6, rows = 1))]
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 5, rows = 1))]
     #[asset(path = "characters/bird/bird_run.png")]
     pub bird_run: Handle<TextureAtlas>,
-    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 5, rows = 1))]
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
     #[asset(path = "characters/bird/bird_jump.png")]
     pub bird_jump: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
+    #[asset(path = "characters/bird/bird_zoom.png")]
+    pub bird_zoom: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
+    #[asset(path = "characters/bird/bird_hurt.png")]
+    pub bird_hurt: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 20, rows = 1))]
+    #[asset(path = "characters/bird/bird_death.png")]
+    pub bird_death: Handle<TextureAtlas>,
     // ! Levels
     #[asset(path = "levels/test_level.ldtk")]
     pub test_level: Handle<LdtkAsset>,
