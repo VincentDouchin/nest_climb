@@ -50,7 +50,7 @@ pub fn spawn_collectibles(
                 _ => assets.coin.clone(),
             })
             .insert((
-                AnimationTimerComponent::default(),
+                AnimationTimer::default(),
                 TextureAtlasSprite::default(),
                 Collider::cuboid(8.0, 8.0),
                 RigidBody::Fixed,

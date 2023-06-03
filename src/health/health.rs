@@ -20,7 +20,7 @@ impl Health {
             took_damage: false,
         };
     }
-    pub fn update_health(&mut self, amount: u32) {
+    pub fn take_damage(&mut self, amount: u32) {
         if let Some(timer) = self.timer.as_mut() {
             if timer.finished() {
                 self.timer = None;
@@ -84,7 +84,7 @@ pub fn kill_entity(
                         ..default()
                     },
                     DespawnWhenAnimationFinished,
-                    AnimationTimerComponent::default(),
+                    AnimationTimer::default(),
                 ));
             }
             if maybe_enemy.is_some() {

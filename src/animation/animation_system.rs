@@ -71,7 +71,7 @@ pub fn animate_sprites(
     mut query: Query<(
         &Handle<TextureAtlas>,
         &mut TextureAtlasSprite,
-        &mut AnimationTimerComponent,
+        &mut AnimationTimer,
         Option<&AnimationState>,
     )>,
     time: Res<Time>,

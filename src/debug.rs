@@ -1,4 +1,4 @@
-use crate::{Health, Player};
+use crate::{GameState, Health, Player};
 use bevy::prelude::*;
 use bevy_egui::egui::plot::{Corner, Legend, Plot};
 use bevy_rapier2d::prelude::*;
@@ -16,6 +16,11 @@ pub fn toggle_debug(keys: Res<Input<KeyCode>>, mut debug: ResMut<Debug>) {
         debug.enabled = !debug.enabled
     }
 }
+pub fn jump_to_run_state(keys: Res<Input<KeyCode>>, mut next_state: ResMut<NextState<GameState>>) {
+    if keys.just_pressed(KeyCode::F2) {
+        next_state.set(GameState::Run);
+    }
+}
 #[derive(Resource)]
 pub struct Debug {
     enabled: bool,
@@ -26,6 +31,7 @@ pub fn debug_plugin(app: &mut App) {
     app.insert_resource(Debug { enabled: false });
     app.add_plugin(EguiPlugin);
     app.add_system(toggle_debug);
+    app.add_system(jump_to_run_state);
     app.add_system(debug_rendering);
     app.add_system(ui_system.run_if(run_debug));
     app.add_system(plot_source_rolling_update.run_if(run_debug));

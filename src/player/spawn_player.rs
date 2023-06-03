@@ -1,5 +1,5 @@
 use crate::*;
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
@@ -18,6 +18,7 @@ pub fn spawn_player(
     assets: Res<MyAssets>,
 ) {
     for entity in player_query.iter() {
+        let collider = Collider::cuboid(7.0, 10.5);
         let bundle = (
             assets.bird_idle.clone(),
             AnimationSprites {
@@ -26,13 +27,16 @@ pub fn spawn_player(
                 jumping: assets.bird_jump.clone(),
                 hurt: assets.bird_hurt.clone(),
             },
-            TextureAtlasSprite::default(),
-            AnimationTimerComponent::default(),
+            TextureAtlasSprite {
+                anchor: Anchor::Custom(Vec2::new(0.0, (-10.5 / 32.0) / 2.0)),
+                ..default()
+            },
+            AnimationTimer::default(),
             DirectionComponent(SpriteDirection::Right),
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
-            Collider::cuboid(16.0, 16.0),
-            TnuaRapier2dSensorShape(Collider::cuboid(16.0, 16.0)),
+            TnuaRapier2dSensorShape(collider.clone()),
+            collider,
             Velocity::default(),
             CameraTarget,
             TnuaPlatformerAnimatingOutput::default(),
@@ -61,6 +65,7 @@ pub fn spawn_player(
                     tilt_offset_angacl: 500.0,
                     turning_angvel: 10.0,
                 },
+
                 ..default()
             },
             InputManagerBundle::<PlayerAction> {

@@ -28,7 +28,7 @@ pub fn spawn_enemy(
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
             TextureAtlasSprite::default(),
-            AnimationTimerComponent::default(),
+            AnimationTimer::default(),
         );
         commands.entity(entity).insert(bundle);
     }
