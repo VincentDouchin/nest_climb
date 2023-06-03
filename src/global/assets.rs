@@ -17,7 +17,7 @@ pub struct MyAssets {
     #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
     #[asset(path = "characters/bird/bird_zoom.png")]
     pub bird_zoom: Handle<TextureAtlas>,
-    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 7, rows = 1))]
     #[asset(path = "characters/bird/bird_hurt.png")]
     pub bird_hurt: Handle<TextureAtlas>,
     #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 20, rows = 1))]
@@ -38,6 +38,10 @@ pub struct MyAssets {
     #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 3, rows = 1))]
     #[asset(path = "characters/bushly/idle.png")]
     pub bushly_idle: Handle<TextureAtlas>,
+    // ! Items
+    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 4, rows = 1))]
+    #[asset(path = "items/coin.png")]
+    pub coin: Handle<TextureAtlas>,
     // ! Background
     #[asset(path = "background/back.png")]
     pub parallax_back: Handle<Image>,

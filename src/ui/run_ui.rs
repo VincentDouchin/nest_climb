@@ -7,10 +7,19 @@ pub struct HeartContainer;
 #[derive(Resource)]
 pub struct Score {
     pub enemies_killed: u32,
+    pub collectibles: u32,
+}
+impl Score {
+    fn sum(&self) -> u32 {
+        return &self.collectibles + &self.enemies_killed * 100;
+    }
 }
 impl Default for Score {
     fn default() -> Self {
-        Score { enemies_killed: 0 }
+        Score {
+            enemies_killed: 0,
+            collectibles: 0,
+        }
     }
 }
 
@@ -129,7 +138,7 @@ pub fn update_score(
     score: Res<Score>,
 ) {
     for mut text in score_display_query.iter_mut() {
-        text.sections[0].value = score.enemies_killed.to_string();
+        text.sections[0].value = score.sum().to_string();
     }
 }
 

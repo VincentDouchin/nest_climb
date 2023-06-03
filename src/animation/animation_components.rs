@@ -4,24 +4,22 @@ use bevy::prelude::*;
 pub struct AnimationTimerComponent {
     pub timer: Timer,
 }
-
 impl AnimationTimerComponent {
     pub fn new(fps: Option<f32>) -> Self {
         AnimationTimerComponent {
             timer: Timer::from_seconds(1.0 / fps.unwrap_or(8.0), TimerMode::Repeating),
         }
     }
-    pub fn finished(&self) -> bool {
-        true
-    }
 }
 impl Default for AnimationTimerComponent {
     fn default() -> Self {
         AnimationTimerComponent {
-            timer: Timer::from_seconds(1.0 / 8.0, TimerMode::Repeating),
+            timer: Timer::from_seconds(1.0 / 4.0, TimerMode::Repeating),
         }
     }
 }
+#[derive(Component)]
+pub struct DespawnWhenAnimationFinished;
 
 #[derive(Eq, PartialEq)]
 pub enum SpriteDirection {
@@ -33,16 +31,23 @@ pub enum SpriteDirection {
 pub struct DirectionComponent(pub SpriteDirection);
 
 #[derive(Eq, PartialEq)]
+pub enum JumpingState {
+    Start,
+    Top,
+    End,
+}
+
+#[derive(PartialEq)]
 pub enum AnimationStates {
     Idle,
     Running,
-    Jumping,
+    Jumping(f32, f32),
     Hurt,
     Dead,
     Zoom,
 }
 
-#[derive(Component, Eq, PartialEq)]
+#[derive(Component, PartialEq)]
 pub struct AnimationState {
     pub state: AnimationStates,
 }
@@ -64,3 +69,59 @@ pub struct AnimationSprites {
 
 #[derive(Component)]
 pub struct DeathAnimation(pub Handle<TextureAtlas>);
+/*
+ #[derive(Resource)]
+ struct AnimationClips {
+     standing: Handle<AnimationClip>,
+     running: Handle<AnimationClip>,
+ }
+enum AnimationState {
+    Standing,
+    Running(f32),
+}
+
+fn animating_system(
+    mut query: &mut Query<(
+        &mut TnuaAnimatingState<AnimationState>,
+        &TnuaPlatformerAnimatingOutput,
+        &mut AnimationPlayer,
+    )>,
+    animation_clips: Res<AnimationClips>,
+) {
+    for (mut animating_state, animating_output, mut animation_player) in query.iter_mut() {
+        match animating_state.update_by_discriminant({
+            let speed = animating_output.running_velocity.length();
+            if 0.01 < speed {
+                AnimationState::Running(speed)
+            } else {
+                AnimationState::Standing
+            }
+        }) {
+            TnuaAnimatingStateDirective::Maintain { state } => {
+                if let AnimationState::Running(speed) = state {
+                    animation_player.set_speed(*speed);
+                }
+            }
+            TnuaAnimatingStateDirective::Alter {
+               //  We don't need the old state here, but it's available for transition
+               //  animations.
+                old_state: _,
+                state,
+            } => match state {
+                AnimationState::Standing => {
+                    animation_player
+                        .start(animation_clips.standing.clone_weak())
+                        .set_speed(1.0)
+                        .repeat();
+                }
+                AnimationState::Running(speed) => {
+                    animation_player
+                        .start(animation_clips.standing.clone_weak())
+                        .set_speed(*speed)
+                        .repeat();
+                }
+            }
+        }
+    }
+}
+*/

@@ -65,15 +65,15 @@ pub fn kill_entity(
         (
             Entity,
             &Health,
-            Option<&Enemy>,
             &Transform,
             Option<&DeathAnimation>,
+            Option<&Enemy>,
         ),
         Changed<Health>,
     >,
     mut score: ResMut<Score>,
 ) {
-    for (entity, health, is_enemy, transform, maybe_death_animation) in query.iter() {
+    for (entity, health, transform, maybe_death_animation, maybe_enemy) in query.iter() {
         if health.current_health <= 0 {
             commands.entity(entity).despawn_recursive();
             if let Some(death_animation) = maybe_death_animation {
@@ -83,11 +83,12 @@ pub fn kill_entity(
                         transform: transform.clone(),
                         ..default()
                     },
+                    DespawnWhenAnimationFinished,
                     AnimationTimerComponent::default(),
                 ));
             }
-            if is_enemy.is_some() {
-                score.enemies_killed += 1
+            if maybe_enemy.is_some() {
+                score.enemies_killed += 1;
             }
         }
     }

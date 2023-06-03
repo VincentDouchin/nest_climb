@@ -15,14 +15,17 @@ fn main() {
         .add_system(despawn_state_ui)
         // ! Assets
         .fn_plugin(load_assets_plugin)
-        // !Camera
+        // ! Camera
         .fn_plugin(camera_plugin)
         // ! Level
         .fn_plugin(parallax_plugin)
         .fn_plugin(map_plugin)
-        .add_system(spawn_player.in_set(OnUpdate(GameState::Run)))
-        .add_system(spawn_enemy.in_set(OnUpdate(GameState::Run)))
-        .add_system(spawn_walls.in_set(OnUpdate(GameState::Run)))
+        .add_systems(
+            (spawn_player, spawn_walls, spawn_enemy, spawn_collectibles)
+                .in_set(OnUpdate(GameState::Run)),
+        )
+        // ! Collectibles
+        .add_system(collect_collectible.in_set(OnUpdate(GameState::Run)))
         // ! Movement
         .add_system(
             move_player_system
@@ -38,13 +41,7 @@ fn main() {
                 .in_set(OnUpdate(GameState::Run)),
         )
         // ! Animation
-        .add_systems(
-            (change_animation_atlas, animate_sprites)
-                .chain()
-                .in_set(OnUpdate(GameState::Run)),
-        )
-        .add_system(update_direction.in_set(OnUpdate(GameState::Run)))
-        .add_system(update_animation_state.in_set(OnUpdate(GameState::Run)))
+        .fn_plugin(animation_plugin)
         // ! UI
         .fn_plugin(run_ui_plugin)
         .add_system(spawn_pause_ui.in_schedule(OnEnter(GameState::Pause)))
