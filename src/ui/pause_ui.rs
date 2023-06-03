@@ -10,6 +10,7 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
         .spawn((
             NodeBundle {
                 style: Style {
+                    position_type: PositionType::Absolute,
                     flex_direction: FlexDirection::Column,
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::FlexStart,

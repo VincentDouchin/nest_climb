@@ -1,6 +1,6 @@
 use crate::*;
 use bevy::prelude::*;
-
+use leafwing_input_manager::prelude::ActionStateDriver;
 #[derive(Component)]
 pub struct HeartContainer;
 
@@ -24,7 +24,16 @@ impl Default for Score {
 }
 
 #[derive(Component)]
+pub struct ButtonImages {
+    pub normal: Handle<Image>,
+    pub pressed: Handle<Image>,
+}
+
+#[derive(Component)]
 pub struct ScoreDisplay;
+
+#[derive(Component)]
+pub struct PlayerButtons;
 
 pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
     commands
@@ -32,6 +41,7 @@ pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
             NodeBundle {
                 style: Style {
                     justify_content: JustifyContent::SpaceBetween,
+                    position_type: PositionType::Absolute,
                     size: Size {
                         width: Val::Percent(100.0),
                         height: Val::Auto,
@@ -146,9 +156,96 @@ pub fn reset_score(mut score: ResMut<Score>) {
     score.enemies_killed = 0;
 }
 
+pub fn spawn_touch_buttons(
+    mut commands: Commands,
+    assets: Res<MyAssets>,
+    player_query: Query<Entity, Added<Player>>,
+) {
+    if let Ok(player_entity) = player_query.get_single() {
+        commands
+            .spawn((
+                NodeBundle {
+                    style: Style {
+                        size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                        align_items: AlignItems::End,
+                        ..default()
+                    },
+                    ..default()
+                },
+                PlayerButtons,
+            ))
+            .with_children(|root| {
+                vec![
+                    PlayerAction::MoveLeft,
+                    PlayerAction::MoveRight,
+                    PlayerAction::Jump,
+                ]
+                .iter()
+                .for_each(|player_action| {
+                    root.spawn((
+                        ButtonBundle {
+                            image: UiImage::new(assets.button_normal.clone()),
+                            style: Style {
+                                margin: if player_action == &PlayerAction::Jump {
+                                    UiRect {
+                                        left: Val::Auto,
+                                        right: Val::Px(50.0),
+                                        top: Val::Px(50.0),
+                                        bottom: Val::Px(50.0),
+                                    }
+                                } else {
+                                    UiRect::all(Val::Px(50.0))
+                                },
+                                size: Size::new(Val::Px(50.), Val::Px(50.)),
+                                ..Default::default()
+                            },
+
+                            ..default()
+                        },
+                        ActionStateDriver {
+                            action: *player_action,
+                            entity: player_entity,
+                        },
+                        ButtonImages {
+                            normal: assets.button_normal.clone(),
+                            pressed: assets.button_pressed.clone(),
+                        },
+                    ));
+                });
+            });
+    }
+}
+
+pub fn despawn_player_buttons(
+    mut commands: Commands,
+    removed_player: RemovedComponents<Player>,
+    player_buttons_query: Query<Entity, With<PlayerButtons>>,
+) {
+    if !removed_player.is_empty() {
+        for entity in player_buttons_query.iter() {
+            commands.entity(entity).despawn_recursive()
+        }
+    }
+}
+pub fn press_button(mut button_query: Query<(&ButtonImages, &Interaction, &mut UiImage)>) {
+    for (button_images, interaction, mut image_handle) in button_query.iter_mut() {
+        let texture = if interaction == &Interaction::Clicked {
+            button_images.pressed.clone()
+        } else {
+            button_images.normal.clone()
+        };
+        if image_handle.texture != texture {
+            image_handle.texture = texture
+        }
+    }
+}
+
 pub fn run_ui_plugin(app: &mut App) {
     app.init_resource::<Score>()
         .add_system(reset_score.in_schedule(OnEnter(GameState::LevelSelect)))
         .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_systems((update_health_ui, update_score).in_set(OnUpdate(GameState::Run)));
+    #[cfg(feature = "touch_controls")]
+    app.add_system(spawn_touch_buttons.in_set(OnUpdate(GameState::Run)))
+        .add_systems((press_button, despawn_player_buttons));
 }

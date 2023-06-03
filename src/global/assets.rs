@@ -31,6 +31,10 @@ pub struct MyAssets {
     pub heart_empty: Handle<Image>,
     #[asset(path = "ui/heart_full.png")]
     pub heart_full: Handle<Image>,
+    #[asset(path = "ui/button_normal.png")]
+    pub button_normal: Handle<Image>,
+    #[asset(path = "ui/button_pressed.png")]
+    pub button_pressed: Handle<Image>,
     // ! Fonts
     #[asset(path = "fonts/roboto.ttf")]
     pub default_font: Handle<Font>,

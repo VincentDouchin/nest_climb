@@ -1,6 +1,7 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_ninepatch::*;
 use bevy_parallax::*;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
@@ -17,21 +18,22 @@ pub fn initialize_libraries(app: &mut App) {
                 }),
                 ..default()
             }),
-    );
+    )
+    // ! Nine Patch
+    .add_plugin(NinePatchPlugin::<()>::default())
     // ! Parallax
-    app.add_plugin(ParallaxPlugin);
-    app.init_resource::<ParallaxResource>();
+    .add_plugin(ParallaxPlugin)
+    .init_resource::<ParallaxResource>()
     // ! Leafwing inputs
-    app.add_plugin(InputManagerPlugin::<PlayerAction>::default());
+    .add_plugin(InputManagerPlugin::<PlayerAction>::default())
     // ! LDTK levels
-    app.add_plugin(LdtkPlugin);
+    .add_plugin(LdtkPlugin)
     // ! Rapier physics engine
-    app.add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0));
-
-    app.add_startup_system(|mut cfg: ResMut<RapierConfiguration>| {
+    .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+    .add_startup_system(|mut cfg: ResMut<RapierConfiguration>| {
         cfg.gravity = Vec2::Y * -250.0;
-    });
+    })
     // ! Tnua platformer controls
-    app.add_plugin(TnuaRapier2dPlugin);
-    app.add_plugin(TnuaPlatformerPlugin);
+    .add_plugin(TnuaRapier2dPlugin)
+    .add_plugin(TnuaPlatformerPlugin);
 }
