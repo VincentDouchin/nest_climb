@@ -20,17 +20,6 @@ pub fn spawn_player(
     for entity in player_query.iter() {
         let collider = Collider::cuboid(7.0, 10.5);
         let bundle = (
-            assets.bird_idle.clone(),
-            AnimationSprites {
-                idle: assets.bird_idle.clone(),
-                running: assets.bird_run.clone(),
-                jumping: assets.bird_jump.clone(),
-                hurt: assets.bird_hurt.clone(),
-            },
-            TextureAtlasSprite {
-                anchor: Anchor::Custom(Vec2::new(0.0, (-10.5 / 32.0) / 2.0)),
-                ..default()
-            },
             AnimationTimer::default(),
             DirectionComponent(SpriteDirection::Right),
             RigidBody::Dynamic,
@@ -68,6 +57,7 @@ pub fn spawn_player(
 
                 ..default()
             },
+            CollisionGroups::new(Group::GROUP_2, Group::ALL),
             InputManagerBundle::<PlayerAction> {
                 action_state: ActionState::default(),
                 input_map: get_player_input_map(),
@@ -77,6 +67,17 @@ pub fn spawn_player(
         commands.entity(entity).insert(bundle).insert((
             AnimationState::default(),
             DeathAnimation(assets.bird_death.clone()),
+            assets.bird_idle.clone(),
+            AnimationSprites {
+                idle: assets.bird_idle.clone(),
+                running: assets.bird_run.clone(),
+                jumping: assets.bird_jump.clone(),
+                hurt: assets.bird_hurt.clone(),
+            },
+            TextureAtlasSprite {
+                anchor: Anchor::Custom(Vec2::new(0.0, (-10.5 / 32.0) / 2.0)),
+                ..default()
+            },
         ));
     }
 }

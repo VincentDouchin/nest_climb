@@ -11,6 +11,8 @@ mod map {
     pub use self::map::*;
     mod walls;
     pub use self::walls::*;
+    mod platform;
+    pub use self::platform::*;
 }
 pub use map::*;
 

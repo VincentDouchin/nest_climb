@@ -1,8 +1,28 @@
-use crate::Wall;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::collections::{HashMap, HashSet};
+#[derive(Copy, Clone, Eq, PartialEq, Default, Debug, Component, Hash)]
+pub enum Wall {
+    #[default]
+    Solid,
+    Platform,
+}
+
+#[derive(Clone, Debug, Bundle, LdtkIntCell)]
+pub struct WallBundle {
+    #[ldtk_int_cell]
+    wall: Wall,
+}
+impl LdtkIntCell for Wall {
+    fn bundle_int_cell(int_grid_cell: IntGridCell, _layer_instance: &LayerInstance) -> Self {
+        if int_grid_cell.value == 4 {
+            Wall::Platform
+        } else {
+            Wall::Solid
+        }
+    }
+}
 
 /// Spawns heron collisions for the walls of a level
 ///
@@ -22,7 +42,7 @@ use std::collections::{HashMap, HashSet};
 /// 4. spawn colliders for each rectangle
 pub fn spawn_walls(
     mut commands: Commands,
-    wall_query: Query<(&GridCoords, &Parent), Added<Wall>>,
+    wall_query: Query<(&GridCoords, &Parent, &Wall), Added<Wall>>,
     parent_query: Query<&Parent, Without<Wall>>,
     level_query: Query<(Entity, &Handle<LdtkLevel>)>,
     levels: Res<Assets<LdtkLevel>>,
@@ -33,6 +53,7 @@ pub fn spawn_walls(
     struct Plate {
         left: i32,
         right: i32,
+        wall_type: Wall,
     }
 
     /// A simple rectangle type representing a wall of any size
@@ -41,6 +62,7 @@ pub fn spawn_walls(
         right: i32,
         top: i32,
         bottom: i32,
+        wall_type: Wall,
     }
 
     // Consider where the walls are
@@ -50,9 +72,9 @@ pub fn spawn_walls(
     // This has two consequences in the resulting collision entities:
     // 1. it forces the walls to be split along level boundaries
     // 2. it lets us easily add the collision entities as children of the appropriate level entity
-    let mut level_to_wall_locations: HashMap<Entity, HashSet<GridCoords>> = HashMap::new();
+    let mut level_to_wall_locations: HashMap<Entity, HashSet<(GridCoords, &Wall)>> = HashMap::new();
 
-    wall_query.for_each(|(&grid_coords, parent)| {
+    wall_query.for_each(|(&grid_coords, parent, wall)| {
         // An intgrid tile's direct parent will be a layer entity, not the level entity
         // To get the level entity, you need the tile's grandparent.
         // This is where parent_query comes in.
@@ -60,7 +82,7 @@ pub fn spawn_walls(
             level_to_wall_locations
                 .entry(grandparent.get())
                 .or_default()
-                .insert(grid_coords);
+                .insert((grid_coords, wall));
         }
     });
 
@@ -84,29 +106,31 @@ pub fn spawn_walls(
 
                 // combine wall tiles into flat "plates" in each individual row
                 let mut plate_stack: Vec<Vec<Plate>> = Vec::new();
-
                 for y in 0..height {
                     let mut row_plates: Vec<Plate> = Vec::new();
                     let mut plate_start = None;
-
                     // + 1 to the width so the algorithm "terminates" plates that touch the right edge
-                    for x in 0..width + 1 {
-                        match (plate_start, level_walls.contains(&GridCoords { x, y })) {
-                            (Some(s), false) => {
-                                row_plates.push(Plate {
-                                    left: s,
-                                    right: x - 1,
-                                });
-                                plate_start = None;
+                    for wall_type in &[Wall::Solid, Wall::Platform] {
+                        for x in 0..width + 1 {
+                            match (
+                                (plate_start),
+                                level_walls.contains(&(GridCoords { x, y }, wall_type)),
+                            ) {
+                                (Some(s), false) => {
+                                    row_plates.push(Plate {
+                                        left: s,
+                                        right: x - 1,
+                                        wall_type: wall_type.clone(),
+                                    });
+                                    plate_start = None;
+                                }
+                                (None, true) => plate_start = Some(x),
+                                _ => (),
                             }
-                            (None, true) => plate_start = Some(x),
-                            _ => (),
                         }
                     }
-
                     plate_stack.push(row_plates);
                 }
-
                 // combine "plates" into rectangles across multiple rows
                 let mut rect_builder: HashMap<Plate, Rect> = HashMap::new();
                 let mut prev_row: Vec<Plate> = Vec::new();
@@ -133,6 +157,7 @@ pub fn spawn_walls(
                                 top: y as i32,
                                 left: plate.left,
                                 right: plate.right,
+                                wall_type: plate.wall_type.clone(),
                             });
                     }
                     prev_row = current_row;
@@ -144,17 +169,15 @@ pub fn spawn_walls(
                     // 1. Adjusts the transforms to be relative to the level for free
                     // 2. the colliders will be despawned automatically when levels unload
                     for wall_rect in wall_rects {
-                        level
-                            .spawn_empty()
-                            .insert(Collider::cuboid(
-                                (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                    * grid_size as f32
-                                    / 2.,
-                                (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                    * grid_size as f32
-                                    / 2.,
-                            ))
-                            .insert(RigidBody::Fixed)
+                        let mut wall = level.spawn(Collider::cuboid(
+                            (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
+                                * grid_size as f32
+                                / 2.,
+                            (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
+                                * grid_size as f32
+                                / 2.,
+                        ));
+                        wall.insert(RigidBody::Fixed)
                             .insert(Transform::from_xyz(
                                 (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
                                     / 2.,
@@ -163,6 +186,10 @@ pub fn spawn_walls(
                                 0.,
                             ))
                             .insert(GlobalTransform::default());
+
+                        if wall_rect.wall_type == Wall::Platform {
+                            wall.insert(CollisionGroups::new(Group::GROUP_1, Group::ALL));
+                        }
                     }
                 });
             }
