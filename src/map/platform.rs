@@ -24,7 +24,7 @@ pub fn jump_throught_platforms(
                 if let Some(contact_pair) =
                     rapier_context.intersection_pair(player_entity, platform_entity)
                 {
-                    return contact_pair;
+                    return contact_pair && wall == &Wall::Platform;
                 }
             }
             return false;
