@@ -169,26 +169,30 @@ pub fn spawn_walls(
                     // 1. Adjusts the transforms to be relative to the level for free
                     // 2. the colliders will be despawned automatically when levels unload
                     for wall_rect in wall_rects {
-                        let mut wall = level.spawn(Collider::cuboid(
-                            (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                * grid_size as f32
-                                / 2.,
-                            (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                * grid_size as f32
-                                / 2.,
-                        ));
-                        wall.insert(RigidBody::Fixed)
-                            .insert(Transform::from_xyz(
+                        let bundle = (
+                            Collider::cuboid(
+                                (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
+                                    * grid_size as f32
+                                    / 2.,
+                                (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
+                                    * grid_size as f32
+                                    / 2.,
+                            ),
+                            Transform::from_xyz(
                                 (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
                                     / 2.,
                                 (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
                                     / 2.,
                                 0.,
-                            ))
-                            .insert(GlobalTransform::default());
+                            ),
+                            RigidBody::Fixed,
+                            GlobalTransform::default(),
+                        );
+                        let mut wall = level.spawn(bundle.clone());
 
                         if wall_rect.wall_type == Wall::Platform {
                             wall.insert(CollisionGroups::new(Group::GROUP_1, Group::ALL));
+                            level.spawn(bundle.clone()).insert((Wall::Platform, Sensor));
                         }
                     }
                 });
