@@ -11,9 +11,12 @@ pub struct MyAssets {
     #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 5, rows = 1))]
     #[asset(path = "characters/bird/bird_run.png")]
     pub bird_run: Handle<TextureAtlas>,
-    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
-    #[asset(path = "characters/bird/bird_jump.png")]
-    pub bird_jump: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 1, rows = 1))]
+    #[asset(path = "characters/bird/bird_jump_up.png")]
+    pub bird_jump_up: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 1, rows = 1))]
+    #[asset(path = "characters/bird/bird_jump_down.png")]
+    pub bird_jump_down: Handle<TextureAtlas>,
     #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 4, rows = 1))]
     #[asset(path = "characters/bird/bird_zoom.png")]
     pub bird_zoom: Handle<TextureAtlas>,

@@ -1,50 +1,63 @@
 use bevy::{prelude::*, window::WindowFocused};
 use bevy_rapier2d::prelude::*;
 
+use crate::{spawn_pause_ui, PauseUi};
+
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 pub enum GameState {
     #[default]
     AssetLoading,
     Run,
-    Pause,
     Start,
     LevelSelect,
 }
-
-pub fn switch_state(
-    app_state: Res<State<GameState>>,
-    keys: Res<Input<KeyCode>>,
-    mut next_state: ResMut<NextState<GameState>>,
-) {
-    if keys.just_pressed(KeyCode::Escape) {
-        if app_state.0 == GameState::Run {
-            next_state.0 = Some(GameState::Pause)
-        }
-        if app_state.0 == GameState::Pause {
-            next_state.set(GameState::Run)
-        }
+#[derive(Resource)]
+pub struct Paused {
+    enabled: bool,
+}
+impl Default for Paused {
+    fn default() -> Self {
+        Paused { enabled: false }
     }
 }
 
-pub fn pause_game(mut rapier_config: ResMut<RapierConfiguration>) {
-    rapier_config.physics_pipeline_active = false;
-}
-pub fn resume_game(mut rapier_config: ResMut<RapierConfiguration>) {
-    rapier_config.physics_pipeline_active = true;
-}
-pub fn pause_on_focus_lost(
+pub fn pause_game(
+    keys: Res<Input<KeyCode>>,
+    mut paused: ResMut<Paused>,
     mut events: EventReader<WindowFocused>,
-    mut next_state: ResMut<NextState<GameState>>,
+    mut rapier_config: ResMut<RapierConfiguration>,
+    mut time: ResMut<Time>,
 ) {
+    if keys.just_pressed(KeyCode::Escape) {
+        paused.enabled = !paused.enabled
+    }
     for event in events.iter() {
         if !event.focused {
-            next_state.set(GameState::Pause)
+            paused.enabled = true
         }
+    }
+    rapier_config.physics_pipeline_active = !paused.enabled;
+    if paused.enabled {
+        time.pause()
+    } else {
+        time.unpause()
+    }
+}
+
+pub fn pause_transition_true(paused: Res<Paused>) -> bool {
+    return paused.is_changed() && paused.enabled == true;
+}
+pub fn pause_transition_false(paused: Res<Paused>) -> bool {
+    return paused.is_changed() && paused.enabled == false;
+}
+pub fn despawn_pause_ui(mut commands: Commands, query: Query<Entity, With<PauseUi>>) {
+    for entity in query.iter() {
+        commands.entity(entity).despawn_recursive()
     }
 }
 pub fn pause_plugin(app: &mut App) {
-    app.add_system(switch_state)
-        .add_system(pause_game.in_schedule(OnEnter(GameState::Pause)))
-        .add_system(resume_game.in_schedule(OnExit(GameState::Pause)))
-        .add_system(pause_on_focus_lost.in_set(OnUpdate(GameState::Run)));
+    app.init_resource::<Paused>()
+        .add_system(pause_game)
+        .add_system(spawn_pause_ui.run_if(pause_transition_true))
+        .add_system(despawn_pause_ui.run_if(pause_transition_false));
 }

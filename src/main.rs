@@ -20,31 +20,33 @@ fn main() {
         // ! Level
         .fn_plugin(parallax_plugin)
         .fn_plugin(map_plugin)
+        // ! RUN
         .add_systems(
-            (spawn_player, spawn_walls, spawn_enemy, spawn_collectibles)
+            (
+                spawn_player,
+                spawn_walls,
+                spawn_enemy,
+                spawn_collectibles,
+                collect_collectible,
+                patrol,
+                player_enemy_interaction,
+                kill_entity,
+                detect_health_changed,
+            )
                 .in_set(OnUpdate(GameState::Run)),
         )
-        // ! Collectibles
-        .add_system(collect_collectible.in_set(OnUpdate(GameState::Run)))
         // ! Movement
         .add_system(
             move_player_system
                 .before(move_camera)
                 .in_set(OnUpdate(GameState::Run)),
         )
-        .add_system(patrol.in_set(OnUpdate(GameState::Run)))
         // ! Damage
         .fn_plugin(run_timer_plugin)
-        .add_systems(
-            (player_enemy_interaction, kill_entity, detect_health_changed)
-                .chain()
-                .in_set(OnUpdate(GameState::Run)),
-        )
         // ! Animation
         .fn_plugin(animation_plugin)
         // ! UI
         .fn_plugin(run_ui_plugin)
-        .add_system(spawn_pause_ui.in_schedule(OnEnter(GameState::Pause)))
         // ! START
         .add_system(spawn_start_ui.in_schedule(OnEnter(GameState::Start)))
         .add_system(start_game.in_set(OnUpdate(GameState::Start)))
@@ -52,6 +54,6 @@ fn main() {
         .add_system(spawn_level_select_ui.in_schedule(OnEnter(GameState::LevelSelect)))
         .add_system(select_level.in_set(OnUpdate(GameState::LevelSelect)))
         // ! PAUSE
-        .add_system(go_back_to_level_select.in_set(OnUpdate(GameState::Pause)))
+        .add_system(go_back_to_level_select)
         .run();
 }

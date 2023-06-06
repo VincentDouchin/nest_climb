@@ -30,18 +30,12 @@ pub enum SpriteDirection {
 #[derive(Component)]
 pub struct DirectionComponent(pub SpriteDirection);
 
-#[derive(Eq, PartialEq)]
-pub enum JumpingState {
-    Start,
-    Top,
-    End,
-}
-
 #[derive(PartialEq)]
 pub enum AnimationStates {
     Idle,
     Running,
-    Jumping(f32, f32),
+    JumpingUp,
+    JumpingDown,
     Hurt,
     Dead,
     Zoom,
@@ -63,7 +57,8 @@ impl Default for AnimationState {
 pub struct AnimationSprites {
     pub idle: Handle<TextureAtlas>,
     pub running: Handle<TextureAtlas>,
-    pub jumping: Handle<TextureAtlas>,
+    pub jumping_up: Handle<TextureAtlas>,
+    pub jumping_down: Handle<TextureAtlas>,
     pub hurt: Handle<TextureAtlas>,
 }
 

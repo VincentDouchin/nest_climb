@@ -29,10 +29,10 @@ pub fn update_animation_state(
         let state = if lost_health {
             AnimationStates::Hurt
         } else if let Some(jumping_velocity) = animation_output.jumping_velocity {
-            if let AnimationStates::Jumping(max, _) = animation_state.state {
-                AnimationStates::Jumping(max, jumping_velocity)
+            if jumping_velocity > 0.0 {
+                AnimationStates::JumpingUp
             } else {
-                AnimationStates::Jumping(jumping_velocity, jumping_velocity)
+                AnimationStates::JumpingDown
             }
         } else if animation_output.running_velocity.x.abs() > 0.0 {
             AnimationStates::Running
@@ -56,7 +56,8 @@ pub fn change_animation_atlas(
     for (animation_state, sprites, mut texture_atlas_handle, mut sprite) in query.iter_mut() {
         let last_atlas = texture_atlas_handle.clone();
         *texture_atlas_handle = match animation_state.state {
-            AnimationStates::Jumping(_, _) => sprites.jumping.clone(),
+            AnimationStates::JumpingUp => sprites.jumping_up.clone(),
+            AnimationStates::JumpingDown => sprites.jumping_down.clone(),
             AnimationStates::Running => sprites.running.clone(),
             AnimationStates::Hurt => sprites.hurt.clone(),
             _ => sprites.idle.clone(),
@@ -72,35 +73,15 @@ pub fn animate_sprites(
         &Handle<TextureAtlas>,
         &mut TextureAtlasSprite,
         &mut AnimationTimer,
-        Option<&AnimationState>,
     )>,
     time: Res<Time>,
     texture_atlases: Res<Assets<TextureAtlas>>,
 ) {
-    for (texture_atlas_handle, mut sprite, mut animation_timer, maybe_animation_state) in
-        query.iter_mut()
-    {
+    for (texture_atlas_handle, mut sprite, mut animation_timer) in query.iter_mut() {
         let texture_atlas = texture_atlases.get(&texture_atlas_handle).unwrap();
         animation_timer.timer.tick(time.delta());
-        let jumping_velocity = || {
-            if let Some(animation_state) = maybe_animation_state {
-                if let AnimationStates::Jumping(max_velocity, current_velocity) =
-                    animation_state.state
-                {
-                    return Some((max_velocity, current_velocity));
-                }
-            };
-            return None;
-        };
-        fn get_index(current: f32, max: f32, len: usize) -> usize {
-            let length = len as f32 - 1.0;
-            return ((length - (current + max) / (max * 2.0) * length).floor()).min(length)
-                as usize;
-        }
 
-        if let Some((max_velocity, current_velocity)) = jumping_velocity() {
-            sprite.index = get_index(current_velocity, max_velocity, texture_atlas.len());
-        } else if animation_timer.timer.just_finished() {
+        if animation_timer.timer.just_finished() {
             sprite.index = (sprite.index + 1) % texture_atlas.len();
         }
     }

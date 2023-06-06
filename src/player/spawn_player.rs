@@ -71,7 +71,8 @@ pub fn spawn_player(
             AnimationSprites {
                 idle: assets.bird_idle.clone(),
                 running: assets.bird_run.clone(),
-                jumping: assets.bird_jump.clone(),
+                jumping_up: assets.bird_jump_up.clone(),
+                jumping_down: assets.bird_jump_down.clone(),
                 hurt: assets.bird_hurt.clone(),
             },
             TextureAtlasSprite {

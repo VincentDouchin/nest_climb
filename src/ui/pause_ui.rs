@@ -4,6 +4,9 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct GoBackToLevelSelect;
 
+#[derive(Component)]
+pub struct PauseUi;
+
 pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
     // ! ROOT
     commands
@@ -25,9 +28,7 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 background_color: BackgroundColor(Color::WHITE),
                 ..default()
             },
-            StateUi {
-                state: GameState::Pause,
-            },
+            PauseUi,
         ))
         .with_children(|root| {
             // ! GAME PAUSED TEXT
