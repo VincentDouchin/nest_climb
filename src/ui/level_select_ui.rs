@@ -6,9 +6,7 @@ pub fn spawn_level_select_ui(mut commands: Commands, assets: Res<MyAssets>) {
     commands
         // ! ROOT
         .spawn((
-            StateUi {
-                state: GameState::LevelSelect,
-            },
+            StateUi(GameState::LevelSelect),
             NodeBundle {
                 style: Style {
                     size: Size::all(Val::Percent(100.0)),

@@ -27,6 +27,10 @@ pub fn move_player_system(
 
         // ! Jump
 
-        controls.jump = actions.pressed(PlayerAction::Jump).then(|| 1.0);
+        controls.jump = if actions.pressed(PlayerAction::Jump) {
+            Some(1.0)
+        } else {
+            None
+        };
     }
 }

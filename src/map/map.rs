@@ -17,8 +17,8 @@ pub fn map_plugin(app: &mut App) {
             set_clear_color: SetClearColor::FromLevelBackground,
             ..Default::default()
         })
-        .add_system(spawn_map.in_schedule(OnExit(GameState::LevelSelect)))
-        .add_system(despawn_map.in_schedule(OnEnter(GameState::LevelSelect)))
+        .add_system(spawn_map.in_schedule(OnEnter(GameState::Run)))
+        .add_system(despawn_map.in_schedule(OnExit(GameState::Run)))
         .add_system(jump_throught_platforms.in_set(OnUpdate(GameState::Run)));
 }
 

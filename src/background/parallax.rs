@@ -55,6 +55,6 @@ fn despawn_parallax_layers(
 
 pub fn parallax_plugin(app: &mut App) {
     app.add_system(target_camera_for_parallax);
-    app.add_system(add_parallax_layers.in_schedule(OnExit(GameState::LevelSelect)));
-    app.add_system(despawn_parallax_layers.in_schedule(OnEnter(GameState::LevelSelect)));
+    app.add_system(add_parallax_layers.in_schedule(OnEnter(GameState::Run)));
+    app.add_system(despawn_parallax_layers.in_schedule(OnExit(GameState::Run)));
 }

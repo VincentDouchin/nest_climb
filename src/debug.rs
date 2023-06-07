@@ -1,9 +1,9 @@
-use crate::{GameState, Health, Player};
+use crate::*;
 use bevy::prelude::*;
 use bevy_egui::egui::plot::{Corner, Legend, Plot};
+use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use std::collections::VecDeque;
-
 pub fn debug_rendering(mut debug_config: ResMut<DebugRenderContext>, debug: Res<Debug>) {
     debug_config.enabled = debug.enabled
 }
@@ -16,22 +16,48 @@ pub fn toggle_debug(keys: Res<Input<KeyCode>>, mut debug: ResMut<Debug>) {
         debug.enabled = !debug.enabled
     }
 }
-pub fn jump_to_run_state(keys: Res<Input<KeyCode>>, mut next_state: ResMut<NextState<GameState>>) {
-    if keys.just_pressed(KeyCode::F2) {
+
+#[derive(Resource)]
+pub struct Debug {
+    pub enabled: bool,
+    pub skip_start_screen: bool,
+}
+pub fn save_debug(debug: Res<Debug>, mut pkv: ResMut<PkvStore>) {
+    if debug.is_changed() {
+        pkv.set("skip start screen", &debug.skip_start_screen)
+            .expect("save skip start screen");
+    }
+}
+pub fn set_debug(mut debug: ResMut<Debug>, pkv: Res<PkvStore>) {
+    if let Ok(skip_start_screen) = pkv.get("skip start screen") {
+        debug.skip_start_screen = skip_start_screen
+    }
+}
+pub fn skip_start_screen(
+    debug: Res<Debug>,
+    mut next_state: ResMut<NextState<GameState>>,
+    mut commands: Commands,
+    assets: Res<MyAssets>,
+) {
+    if debug.skip_start_screen {
+        commands.insert_resource(CurrentLevel {
+            level: assets.test_level.clone(),
+        });
         next_state.set(GameState::Run);
     }
 }
-#[derive(Resource)]
-pub struct Debug {
-    enabled: bool,
-}
 pub fn debug_plugin(app: &mut App) {
     app.add_plugin(RapierDebugRenderPlugin::default());
+    app.add_system(save_debug);
     app.insert_resource(ExampleUiTnuaActive(true));
-    app.insert_resource(Debug { enabled: false });
+    app.insert_resource(Debug {
+        enabled: false,
+        skip_start_screen: false,
+    });
+    app.add_startup_system(set_debug);
+    app.add_system(skip_start_screen.in_schedule(OnEnter(GameState::Start)));
     app.add_plugin(EguiPlugin);
     app.add_system(toggle_debug);
-    app.add_system(jump_to_run_state);
     app.add_system(debug_rendering);
     app.add_system(ui_system.run_if(run_debug));
     app.add_system(plot_source_rolling_update.run_if(run_debug));
@@ -221,6 +247,7 @@ fn ui_system(
     mut rapier_config: ResMut<RapierConfiguration>,
     mut player_query: Query<&mut Health, With<Player>>,
     mut commands: Commands,
+    mut debug: ResMut<Debug>,
 ) {
     for (entity, _, _, _, command_altering_selectors) in query.iter_mut() {
         if let Some(mut command_altering_selectors) = command_altering_selectors {
@@ -274,7 +301,10 @@ fn ui_system(
                                 .text("Current Health"),
                         );
                     }
-
+                    ui.add(egui::Checkbox::new(
+                        &mut debug.skip_start_screen,
+                        "Skip start screen",
+                    ));
                     ui.add(
                         egui::Slider::new(&mut rapier_config.gravity.y, 0.0..=-500.0)
                             .text("Gravity"),
@@ -370,10 +400,31 @@ fn ui_system(
                     );
                     ui.add(
                         egui::Slider::new(
-                            &mut platformer_config.jump_start_extra_gravity,
+                            &mut platformer_config.jump_takeoff_extra_gravity,
                             0.0..=900.0,
                         )
-                        .text("Jump Start Extra Gravity"),
+                        .text("Jump Takeoff Extra Gravity"),
+                    );
+                    ui.add(
+                        egui::Slider::new(
+                            &mut platformer_config.jump_takeoff_above_velocity,
+                            0.0..=900.0,
+                        )
+                        .text("Jump Takeoff Above Gravity"),
+                    );
+                    ui.add(
+                        egui::Slider::new(
+                            &mut platformer_config.height_change_impulse_for_duration,
+                            0.0..=900.0,
+                        )
+                        .text("Height Change Impulse For Duration"),
+                    );
+                    ui.add(
+                        egui::Slider::new(
+                            &mut platformer_config.height_change_impulse_limit,
+                            0.0..=900.0,
+                        )
+                        .text("height Change Impulse Limit"),
                     );
                     ui.add(
                         egui::Slider::new(

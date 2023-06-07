@@ -18,24 +18,19 @@ pub fn spawn_player(
     assets: Res<MyAssets>,
 ) {
     for entity in player_query.iter() {
-        let collider = Collider::cuboid(7.0, 10.5);
-        let bundle = (
-            AnimationTimer::default(),
-            DirectionComponent(SpriteDirection::Right),
-            RigidBody::Dynamic,
-            LockedAxes::ROTATION_LOCKED,
-            TnuaRapier2dSensorShape(collider.clone()),
-            collider,
-            Velocity::default(),
-            CameraTarget,
+        let collider = Collider::cuboid(7.0, 10.0);
+
+        let tnua_bundle = (
             TnuaPlatformerAnimatingOutput::default(),
+            TnuaRapier2dIOBundle::default(),
+            TnuaRapier2dSensorShape(collider.clone()),
             TnuaPlatformerBundle {
                 config: TnuaPlatformerConfig {
                     full_speed: 100.0,
                     full_jump_height: 100.0,
                     up: Vec3::Y,
                     forward: Vec3::X,
-                    float_height: 0.1,
+                    float_height: 0.5,
                     cling_distance: 1.0,
                     spring_strengh: 40.0,
                     spring_dampening: 0.4,
@@ -44,27 +39,26 @@ pub fn spawn_player(
                     coyote_time: 0.15,
                     jump_input_buffer_time: 0.2,
                     held_jump_cooldown: None,
-                    jump_start_extra_gravity: 30.0,
                     jump_fall_extra_gravity: 150.0,
                     jump_shorten_extra_gravity: 600.0,
                     jump_peak_prevention_at_upward_velocity: 0.0,
                     jump_peak_prevention_extra_gravity: 20.0,
                     free_fall_behavior: TnuaFreeFallBehavior::LikeJumpShorten,
-                    tilt_offset_angvel: 5.0,
-                    tilt_offset_angacl: 500.0,
+                    tilt_offset_angvel: 0.0,
+                    tilt_offset_angacl: 0.0,
                     turning_angvel: 10.0,
+                    upslope_jump_extra_gravity: 0.0,
+                    jump_takeoff_extra_gravity: 0.0,
+                    jump_takeoff_above_velocity: 0.0,
+                    height_change_impulse_for_duration: 0.04,
+                    height_change_impulse_limit: 0.0,
                 },
-
                 ..default()
             },
-            CollisionGroups::new(Group::GROUP_2, Group::ALL),
-            InputManagerBundle::<PlayerAction> {
-                action_state: ActionState::default(),
-                input_map: get_player_input_map(),
-            },
-            Health::new(5),
         );
-        commands.entity(entity).insert(bundle).insert((
+        let animation_bundle = (
+            DirectionComponent(SpriteDirection::Right),
+            AnimationTimer::default(),
             AnimationState::default(),
             DeathAnimation(assets.bird_death.clone()),
             assets.bird_idle.clone(),
@@ -79,6 +73,27 @@ pub fn spawn_player(
                 anchor: Anchor::Custom(Vec2::new(0.0, (-10.5 / 32.0) / 2.0)),
                 ..default()
             },
-        ));
+        );
+        let physics_bundle = (
+            RigidBody::Dynamic,
+            LockedAxes::ROTATION_LOCKED,
+            collider,
+            Velocity::default(),
+            CollisionGroups::new(Group::GROUP_2, Group::ALL),
+        );
+        let player_bundle = (
+            CameraTarget,
+            InputManagerBundle::<PlayerAction> {
+                action_state: ActionState::default(),
+                input_map: get_player_input_map(),
+            },
+            Health::new(5),
+        );
+        commands
+            .entity(entity)
+            .insert(tnua_bundle)
+            .insert(player_bundle)
+            .insert(animation_bundle)
+            .insert(physics_bundle);
     }
 }

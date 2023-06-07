@@ -50,9 +50,7 @@ pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 },
                 ..default()
             },
-            StateUi {
-                state: GameState::Run,
-            },
+            StateUi(GameState::Run),
         ))
         .with_children(|root| {
             root.spawn((

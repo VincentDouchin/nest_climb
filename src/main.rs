@@ -7,12 +7,11 @@ fn main() {
     App::new()
         // ! Libraries
         .fn_plugin(initialize_libraries)
-        // ! Debug
-        .fn_plugin(debug_plugin)
         // ! States
         .add_state::<GameState>()
         .fn_plugin(pause_plugin)
-        .add_system(despawn_state_ui)
+        .add_system(despawn_state_ui::<GameState>)
+        .add_system(despawn_state_ui::<PauseState>)
         // ! Assets
         .fn_plugin(load_assets_plugin)
         // ! Camera
@@ -33,7 +32,8 @@ fn main() {
                 kill_entity,
                 detect_health_changed,
             )
-                .in_set(OnUpdate(GameState::Run)),
+                .in_set(OnUpdate(GameState::Run))
+                .distributive_run_if(in_state(PauseState::NotPaused)),
         )
         // ! Movement
         .add_system(
@@ -55,5 +55,7 @@ fn main() {
         .add_system(select_level.in_set(OnUpdate(GameState::LevelSelect)))
         // ! PAUSE
         .add_system(go_back_to_level_select)
+        // ! Debug
+        .fn_plugin(debug_plugin)
         .run();
 }

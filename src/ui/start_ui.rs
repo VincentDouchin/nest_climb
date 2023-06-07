@@ -21,9 +21,7 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 ..default()
             },
             StartButton,
-            StateUi {
-                state: GameState::Start,
-            },
+            StateUi(GameState::Start),
         ))
         .with_children(|parent| {
             parent.spawn(TextBundle::from_section(
