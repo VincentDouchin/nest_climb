@@ -62,11 +62,13 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
 
 pub fn go_back_to_level_select(
     mut next_state: ResMut<NextState<GameState>>,
+    mut next_paused_state: ResMut<NextState<PauseState>>,
     interaction_query: Query<&Interaction, (With<GoBackToLevelSelect>, Changed<Interaction>)>,
 ) {
     for interaction in interaction_query.iter() {
         if interaction == &Interaction::Clicked {
-            next_state.set(GameState::LevelSelect)
+            next_paused_state.set(PauseState::NotPaused);
+            next_state.set(GameState::LevelSelect);
         }
     }
 }

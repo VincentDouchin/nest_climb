@@ -24,13 +24,13 @@ pub fn map_plugin(app: &mut App) {
 
 #[derive(Resource)]
 pub struct CurrentLevel {
-    pub level: Handle<LdtkAsset>,
+    pub file: Handle<LdtkAsset>,
 }
 
 pub fn spawn_map(mut commands: Commands, current_level: Res<CurrentLevel>) {
     commands.spawn((
         LdtkWorldBundle {
-            ldtk_handle: current_level.level.clone(),
+            ldtk_handle: current_level.file.clone(),
             transform: Transform::from_xyz(0.0, 0.0, 0.0),
             ..default()
         },

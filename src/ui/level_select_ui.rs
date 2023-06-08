@@ -2,7 +2,17 @@ use crate::{CurrentLevel, GameState, MyAssets, StateUi};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-pub fn spawn_level_select_ui(mut commands: Commands, assets: Res<MyAssets>) {
+#[derive(Component)]
+pub struct LevelSelector {
+    file: Handle<LdtkAsset>,
+    level: usize,
+}
+
+pub fn spawn_level_select_ui(
+    mut commands: Commands,
+    assets: Res<MyAssets>,
+    ldtk: Res<Assets<LdtkAsset>>,
+) {
     commands
         // ! ROOT
         .spawn((
@@ -52,6 +62,7 @@ pub fn spawn_level_select_ui(mut commands: Commands, assets: Res<MyAssets>) {
                     flex_grow: 1.0,
                     margin: UiRect::all(Val::Px(50.0)),
                     padding: UiRect::all(Val::Px(50.0)),
+                    gap: Size::all(Val::Px(50.0)),
                     ..default()
                 },
                 background_color: BackgroundColor(Color::WHITE),
@@ -59,37 +70,42 @@ pub fn spawn_level_select_ui(mut commands: Commands, assets: Res<MyAssets>) {
             })
             .with_children(|level_container| {
                 // ! LEVEL BUTTON
-                let levels = vec![assets.test_level.clone()];
-                for (index, level) in levels.iter().enumerate() {
-                    level_container
-                        .spawn((
-                            ButtonBundle {
-                                style: Style {
-                                    size: Size::all(Val::Px(50.0)),
-                                    ..default()
-                                },
-                                background_color: BackgroundColor(Color::GRAY),
-                                ..default()
-                            },
-                            level.clone(),
-                        ))
-                        .with_children(|level_button| {
-                            level_button.spawn(TextBundle {
-                                text: Text::from_section(
-                                    index.to_string(),
-                                    TextStyle {
-                                        font: assets.default_font.clone(),
-                                        font_size: 30.0,
-                                        color: Color::BLACK,
+                if let Some(ldtk_file) = ldtk.get(&assets.test_level) {
+                    let levels = ldtk_file.iter_levels();
+                    for (index, _) in levels.enumerate() {
+                        level_container
+                            .spawn((
+                                ButtonBundle {
+                                    style: Style {
+                                        size: Size::all(Val::Px(50.0)),
+                                        ..default()
                                     },
-                                ),
-                                style: Style {
-                                    margin: UiRect::all(Val::Auto),
+                                    background_color: BackgroundColor(Color::GRAY),
                                     ..default()
                                 },
-                                ..default()
+                                LevelSelector {
+                                    file: assets.test_level.clone(),
+                                    level: index,
+                                },
+                            ))
+                            .with_children(|level_button| {
+                                level_button.spawn(TextBundle {
+                                    text: Text::from_section(
+                                        index.to_string(),
+                                        TextStyle {
+                                            font: assets.default_font.clone(),
+                                            font_size: 30.0,
+                                            color: Color::BLACK,
+                                        },
+                                    ),
+                                    style: Style {
+                                        margin: UiRect::all(Val::Auto),
+                                        ..default()
+                                    },
+                                    ..default()
+                                });
                             });
-                        });
+                    }
                 }
             });
         });
@@ -97,14 +113,15 @@ pub fn spawn_level_select_ui(mut commands: Commands, assets: Res<MyAssets>) {
 
 pub fn select_level(
     mut commands: Commands,
-    level_button_query: Query<(&Handle<LdtkAsset>, &Interaction), With<Button>>,
+    level_button_query: Query<(&LevelSelector, &Interaction), With<Button>>,
     mut next_state: ResMut<NextState<GameState>>,
 ) {
-    for (level_handle, interaction) in level_button_query.iter() {
+    for (level_selector, interaction) in level_button_query.iter() {
         if interaction == &Interaction::Clicked {
             commands.insert_resource(CurrentLevel {
-                level: level_handle.clone(),
+                file: level_selector.file.clone(),
             });
+            commands.insert_resource(LevelSelection::Index(level_selector.level));
             next_state.set(GameState::Run);
         }
     }
