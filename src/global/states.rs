@@ -8,6 +8,7 @@ pub enum GameState {
     Run,
     Start,
     LevelSelect,
+    LevelTransition,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]

@@ -32,7 +32,7 @@ pub fn spawn_player(
                     forward: Vec3::X,
                     float_height: 0.5,
                     cling_distance: 1.0,
-                    spring_strengh: 40.0,
+                    spring_strengh: 100.0,
                     spring_dampening: 0.4,
                     acceleration: 200.0,
                     air_acceleration: 100.0,

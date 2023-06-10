@@ -84,3 +84,15 @@ mod collectibles {
     pub use self::collectibles::*;
 }
 pub use collectibles::*;
+
+mod flag {
+    mod spawn_flag;
+    pub use self::spawn_flag::*;
+}
+pub use flag::*;
+
+mod platforms {
+    mod spawn_platforms;
+    pub use self::spawn_platforms::*;
+}
+pub use platforms::*;

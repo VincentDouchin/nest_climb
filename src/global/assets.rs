@@ -49,6 +49,12 @@ pub struct MyAssets {
     #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 4, rows = 1))]
     #[asset(path = "items/coin.png")]
     pub coin: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 1, rows = 1))]
+    #[asset(path = "items/flag.png")]
+    pub flag: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 48.0, tile_size_y = 8.0, columns = 1, rows = 1))]
+    #[asset(path = "items/platform.png")]
+    pub platform: Handle<TextureAtlas>,
     // ! Background
     #[asset(path = "background/back.png")]
     pub parallax_back: Handle<Image>,

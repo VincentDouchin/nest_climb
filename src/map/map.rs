@@ -13,13 +13,24 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_entity::<EnemyBundle>("Enemy")
         .register_ldtk_entity::<CollectibleBundle>("Collectible")
+        .register_ldtk_entity::<FlagBundle>("Flag")
+        .register_ldtk_entity::<PlatformBundle>("Platform")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::FromLevelBackground,
             ..Default::default()
         })
         .add_system(spawn_map.in_schedule(OnEnter(GameState::Run)))
         .add_system(despawn_map.in_schedule(OnExit(GameState::Run)))
-        .add_system(jump_throught_platforms.in_set(OnUpdate(GameState::Run)));
+        .add_systems(
+            (
+                spawn_player,
+                spawn_walls,
+                spawn_enemy,
+                spawn_collectibles,
+                spawn_platforms,
+            )
+                .in_set(OnUpdate(GameState::Run)),
+        );
 }
 
 #[derive(Resource)]

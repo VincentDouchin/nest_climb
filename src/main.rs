@@ -22,15 +22,12 @@ fn main() {
         // ! RUN
         .add_systems(
             (
-                spawn_player,
-                spawn_walls,
-                spawn_enemy,
-                spawn_collectibles,
                 collect_collectible,
                 patrol,
                 player_enemy_interaction,
                 kill_entity,
                 detect_health_changed,
+                jump_throught_platforms,
             )
                 .in_set(OnUpdate(GameState::Run))
                 .distributive_run_if(in_state(PauseState::NotPaused)),
@@ -55,6 +52,10 @@ fn main() {
         .add_system(select_level.in_set(OnUpdate(GameState::LevelSelect)))
         // ! PAUSE
         .add_system(go_back_to_level_select)
+        // ! FLAG
+        .add_system(spawn_flag.in_set(OnUpdate(GameState::Run)))
+        .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
+        .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
         // ! Debug
         .fn_plugin(debug_plugin)
         .run();
