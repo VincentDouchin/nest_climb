@@ -3,6 +3,8 @@ use bevy::prelude::*;
 use leafwing_input_manager::prelude::ActionStateDriver;
 #[derive(Component)]
 pub struct HeartContainer;
+#[derive(Resource, Default)]
+pub struct IsTouchDevice(pub bool);
 
 #[derive(Resource)]
 pub struct Score {
@@ -238,12 +240,26 @@ pub fn press_button(mut button_query: Query<(&ButtonImages, &Interaction, &mut U
     }
 }
 
+pub fn detect_touch(
+    mut is_touch: ResMut<IsTouchDevice>,
+    mut touch_events: EventReader<TouchInput>,
+) {
+    if touch_events.iter().len() > 0 {
+        is_touch.0 = true
+    }
+}
+
 pub fn run_ui_plugin(app: &mut App) {
     app.init_resource::<Score>()
+        .init_resource::<IsTouchDevice>()
         .add_system(reset_score.in_schedule(OnEnter(GameState::LevelSelect)))
         .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_systems((update_health_ui, update_score).in_set(OnUpdate(GameState::Run)));
-    #[cfg(feature = "touch_controls")]
-    app.add_system(spawn_touch_buttons.in_set(OnUpdate(GameState::Run)))
-        .add_systems((press_button, despawn_player_buttons));
+    app.add_system(
+        spawn_touch_buttons
+            .in_set(OnUpdate(GameState::Run))
+            .run_if(|is_touch: Res<IsTouchDevice>| is_touch.0),
+    )
+    .add_system(detect_touch)
+    .add_systems((press_button, despawn_player_buttons));
 }
