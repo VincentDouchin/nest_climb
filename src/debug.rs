@@ -248,6 +248,7 @@ fn ui_system(
     mut player_query: Query<&mut Health, With<Player>>,
     mut commands: Commands,
     mut debug: ResMut<Debug>,
+    mut is_touch_device: ResMut<IsTouchDevice>,
 ) {
     for (entity, _, _, _, command_altering_selectors) in query.iter_mut() {
         if let Some(mut command_altering_selectors) = command_altering_selectors {
@@ -305,6 +306,7 @@ fn ui_system(
                         &mut debug.skip_start_screen,
                         "Skip start screen",
                     ));
+                    ui.add(egui::Checkbox::new(&mut is_touch_device.0, "touch device"));
                     ui.add(
                         egui::Slider::new(&mut rapier_config.gravity.y, 0.0..=-500.0)
                             .text("Gravity"),

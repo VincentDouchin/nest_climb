@@ -175,7 +175,7 @@ pub fn spawn_touch_buttons(
                 PlayerButtons,
             ))
             .with_children(|root| {
-                vec![
+                [
                     PlayerAction::MoveLeft,
                     PlayerAction::MoveRight,
                     PlayerAction::Jump,
@@ -258,7 +258,7 @@ pub fn run_ui_plugin(app: &mut App) {
     app.add_system(
         spawn_touch_buttons
             .in_set(OnUpdate(GameState::Run))
-            .run_if(|is_touch: Res<IsTouchDevice>| is_touch.0),
+            .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
     )
     .add_system(detect_touch)
     .add_systems((press_button, despawn_player_buttons));

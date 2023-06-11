@@ -23,6 +23,9 @@
 <script type="module">
 	import init from './nest_climb.js'
 	init()
+	document.addEventListener('touchstart', () => {
+		document.body.requestFullscreen()
+	})
 </script>
 
 </html>
