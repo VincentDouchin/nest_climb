@@ -23,8 +23,9 @@
 <script type="module">
 	import init from './nest_climb.js'
 	init()
-	document.body.addEventListener('touchstart', () => {
+	window.addEventListener('touchstart', () => {
 		document.body.requestFullscreen()
+		window.screen.orientation.lock('landscape')
 	})
 </script>
 
