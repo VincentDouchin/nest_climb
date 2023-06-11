@@ -5,10 +5,15 @@ use bevy_rapier2d::prelude::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
 pub struct Enemy;
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
+pub struct SoftHead;
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
+pub struct DamagePlayer;
 
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct EnemyBundle {
     enemy: Enemy,
+    damage_player: DamagePlayer,
     #[ldtk_entity]
     pub patrol: Patrol,
     #[ldtk_entity]
@@ -29,6 +34,7 @@ pub fn spawn_enemy(
             LockedAxes::ROTATION_LOCKED,
             TextureAtlasSprite::default(),
             AnimationTimer::default(),
+            SoftHead,
         );
         commands.entity(entity).insert(bundle);
     }

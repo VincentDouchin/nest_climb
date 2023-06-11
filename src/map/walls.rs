@@ -2,11 +2,15 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::collections::{HashMap, HashSet};
+
+use crate::DamagePlayer;
+
 #[derive(Copy, Clone, Eq, PartialEq, Default, Debug, Component, Hash)]
 pub enum Wall {
     #[default]
     Solid,
     Platform,
+    Spike,
 }
 
 #[derive(Clone, Debug, Bundle, LdtkIntCell)]
@@ -14,13 +18,14 @@ pub struct WallBundle {
     #[ldtk_int_cell]
     wall: Wall,
 }
+
 impl LdtkIntCell for Wall {
     fn bundle_int_cell(int_grid_cell: IntGridCell, _layer_instance: &LayerInstance) -> Self {
-        if int_grid_cell.value == 4 {
-            Wall::Platform
-        } else {
-            Wall::Solid
-        }
+        return match int_grid_cell.value {
+            4 => Wall::Platform,
+            5 => Wall::Spike,
+            _ => Wall::Solid,
+        };
     }
 }
 
@@ -110,7 +115,7 @@ pub fn spawn_walls(
                     let mut row_plates: Vec<Plate> = Vec::new();
                     let mut plate_start = None;
                     // + 1 to the width so the algorithm "terminates" plates that touch the right edge
-                    for wall_type in &[Wall::Solid, Wall::Platform] {
+                    for wall_type in &[Wall::Solid, Wall::Platform, Wall::Spike] {
                         for x in 0..width + 1 {
                             match (
                                 (plate_start),
@@ -190,9 +195,15 @@ pub fn spawn_walls(
                         );
                         let mut wall = level.spawn(bundle.clone());
 
-                        if wall_rect.wall_type == Wall::Platform {
-                            wall.insert(CollisionGroups::new(Group::GROUP_1, Group::ALL));
-                            level.spawn(bundle.clone()).insert((Wall::Platform, Sensor));
+                        match wall_rect.wall_type {
+                            Wall::Platform => {
+                                wall.insert(CollisionGroups::new(Group::GROUP_1, Group::ALL));
+                                level.spawn(bundle.clone()).insert((Wall::Platform, Sensor));
+                            }
+                            Wall::Spike => {
+                                wall.insert(DamagePlayer);
+                            }
+                            _ => {}
                         }
                     }
                 });

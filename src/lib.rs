@@ -79,20 +79,15 @@ mod background {
 }
 pub use background::*;
 
-mod collectibles {
-    mod collectibles;
-    pub use self::collectibles::*;
-}
-pub use collectibles::*;
-
-mod flag {
-    mod spawn_flag;
-    pub use self::spawn_flag::*;
-}
-pub use flag::*;
-
-mod platforms {
+mod items {
     mod spawn_platforms;
     pub use self::spawn_platforms::*;
+    mod spawn_flag;
+    pub use self::spawn_flag::*;
+    mod spawn_collectibles;
+    pub use self::spawn_collectibles::*;
+
+    mod spawn_sawblade;
+    pub use self::spawn_sawblade::*;
 }
-pub use platforms::*;
+pub use items::*;

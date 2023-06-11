@@ -10,11 +10,13 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_int_cell::<WallBundle>(2)
         .register_ldtk_int_cell::<WallBundle>(3)
         .register_ldtk_int_cell::<WallBundle>(4)
+        .register_ldtk_int_cell::<WallBundle>(5)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_entity::<EnemyBundle>("Enemy")
         .register_ldtk_entity::<CollectibleBundle>("Collectible")
         .register_ldtk_entity::<FlagBundle>("Flag")
         .register_ldtk_entity::<PlatformBundle>("Platform")
+        .register_ldtk_entity::<SawbladeBundle>("Sawblade")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::FromLevelBackground,
             ..Default::default()
@@ -28,6 +30,7 @@ pub fn map_plugin(app: &mut App) {
                 spawn_enemy,
                 spawn_collectibles,
                 spawn_platforms,
+                spawn_sawblade,
             )
                 .in_set(OnUpdate(GameState::Run)),
         );
