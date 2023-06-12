@@ -201,7 +201,7 @@ pub fn spawn_walls(
                                 level.spawn(bundle.clone()).insert((Wall::Platform, Sensor));
                             }
                             Wall::Spike => {
-                                wall.insert(DamagePlayer);
+                                wall.insert((DamagePlayer, Sleeping::disabled()));
                             }
                             _ => {}
                         }

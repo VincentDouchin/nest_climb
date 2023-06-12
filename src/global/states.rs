@@ -47,9 +47,11 @@ pub fn pause_physics<const PAUSE: bool>(mut rapier_config: ResMut<RapierConfigur
 
 pub fn pause_plugin(app: &mut App) {
     app.add_state::<PauseState>()
-        .add_system(pause_physics::<false>.in_schedule(OnEnter(PauseState::Paused)))
         .add_system(pause_physics::<true>.in_schedule(OnExit(PauseState::Paused)))
-        .add_system(spawn_pause_ui.in_schedule(OnEnter(PauseState::Paused)))
-        .add_system(pause_game)
-        .add_system(pause_game_on_unfocus);
+        .add_systems(
+            (pause_physics::<false>, spawn_pause_ui)
+                .distributive_run_if(in_state(GameState::Run))
+                .in_schedule(OnEnter(PauseState::Paused)),
+        )
+        .add_systems((pause_game, pause_game_on_unfocus).in_set(OnUpdate(GameState::Run)));
 }

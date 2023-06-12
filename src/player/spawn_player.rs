@@ -80,6 +80,8 @@ pub fn spawn_player(
             collider,
             Velocity::default(),
             CollisionGroups::new(Group::GROUP_2, Group::ALL),
+            Sleeping::disabled(),
+            Ccd::default(),
         );
         let player_bundle = (
             CameraTarget,

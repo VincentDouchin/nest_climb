@@ -15,18 +15,20 @@ pub struct PlatformBundle {
 
 pub fn spawn_platforms(
     mut commands: Commands,
-    query: Query<Entity, Added<Platform>>,
+    mut query: Query<(Entity, &mut Transform), Added<Platform>>,
     assets: Res<MyAssets>,
 ) {
-    for entity in query.iter() {
+    for (entity, mut transform) in query.iter_mut() {
+        transform.scale = Vec3::splat(1.0);
         commands.entity(entity).insert((
             assets.platform.clone(),
-            Collider::cuboid(24.0, 4.0),
+            Collider::cuboid(24.0, 8.0),
             Velocity::default(),
             RigidBody::Dynamic,
             KinematicCharacterController::default(),
             LockedAxes::ROTATION_LOCKED,
             TextureAtlasSprite::default(),
+            Ccd::default(),
         ));
     }
 }

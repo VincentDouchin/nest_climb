@@ -35,6 +35,7 @@ pub fn spawn_sawblade(
             LockedAxes::ROTATION_LOCKED,
             TextureAtlasSprite::default(),
             AnimationTimer::default(),
+            Sensor,
         ));
     }
 }
