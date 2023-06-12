@@ -45,6 +45,8 @@ pub fn player_enemy_interaction(
                         player_health.take_damage(1)
                     }
                 }
+            } else if rapier_context.intersection_pair(player, enemy).is_some() {
+                player_health.take_damage(1)
             }
         }
     }
