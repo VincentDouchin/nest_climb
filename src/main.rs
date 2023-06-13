@@ -17,7 +17,7 @@ fn main() {
         // ! Camera
         .fn_plugin(camera_plugin)
         // ! Level
-        .fn_plugin(parallax_plugin)
+        // .fn_plugin(parallax_plugin)
         .fn_plugin(map_plugin)
         // ! RUN
         .add_systems(
