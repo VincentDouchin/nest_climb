@@ -84,7 +84,7 @@ pub fn spawn_player(
             Ccd::default(),
         );
         let player_bundle = (
-            CameraTarget,
+            CameraTarget::new(false, true),
             InputManagerBundle::<PlayerAction> {
                 action_state: ActionState::default(),
                 input_map: get_player_input_map(),

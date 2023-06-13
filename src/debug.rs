@@ -244,8 +244,9 @@ fn ui_system(
         &mut TnuaPlatformerConfig,
         Option<&mut CommandAlteringSelectors>,
     )>,
+    mut camera_query: Query<&mut OrthographicProjection, With<MainCamera>>,
     mut rapier_config: ResMut<RapierConfiguration>,
-    mut player_query: Query<&mut Health, With<Player>>,
+    mut player_query: Query<(&mut Health, &mut CameraTarget), With<Player>>,
     mut commands: Commands,
     mut debug: ResMut<Debug>,
     mut is_touch_device: ResMut<IsTouchDevice>,
@@ -292,7 +293,14 @@ fn ui_system(
         {
             ui.horizontal(|ui| {
                 ui.vertical(|ui| {
-                    if let Ok(mut player_health) = player_query.get_single_mut() {
+                    // ! CAMERA
+                    if let Ok(mut projection) = camera_query.get_single_mut() {
+                        ui.add(egui::Slider::new(&mut projection.scale, 0.0..=10.0).text("Zoom"));
+                    }
+                    // ! PLAYER
+                    if let Ok((mut player_health, mut camera_target)) =
+                        player_query.get_single_mut()
+                    {
                         ui.add(
                             egui::Slider::new(&mut player_health.max_health, 0..=10)
                                 .text("Max Health"),
@@ -301,6 +309,8 @@ fn ui_system(
                             egui::Slider::new(&mut player_health.current_health, 0..=10)
                                 .text("Current Health"),
                         );
+                        ui.add(egui::Checkbox::new(&mut camera_target.x, "Camera follow X"));
+                        ui.add(egui::Checkbox::new(&mut camera_target.y, "Camera follow Y"));
                     }
                     ui.add(egui::Checkbox::new(
                         &mut debug.skip_start_screen,
