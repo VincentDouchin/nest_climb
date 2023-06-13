@@ -39,7 +39,7 @@ pub struct MyAssets {
     #[asset(path = "ui/button_pressed.png")]
     pub button_pressed: Handle<Image>,
     // ! Fonts
-    #[asset(path = "fonts/roboto.ttf")]
+    #[asset(path = "fonts/monogram.ttf")]
     pub default_font: Handle<Font>,
     // ! Enemies
     #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 3, rows = 1))]
