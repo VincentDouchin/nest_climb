@@ -260,6 +260,6 @@ pub fn run_ui_plugin(app: &mut App) {
             .in_set(OnUpdate(GameState::Run))
             .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
     )
-    .add_system(detect_touch)
+    .add_system(detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0))
     .add_systems((press_button, despawn_player_buttons));
 }
