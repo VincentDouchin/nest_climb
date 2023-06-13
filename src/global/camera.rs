@@ -1,5 +1,5 @@
 use crate::*;
-use bevy::prelude::*;
+use bevy::{prelude::*, window::*};
 use bevy_ecs_ldtk::prelude::*;
 #[derive(Component)]
 pub struct MainCamera;
@@ -48,12 +48,16 @@ pub fn set_camera_to_level_center(
     current_level: Res<CurrentLevel>,
     files: Res<Assets<LdtkAsset>>,
     level_selection: Res<LevelSelection>,
-    mut camera_query: Query<&mut Transform, With<MainCamera>>,
+    mut camera_query: Query<(&mut Transform, &mut OrthographicProjection), With<MainCamera>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
     if let Some(file) = files.get(&current_level.file) {
         if let Some(level) = file.get_level(&level_selection) {
-            if let Ok(mut camera_transform) = camera_query.get_single_mut() {
-                camera_transform.translation.x = level.px_wid as f32 / 2.0
+            if let Ok((mut camera_transform, mut projection)) = camera_query.get_single_mut() {
+                camera_transform.translation.x = level.px_wid as f32 / 2.0;
+                if let Ok(window) = window_query.get_single() {
+                    projection.scale = level.px_wid as f32 / window.width()
+                }
             }
         }
     }
