@@ -196,7 +196,7 @@ pub fn spawn_touch_buttons(
                                 } else {
                                     UiRect::all(Val::Px(50.0))
                                 },
-                                size: Size::new(Val::Px(50.), Val::Px(50.)),
+                                size: Size::new(Val::Px(100.), Val::Px(100.)),
                                 ..Default::default()
                             },
 
