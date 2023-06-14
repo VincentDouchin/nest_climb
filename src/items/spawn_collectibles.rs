@@ -3,8 +3,11 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+#[derive(Component, Clone, Default)]
+pub struct Pickup;
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct CollectibleBundle {
+    pickup: Pickup,
     #[ldtk_entity]
     pub collectible_type: CollectibleType,
 }
@@ -61,18 +64,21 @@ pub fn spawn_collectibles(
 
 pub fn collect_collectible(
     mut commands: Commands,
-    collectible_query: Query<(Entity, &CollectibleType), With<CollectibleType>>,
+    collectible_query: Query<(Entity, Option<&CollectibleType>), With<Pickup>>,
     player_query: Query<Entity, With<Player>>,
     rapier_context: Res<RapierContext>,
     mut score: ResMut<Score>,
 ) {
-    for (collectible_entity, collectible_type) in collectible_query.iter() {
+    for (collectible_entity, maybe_collectible) in collectible_query.iter() {
         for player_entity in player_query.iter() {
             if rapier_context
                 .intersection_pair(collectible_entity, player_entity)
                 .is_some()
             {
-                score.collectibles += collectible_type.clone() as u32;
+                if let Some(collectible_value) = maybe_collectible {
+                    score.collectibles += collectible_value.clone() as u32;
+                }
+
                 commands.entity(collectible_entity).despawn_recursive()
             }
         }

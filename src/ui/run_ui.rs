@@ -249,6 +249,32 @@ pub fn detect_touch(
     }
 }
 
+pub fn multi_touch_button(
+    mut button_query: Query<
+        (&GlobalTransform, &mut Interaction),
+        With<ActionStateDriver<PlayerAction>>,
+    >,
+    touches: Res<Touches>,
+) {
+    // println!("{}", button_query.iter().len());
+
+    for (transform, mut interaction) in button_query.iter_mut() {
+        let min_x = transform.translation().x - 100.0 / 2.0;
+        let max_x = transform.translation().x + 100.0 / 2.0;
+        let min_y = transform.translation().y - 100.0 / 2.0;
+        let max_y = transform.translation().y + 100.0 / 2.0;
+        // println!("{} {} {} {}", min_x, max_x, min_y, max_y);
+        *interaction = if touches.iter().any(|touch| {
+            return (min_x..max_x).contains(&touch.position().x)
+                && (min_y..max_y).contains(&touch.position().y);
+        }) {
+            Interaction::Clicked
+        } else {
+            Interaction::None
+        };
+    }
+}
+
 pub fn run_ui_plugin(app: &mut App) {
     app.init_resource::<Score>()
         .init_resource::<IsTouchDevice>()
@@ -260,6 +286,7 @@ pub fn run_ui_plugin(app: &mut App) {
             .in_set(OnUpdate(GameState::Run))
             .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
     )
+    .add_system(multi_touch_button.before(move_player_system))
     .add_system(detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0))
     .add_systems((press_button, despawn_player_buttons));
 }

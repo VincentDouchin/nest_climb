@@ -89,5 +89,7 @@ mod items {
 
     mod spawn_sawblade;
     pub use self::spawn_sawblade::*;
+    mod spawn_feather;
+    pub use self::spawn_feather::*;
 }
 pub use items::*;
