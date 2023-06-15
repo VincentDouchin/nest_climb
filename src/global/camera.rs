@@ -50,13 +50,22 @@ pub fn set_camera_to_level_center(
     level_selection: Res<LevelSelection>,
     mut camera_query: Query<(&mut Transform, &mut OrthographicProjection), With<MainCamera>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
+    level_query: Query<&GlobalTransform, (With<Handle<LdtkLevel>>, Without<MainCamera>)>,
 ) {
-    if let Some(file) = files.get(&current_level.file) {
-        if let Some(level) = file.get_level(&level_selection) {
-            if let Ok((mut camera_transform, mut projection)) = camera_query.get_single_mut() {
-                camera_transform.translation.x = level.px_wid as f32 / 2.0;
-                if let Ok(window) = window_query.get_single() {
-                    projection.scale = level.px_wid as f32 / window.width()
+    if let Some(file_handle) = &current_level.file {
+        if let Some(file) = files.get(file_handle) {
+            if let Some(level) = file.get_level(&level_selection) {
+                if let Ok((mut camera_transform, mut projection)) = camera_query.get_single_mut() {
+                    camera_transform.translation.x = level.px_wid as f32 / 2.0;
+                    if let Ok(window) = window_query.get_single() {
+                        projection.scale = level.px_wid as f32 / window.width();
+                        for level_global_transform in level_query.iter() {
+                            camera_transform.translation.y = camera_transform.translation.y.max(
+                                level_global_transform.translation().y
+                                    + window.height() / 2.0 * projection.scale,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -65,6 +74,5 @@ pub fn set_camera_to_level_center(
 
 pub fn camera_plugin(app: &mut App) {
     app.add_startup_system(spawn_camera);
-    app.add_system(move_camera);
-    app.add_system(set_camera_to_level_center.in_schedule(OnEnter(GameState::Run)));
+    app.add_systems((move_camera, set_camera_to_level_center).chain());
 }

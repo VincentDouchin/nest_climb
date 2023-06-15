@@ -119,7 +119,7 @@ pub fn select_level(
     for (level_selector, interaction) in level_button_query.iter() {
         if interaction == &Interaction::Clicked {
             commands.insert_resource(CurrentLevel {
-                file: level_selector.file.clone(),
+                file: Some(level_selector.file.clone()),
             });
             commands.insert_resource(LevelSelection::Index(level_selector.level));
             next_state.set(GameState::Run);

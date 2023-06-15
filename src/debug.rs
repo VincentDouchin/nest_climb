@@ -41,7 +41,7 @@ pub fn skip_start_screen(
 ) {
     if debug.skip_start_screen {
         commands.insert_resource(CurrentLevel {
-            file: assets.test_level.clone(),
+            file: Some(assets.test_level.clone()),
         });
         next_state.set(GameState::Run);
     }

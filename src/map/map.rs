@@ -6,6 +6,7 @@ pub struct Level;
 
 pub fn map_plugin(app: &mut App) {
     app.insert_resource(LevelSelection::Index(0))
+        .init_resource::<CurrentLevel>()
         .register_ldtk_int_cell::<WallBundle>(1)
         .register_ldtk_int_cell::<WallBundle>(2)
         .register_ldtk_int_cell::<WallBundle>(3)
@@ -36,20 +37,22 @@ pub fn map_plugin(app: &mut App) {
         );
 }
 
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct CurrentLevel {
-    pub file: Handle<LdtkAsset>,
+    pub file: Option<Handle<LdtkAsset>>,
 }
 
-pub fn spawn_map(mut commands: Commands, current_level: Res<CurrentLevel>) {
-    commands.spawn((
-        LdtkWorldBundle {
-            ldtk_handle: current_level.file.clone(),
-            transform: Transform::from_xyz(0.0, 0.0, 0.0),
-            ..default()
-        },
-        Level,
-    ));
+pub fn spawn_map(mut commands: Commands, maybe_current_level: Res<CurrentLevel>) {
+    if let Some(current_level) = &maybe_current_level.file {
+        commands.spawn((
+            LdtkWorldBundle {
+                ldtk_handle: current_level.clone(),
+                transform: Transform::from_xyz(0.0, 0.0, 0.0),
+                ..default()
+            },
+            Level,
+        ));
+    }
 }
 pub fn despawn_map(mut commands: Commands, map_query: Query<Entity, With<Level>>) {
     for entity in map_query.iter() {

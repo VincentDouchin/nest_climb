@@ -3213,20 +3213,6 @@
 							"defUid": 59,
 							"px": [560,48],
 							"fieldInstances": [{ "__identifier": "Next_Level", "__type": "Int", "__value": 2, "__tile": null, "defUid": 60, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }]
-						},
-						{
-							"__identifier": "Feather",
-							"__grid": [25,116],
-							"__pivot": [0.5,0.5],
-							"__tags": [],
-							"__tile": { "tilesetUid": 65, "x": 208, "y": 864, "w": 16, "h": 16 },
-							"__smartColor": "#733E39",
-							"iid": "d58539c0-ed50-11ed-ae10-4343bc980766",
-							"width": 16,
-							"height": 16,
-							"defUid": 73,
-							"px": [408,1864],
-							"fieldInstances": []
 						}
 					]
 				},
