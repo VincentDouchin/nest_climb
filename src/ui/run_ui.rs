@@ -216,17 +216,6 @@ pub fn spawn_touch_buttons(
     }
 }
 
-pub fn despawn_player_buttons(
-    mut commands: Commands,
-    removed_player: RemovedComponents<Player>,
-    player_buttons_query: Query<Entity, With<PlayerButtons>>,
-) {
-    if !removed_player.is_empty() {
-        for entity in player_buttons_query.iter() {
-            commands.entity(entity).despawn_recursive()
-        }
-    }
-}
 pub fn press_button(mut button_query: Query<(&ButtonImages, &Interaction, &mut UiImage)>) {
     for (button_images, interaction, mut image_handle) in button_query.iter_mut() {
         let texture = if interaction == &Interaction::Clicked {
@@ -287,5 +276,5 @@ pub fn run_ui_plugin(app: &mut App) {
     )
     .add_system(multi_touch_button.before(move_player_system))
     .add_system(detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0))
-    .add_systems((press_button, despawn_player_buttons));
+    .add_system(press_button);
 }

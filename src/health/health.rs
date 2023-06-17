@@ -70,14 +70,24 @@ pub fn kill_entity(
             &Transform,
             Option<&DeathAnimation>,
             Option<&Enemy>,
+            Option<&Player>,
         ),
         Changed<Health>,
     >,
+    player_buttons_query: Query<Entity, With<PlayerButtons>>,
+
     mut score: ResMut<Score>,
 ) {
-    for (entity, health, transform, maybe_death_animation, maybe_enemy) in query.iter() {
+    for (entity, health, transform, maybe_death_animation, maybe_enemy, maybe_player) in
+        query.iter()
+    {
         if health.current_health <= 0 {
             if let Some(death_animation) = maybe_death_animation {
+                if maybe_player.is_some() {
+                    for entity in player_buttons_query.iter() {
+                        commands.entity(entity).despawn_recursive()
+                    }
+                }
                 commands.spawn((
                     SpriteSheetBundle {
                         texture_atlas: death_animation.0.clone(),
