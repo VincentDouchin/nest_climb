@@ -96,15 +96,24 @@ pub fn update_direction(mut query: Query<(&mut TextureAtlasSprite, &DirectionCom
 pub fn despawn_entity_when_animation_finished(
     mut commands: Commands,
     query: Query<
-        (Entity, &TextureAtlasSprite, &Handle<TextureAtlas>),
+        (
+            Entity,
+            &TextureAtlasSprite,
+            &Handle<TextureAtlas>,
+            Option<&Ghost>,
+        ),
         With<DespawnWhenAnimationFinished>,
     >,
     texture_atlases: Res<Assets<TextureAtlas>>,
+    mut next_state: ResMut<NextState<PauseState>>,
 ) {
-    for (entity, sprite, atlas_handle) in query.iter() {
+    for (entity, sprite, atlas_handle, maybe_ghost) in query.iter() {
         if let Some(atlas) = texture_atlases.get(&atlas_handle) {
             if sprite.index == atlas.len() - 1 {
                 commands.entity(entity).despawn_recursive();
+                if maybe_ghost.is_some() {
+                    next_state.set(PauseState::GameOver)
+                }
             }
         }
     }

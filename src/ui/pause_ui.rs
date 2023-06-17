@@ -2,7 +2,7 @@ use crate::*;
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct GoBackToLevelSelect;
+pub struct GoToState<T: States>(pub T);
 
 pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
     // ! ROOT
@@ -43,32 +43,33 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 ..default()
             });
             // ! LEVEL SELECT BUTTON
-            root.spawn((ButtonBundle { ..default() }, GoBackToLevelSelect))
-                .with_children(|button| {
-                    button.spawn(TextBundle {
-                        text: Text::from_section(
-                            "Go back to menu",
-                            TextStyle {
-                                font: assets.default_font.clone(),
-                                font_size: 50.0,
-                                color: Color::BLACK,
-                            },
-                        ),
-                        ..default()
-                    });
+            root.spawn((
+                ButtonBundle { ..default() },
+                GoToState(GameState::LevelSelect),
+            ))
+            .with_children(|button| {
+                button.spawn(TextBundle {
+                    text: Text::from_section(
+                        "Go back to menu",
+                        TextStyle {
+                            font: assets.default_font.clone(),
+                            font_size: 50.0,
+                            color: Color::BLACK,
+                        },
+                    ),
+                    ..default()
                 });
+            });
         });
 }
 
-pub fn go_back_to_level_select(
-    mut next_state: ResMut<NextState<GameState>>,
-    mut next_paused_state: ResMut<NextState<PauseState>>,
-    interaction_query: Query<&Interaction, (With<GoBackToLevelSelect>, Changed<Interaction>)>,
+pub fn go_to_state<T: States>(
+    mut next_state: ResMut<NextState<T>>,
+    interaction_query: Query<(&Interaction, &GoToState<T>), Changed<Interaction>>,
 ) {
-    for interaction in interaction_query.iter() {
+    for (interaction, state) in interaction_query.iter() {
         if interaction == &Interaction::Clicked {
-            next_paused_state.set(PauseState::NotPaused);
-            next_state.set(GameState::LevelSelect);
+            next_state.set(state.0.clone());
         }
     }
 }

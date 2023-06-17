@@ -27,6 +27,8 @@ mod global {
     pub use self::physics::*;
     mod init_libs;
     pub use self::init_libs::*;
+    mod pause;
+    pub use self::pause::*;
 }
 pub use global::*;
 
@@ -54,6 +56,8 @@ mod ui {
     pub use self::start_ui::*;
     mod level_select_ui;
     pub use self::level_select_ui::*;
+    mod game_over_ui;
+    pub use self::game_over_ui::*;
 }
 pub use ui::*;
 
@@ -91,5 +95,7 @@ mod items {
     pub use self::spawn_sawblade::*;
     mod spawn_feather;
     pub use self::spawn_feather::*;
+    mod spawn_pendulum;
+    pub use self::spawn_pendulum::*;
 }
 pub use items::*;

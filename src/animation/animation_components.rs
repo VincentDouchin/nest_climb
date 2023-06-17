@@ -5,16 +5,16 @@ pub struct AnimationTimer {
     pub timer: Timer,
 }
 impl AnimationTimer {
-    pub fn new(fps: Option<f32>) -> Self {
+    pub fn new(fps: f32) -> Self {
         AnimationTimer {
-            timer: Timer::from_seconds(1.0 / fps.unwrap_or(12.0), TimerMode::Repeating),
+            timer: Timer::from_seconds(1.0 / fps, TimerMode::Repeating),
         }
     }
 }
 impl Default for AnimationTimer {
     fn default() -> Self {
         AnimationTimer {
-            timer: Timer::from_seconds(1.0 / 4.0, TimerMode::Repeating),
+            timer: Timer::from_seconds(1.0 / 12.0, TimerMode::Repeating),
         }
     }
 }

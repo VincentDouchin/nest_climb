@@ -279,7 +279,6 @@ pub fn run_ui_plugin(app: &mut App) {
     app.init_resource::<Score>()
         .init_resource::<IsTouchDevice>()
         .add_system(reset_score.in_schedule(OnEnter(GameState::LevelSelect)))
-        .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_systems((update_health_ui, update_score).in_set(OnUpdate(GameState::Run)));
     app.add_system(
         spawn_touch_buttons

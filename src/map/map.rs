@@ -18,6 +18,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<FlagBundle>("Flag")
         .register_ldtk_entity::<PlatformBundle>("Platform")
         .register_ldtk_entity::<SawbladeBundle>("Sawblade")
+        .register_ldtk_entity::<PendulumBundle>("Pendulum")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::FromLevelBackground,
             ..Default::default()
@@ -32,6 +33,7 @@ pub fn map_plugin(app: &mut App) {
                 spawn_collectibles,
                 spawn_platforms,
                 spawn_sawblade,
+                spawn_pendulum,
             )
                 .in_set(OnUpdate(GameState::Run)),
         );

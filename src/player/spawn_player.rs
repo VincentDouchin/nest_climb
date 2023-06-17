@@ -58,7 +58,7 @@ pub fn spawn_player(
         );
         let animation_bundle = (
             DirectionComponent(SpriteDirection::Right),
-            AnimationTimer::default(),
+            AnimationTimer::new(8.0),
             AnimationState::default(),
             DeathAnimation(assets.bird_death.clone()),
             assets.bird_idle.clone(),
@@ -98,4 +98,8 @@ pub fn spawn_player(
             .insert(animation_bundle)
             .insert(physics_bundle);
     }
+}
+
+pub fn is_player_alive(query: Query<&Player>) -> bool {
+    return query.iter().len() > 1;
 }

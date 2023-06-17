@@ -1,6 +1,4 @@
-use crate::*;
-use bevy::{prelude::*, window::WindowFocused};
-use bevy_rapier2d::prelude::*;
+use bevy::prelude::*;
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 pub enum GameState {
     #[default]
@@ -16,42 +14,5 @@ pub enum PauseState {
     #[default]
     NotPaused,
     Paused,
-}
-
-pub fn pause_game(
-    keys: Res<Input<KeyCode>>,
-    mut next_paused_state: ResMut<NextState<PauseState>>,
-    current_paused_state: Res<State<PauseState>>,
-) {
-    if keys.just_pressed(KeyCode::Escape) {
-        let next_state = if current_paused_state.0 == PauseState::Paused {
-            PauseState::NotPaused
-        } else {
-            PauseState::Paused
-        };
-        next_paused_state.set(next_state)
-    }
-}
-
-pub fn pause_game_on_unfocus(
-    mut events: EventReader<WindowFocused>,
-    mut paused_state: ResMut<NextState<PauseState>>,
-) {
-    if events.iter().any(|event| !event.focused) {
-        paused_state.set(PauseState::Paused)
-    }
-}
-pub fn pause_physics<const PAUSE: bool>(mut rapier_config: ResMut<RapierConfiguration>) {
-    rapier_config.physics_pipeline_active = PAUSE;
-}
-
-pub fn pause_plugin(app: &mut App) {
-    app.add_state::<PauseState>()
-        .add_system(pause_physics::<true>.in_schedule(OnExit(PauseState::Paused)))
-        .add_systems(
-            (pause_physics::<false>, spawn_pause_ui)
-                .distributive_run_if(in_state(GameState::Run))
-                .in_schedule(OnEnter(PauseState::Paused)),
-        )
-        .add_systems((pause_game, pause_game_on_unfocus).in_set(OnUpdate(GameState::Run)));
+    GameOver,
 }

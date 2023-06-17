@@ -10,6 +10,8 @@ pub struct Health {
     pub max_health: u32,
     pub timer: Option<Timer>,
 }
+#[derive(Component, Clone, Default)]
+pub struct Ghost;
 impl Health {
     pub fn new(max_health: u32) -> Self {
         return Health {
@@ -75,7 +77,6 @@ pub fn kill_entity(
 ) {
     for (entity, health, transform, maybe_death_animation, maybe_enemy) in query.iter() {
         if health.current_health <= 0 {
-            commands.entity(entity).despawn_recursive();
             if let Some(death_animation) = maybe_death_animation {
                 commands.spawn((
                     SpriteSheetBundle {
@@ -83,13 +84,22 @@ pub fn kill_entity(
                         transform: transform.clone(),
                         ..default()
                     },
+                    Ghost,
                     DespawnWhenAnimationFinished,
                     AnimationTimer::default(),
                 ));
             }
+            commands.entity(entity).despawn_recursive();
+
             if maybe_enemy.is_some() {
                 score.enemies_killed += 1;
             }
         }
+    }
+}
+
+pub fn move_ghost(mut query: Query<&mut Transform, With<Ghost>>, time: Res<Time>) {
+    for mut transform in query.iter_mut() {
+        transform.translation.y += 10.0 * time.delta_seconds()
     }
 }
