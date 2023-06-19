@@ -1,12 +1,11 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-use bevy_ninepatch::*;
-use bevy_parallax::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
 use leafwing_input_manager::prelude::*;
+use seldom_fn_plugin::FnPluginExt;
 pub fn initialize_libraries(app: &mut App) {
     // ! SAVING
     app.insert_resource(PkvStore::new("NestClimb", "savedata"));
@@ -22,11 +21,7 @@ pub fn initialize_libraries(app: &mut App) {
                 ..default()
             }),
     )
-    // ! Nine Patch
-    .add_plugin(NinePatchPlugin::<()>::default())
-    // ! Parallax
-    .add_plugin(ParallaxPlugin)
-    .init_resource::<ParallaxResource>()
+    // ! Nine Slice
     // ! Leafwing inputs
     .add_plugin(InputManagerPlugin::<PlayerAction>::default())
     // ! LDTK levels

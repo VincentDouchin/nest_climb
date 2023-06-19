@@ -99,3 +99,9 @@ mod items {
     pub use self::spawn_pendulum::*;
 }
 pub use items::*;
+
+mod nineslice {
+    mod nineslice;
+    pub use self::nineslice::*;
+}
+pub use nineslice::*;

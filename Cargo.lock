@@ -312,15 +312,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy-parallax"
-version = "0.5.0"
-source = "git+https://github.com/VincentDouchin/bevy-parallax.git#5746d067b60f300db027380272fc63394041be1b"
-dependencies = [
- "bevy",
- "serde",
-]
-
-[[package]]
 name = "bevy-tnua"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -764,15 +755,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39106bc2ee21fce9496d2e15e0ba7925dff63e3eae10f7c1fc0094b56ad9f2bb"
 dependencies = [
  "glam",
-]
-
-[[package]]
-name = "bevy_ninepatch"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ef7431c92a46047d6776602eec6fc2f1750e65c74e60333e247ed6a3a9d0e6e"
-dependencies = [
- "bevy",
 ]
 
 [[package]]
@@ -2594,12 +2576,10 @@ name = "nest_climb"
 version = "0.1.0"
 dependencies = [
  "bevy",
- "bevy-parallax",
  "bevy-tnua",
  "bevy_asset_loader",
  "bevy_ecs_ldtk",
  "bevy_egui",
- "bevy_ninepatch",
  "bevy_pkv",
  "bevy_rapier2d",
  "leafwing-input-manager",
