@@ -77,12 +77,6 @@ mod enemies {
 }
 pub use enemies::*;
 
-mod background {
-    mod parallax;
-    pub use self::parallax::*;
-}
-pub use background::*;
-
 mod items {
     mod spawn_platforms;
     pub use self::spawn_platforms::*;
