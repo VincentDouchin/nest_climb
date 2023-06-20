@@ -1,22 +1,26 @@
 use crate::*;
 use bevy::{
     reflect::TypeUuid,
-    render::render_resource::{AsBindGroup, ShaderRef},
+    render::{
+        camera::RenderTarget,
+        render_resource::{AsBindGroup, ShaderRef},
+        view::RenderLayers,
+    },
     sprite::{Material2d, Material2dPlugin, MaterialMesh2dBundle},
 };
 
 #[derive(AsBindGroup, TypeUuid, Debug, Clone)]
 #[uuid = "f690fdae-d598-45ab-8225-97e2a3f056e0"]
 pub struct NineSliceMaterial {
-    // Uniform bindings must implement `ShaderType`, which will be used to convert the value to
-    // its shader-compatible equivalent. Most core math types already implement `ShaderType`.
     #[uniform(0)]
-    color: Color,
-    // Images can be bound as textures in shaders. If the Image's sampler is also needed, just
-    // add the sampler attribute with a different binding index.
+    pub margins: Vec4,
+    #[uniform(0)]
+    pub size: Vec2,
+    #[uniform(0)]
+    pub scale: Vec2,
     #[texture(1)]
     #[sampler(2)]
-    color_texture: Handle<Image>,
+    pub color_texture: Handle<Image>,
 }
 
 impl Material2d for NineSliceMaterial {
@@ -29,16 +33,39 @@ pub fn test_nine_slice(
     mut commands: Commands,
     mut materials: ResMut<Assets<NineSliceMaterial>>,
     assets: Res<MyAssets>,
+    images: Res<Assets<Image>>,
     mut meshes: ResMut<Assets<Mesh>>,
 ) {
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(Mesh::from(shape::Quad::default())).into(),
-        transform: Transform::default().with_scale(Vec3::splat(128.)),
-        material: materials.add(NineSliceMaterial {
-            color: Color::RED,
-            color_texture: assets.button_normal.clone(),
-        }),
-        ..Default::default()
+    let size = images.get(&assets.button_normal).unwrap().size();
+    // commands.spawn(MaterialMesh2dBundle {
+    //     mesh: meshes.add(Mesh::from(shape::Quad::default())).into(),
+    //     transform: Transform::default().with_scale(Vec3::new(64.0, 32.0, 0.0)),
+    //     material: materials.add(NineSliceMaterial {
+    //         margins: Vec4::splat(8.0),
+    //         size,
+    //         scale: Vec2::new(2.0, 1.0),
+    //         color_texture: assets.button_normal.clone(),
+    //     }),
+    //     ..Default::default()
+    // });
+    let material_handle = materials.add(NineSliceMaterial {
+        margins: Vec4::splat(8.0),
+        size,
+        scale: Vec2::new(2.0, 1.0),
+        color_texture: assets.button_normal.clone(),
+    });
+    // let texture = materials
+    //     .get(&material_handle)
+    //     .unwrap()
+    //     .color_texture
+    //     .clone();
+    commands.spawn(ButtonBundle {
+        style: Style {
+            size: Size::all(Val::Px(64.0)),
+            ..default()
+        },
+        image: UiImage::new(texture),
+        ..default()
     });
 }
 
