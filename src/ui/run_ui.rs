@@ -245,8 +245,6 @@ pub fn multi_touch_button(
     >,
     touches: Res<Touches>,
 ) {
-    // println!("{}", button_query.iter().len());
-
     for (transform, mut interaction, node) in button_query.iter_mut() {
         let min_x = transform.translation().x - node.size().x / 2.0;
         let max_x = transform.translation().x + node.size().x / 2.0;
