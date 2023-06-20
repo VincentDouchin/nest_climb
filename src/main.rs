@@ -62,6 +62,5 @@ fn main() {
         .add_system(spawn_game_over_ui.in_schedule(OnEnter(PauseState::GameOver)))
         // ! Debug
         .fn_plugin(debug_plugin)
-        .fn_plugin(nine_slice_plugin)
         .run();
 }
