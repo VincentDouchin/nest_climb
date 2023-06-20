@@ -250,7 +250,6 @@ pub fn multi_touch_button(
         let max_x = transform.translation().x + node.size().x / 2.0;
         let min_y = transform.translation().y - node.size().y / 2.0;
         let max_y = transform.translation().y + node.size().y / 2.0;
-        // println!("{} {} {} {}", min_x, max_x, min_y, max_y);
         *interaction = if touches.iter().any(|touch| {
             return (min_x..max_x).contains(&touch.position().x)
                 && (min_y..max_y).contains(&touch.position().y);
