@@ -240,18 +240,18 @@ pub fn detect_touch(
 
 pub fn multi_touch_button(
     mut button_query: Query<
-        (&GlobalTransform, &mut Interaction),
+        (&GlobalTransform, &mut Interaction, &Node),
         With<ActionStateDriver<PlayerAction>>,
     >,
     touches: Res<Touches>,
 ) {
     // println!("{}", button_query.iter().len());
 
-    for (transform, mut interaction) in button_query.iter_mut() {
-        let min_x = transform.translation().x - 100.0 / 2.0;
-        let max_x = transform.translation().x + 100.0 / 2.0;
-        let min_y = transform.translation().y - 100.0 / 2.0;
-        let max_y = transform.translation().y + 100.0 / 2.0;
+    for (transform, mut interaction, node) in button_query.iter_mut() {
+        let min_x = transform.translation().x - node.size().x / 2.0;
+        let max_x = transform.translation().x + node.size().x / 2.0;
+        let min_y = transform.translation().y - node.size().y / 2.0;
+        let max_y = transform.translation().y + node.size().y / 2.0;
         // println!("{} {} {} {}", min_x, max_x, min_y, max_y);
         *interaction = if touches.iter().any(|touch| {
             return (min_x..max_x).contains(&touch.position().x)
