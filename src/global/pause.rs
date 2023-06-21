@@ -1,17 +1,20 @@
 use crate::*;
 use bevy::{prelude::*, window::WindowFocused};
 use bevy_rapier2d::prelude::*;
+use leafwing_input_manager::prelude::ActionState;
 pub fn pause_game(
-    keys: Res<Input<KeyCode>>,
+    menu_inputs: Query<&ActionState<PlayerAction>>,
     mut next_paused_state: ResMut<NextState<PauseState>>,
     current_paused_state: Res<State<PauseState>>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) {
-        if current_paused_state.0 == PauseState::Paused {
-            next_paused_state.set(PauseState::NotPaused)
-        } else if current_paused_state.0 == PauseState::NotPaused {
-            next_paused_state.set(PauseState::Paused)
-        };
+    for input in menu_inputs.iter() {
+        if input.just_pressed(PlayerAction::Pause) {
+            if current_paused_state.0 == PauseState::Paused {
+                next_paused_state.set(PauseState::NotPaused)
+            } else if current_paused_state.0 == PauseState::NotPaused {
+                next_paused_state.set(PauseState::Paused)
+            };
+        }
     }
 }
 

@@ -29,21 +29,20 @@ pub fn player_enemy_interaction(
     for (player, mut player_health, tnua_proximity_output) in player_query.iter_mut() {
         for (enemy, maybe_enemy_health, maybe_soft_head) in enemy_query.iter_mut() {
             if let Some(contact_pair) = rapier_context.contact_pair(player, enemy) {
-                let is_touching_top_of_enemy = || {
-                    if let Some(output) = &tnua_proximity_output.output {
-                        return output.entity == enemy;
-                    }
-                    return false;
-                };
+                let is_touching_top_of_enemy = tnua_proximity_output
+                    .output
+                    .clone()
+                    .map_or(false, |output| output.entity == enemy);
 
                 if contact_pair.has_any_active_contacts() {
-                    if is_touching_top_of_enemy() && maybe_soft_head.is_some() {
+                    if is_touching_top_of_enemy && maybe_soft_head.is_some() {
                         if let Some(mut enemy_health) = maybe_enemy_health {
                             enemy_health.take_damage(1)
                         }
                     } else {
                         player_health.take_damage(1)
                     }
+                    continue;
                 }
             } else if rapier_context.intersection_pair(player, enemy).is_some() {
                 player_health.take_damage(1)

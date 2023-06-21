@@ -7,6 +7,7 @@ fn main() {
     App::new()
         // ! Libraries
         .fn_plugin(initialize_libraries)
+        .add_startup_system(spawn_inputs)
         // ! States
         .add_state::<GameState>()
         .fn_plugin(pause_plugin)

@@ -29,6 +29,8 @@ mod global {
     pub use self::init_libs::*;
     mod pause;
     pub use self::pause::*;
+    mod inputs;
+    pub use self::inputs::*;
 }
 pub use global::*;
 
