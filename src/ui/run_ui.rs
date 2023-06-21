@@ -167,14 +167,41 @@ pub fn spawn_touch_buttons(
                 NodeBundle {
                     style: Style {
                         size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
-                        align_items: AlignItems::End,
+
                         ..default()
                     },
                     ..default()
                 },
                 PlayerButtons,
+                StateUi(GameState::Run),
             ))
             .with_children(|root| {
+                root.spawn((
+                    ButtonBundle {
+                        image: UiImage::new(assets.button_normal.clone()),
+                        style: Style {
+                            position_type: PositionType::Absolute,
+                            margin: UiRect {
+                                left: Val::Auto,
+                                top: Val::Px(50.0),
+                                right: Val::Px(0.0),
+                                bottom: Val::Px(0.0),
+                            },
+                            size: Size::new(Val::Px(50.), Val::Px(50.)),
+                            ..Default::default()
+                        },
+
+                        ..default()
+                    },
+                    ActionStateDriver {
+                        action: PlayerAction::Pause,
+                        entity: player_entity,
+                    },
+                    ButtonImages {
+                        normal: assets.button_normal.clone(),
+                        pressed: assets.button_pressed.clone(),
+                    },
+                ));
                 [
                     PlayerAction::MoveLeft,
                     PlayerAction::MoveRight,
@@ -186,6 +213,7 @@ pub fn spawn_touch_buttons(
                         ButtonBundle {
                             image: UiImage::new(assets.button_normal.clone()),
                             style: Style {
+                                align_self: AlignSelf::End,
                                 margin: if player_action == &PlayerAction::Jump {
                                     UiRect {
                                         left: Val::Auto,
