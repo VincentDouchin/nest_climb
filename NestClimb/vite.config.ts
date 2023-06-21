@@ -12,15 +12,15 @@ export default defineConfig(async () => {
 				injectRegister: 'auto',
 				includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
 				injectManifest: {
-					globPatterns: ['**/*.{js,html,wasm}', './assets/images/*.*', './assets/map/Arenas/*.png', './assets/sounds/*.*', './assets/UI/*.*'],
+					globPatterns: ['**/*.{js,html,wasm,png}'],
 				},
 				manifest: {
 					start_url: 'index.html?fullscreen=true',
 					display: 'fullscreen',
 					orientation: 'landscape',
 					name: 'Dungeon Survivor',
-					short_name: 'DungeonSurvivor',
-					description: 'Dungeon Survivor',
+					short_name: 'NestClimb',
+					description: 'Nest Climb',
 					theme_color: '#000000',
 					icons: [
 						{
