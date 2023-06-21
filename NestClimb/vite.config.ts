@@ -18,7 +18,7 @@ export default defineConfig(async () => {
 					start_url: 'index.html?fullscreen=true',
 					display: 'fullscreen',
 					orientation: 'landscape',
-					name: 'Dungeon Survivor',
+					name: 'Nest Climb',
 					short_name: 'NestClimb',
 					description: 'Nest Climb',
 					theme_color: '#000000',
