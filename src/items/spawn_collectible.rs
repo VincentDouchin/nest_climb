@@ -5,8 +5,28 @@ use bevy_rapier2d::prelude::*;
 
 #[derive(Component, Clone, Default)]
 pub struct Pickup;
+
+#[derive(Clone, Bundle)]
+pub struct EntityColliderBundle {
+    body: RigidBody,
+    collider: Collider,
+    sensor: Sensor,
+}
+
+impl Default for EntityColliderBundle {
+    fn default() -> Self {
+        EntityColliderBundle {
+            body: RigidBody::Fixed,
+            collider: Collider::cuboid(8.0, 8.0),
+            sensor: Sensor,
+        }
+    }
+}
+
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct CollectibleBundle {
+    #[bundle]
+    entity_collider_bundle: EntityColliderBundle,
     pickup: Pickup,
     #[ldtk_entity]
     pub collectible_type: CollectibleType,
@@ -47,22 +67,16 @@ pub fn spawn_collectibles(
     assets: Res<MyAssets>,
 ) {
     for (entity, collectible_type) in query.iter() {
+        let handle = match collectible_type {
+            _ => &assets.coin,
+        };
         commands
             .entity(entity)
-            .insert(match collectible_type {
-                _ => assets.coin.clone(),
-            })
-            .insert((
-                AnimationTimer::default(),
-                TextureAtlasSprite::default(),
-                Collider::cuboid(8.0, 8.0),
-                RigidBody::Fixed,
-                Sensor,
-            ));
+            .insert(AnimatedSpriteBundle::new(handle.clone()));
     }
 }
 
-pub fn collect_collectible(
+pub fn collect_item(
     mut commands: Commands,
     collectible_query: Query<(Entity, Option<&CollectibleType>), With<Pickup>>,
     player_query: Query<Entity, With<Player>>,

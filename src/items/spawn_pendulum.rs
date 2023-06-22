@@ -19,6 +19,7 @@ pub struct Pendulum {
 pub struct PendulumBundle {
     #[ldtk_entity]
     pendulum: Pendulum,
+    damage_player: DamagePlayer,
 }
 impl LdtkEntity for Pendulum {
     fn bundle_entity(
@@ -89,12 +90,10 @@ pub fn spawn_pendulum(
             commands.entity(level_entity).add_child(parent);
 
             commands.entity(entity).insert((
-                assets.spikyball.clone(),
+                AnimatedSpriteBundle::new(assets.spikyball.clone()),
                 RigidBody::Dynamic,
                 Velocity::default(),
-                DamagePlayer,
                 Collider::ball(16.0),
-                TextureAtlasSprite::default(),
             ));
         }
     }

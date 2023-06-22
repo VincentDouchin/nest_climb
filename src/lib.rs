@@ -80,18 +80,20 @@ mod enemies {
 pub use enemies::*;
 
 mod items {
-    mod spawn_platforms;
-    pub use self::spawn_platforms::*;
+    mod spawn_platform;
+    pub use self::spawn_platform::*;
     mod spawn_flag;
     pub use self::spawn_flag::*;
-    mod spawn_collectibles;
-    pub use self::spawn_collectibles::*;
+    mod spawn_collectible;
+    pub use self::spawn_collectible::*;
 
-    mod spawn_sawblade;
-    pub use self::spawn_sawblade::*;
+    mod spawn_sawblad;
+    pub use self::spawn_sawblad::*;
     mod spawn_feather;
     pub use self::spawn_feather::*;
     mod spawn_pendulum;
     pub use self::spawn_pendulum::*;
+    mod spawn_heart;
+    pub use self::spawn_heart::*;
 }
 pub use items::*;

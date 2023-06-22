@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Clone)]
 pub struct AnimationTimer {
     pub timer: Timer,
 }
@@ -49,6 +49,20 @@ impl Default for AnimationState {
     fn default() -> Self {
         AnimationState {
             state: AnimationStates::Idle,
+        }
+    }
+}
+#[derive(Bundle, Clone, Default)]
+pub struct AnimatedSpriteBundle {
+    pub timer: AnimationTimer,
+    pub texture_atlas_sprite: TextureAtlasSprite,
+    pub texture_atlas_handle: Handle<TextureAtlas>,
+}
+impl AnimatedSpriteBundle {
+    pub fn new(texture_atlas_handle: Handle<TextureAtlas>) -> Self {
+        AnimatedSpriteBundle {
+            texture_atlas_handle,
+            ..default()
         }
     }
 }

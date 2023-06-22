@@ -13,6 +13,8 @@ pub struct Flag {
 pub struct FlagBundle {
     #[ldtk_entity]
     pub flag: Flag,
+    #[bundle]
+    entity_collider_bundle: EntityColliderBundle,
 }
 impl LdtkEntity for Flag {
     fn bundle_entity(
@@ -27,22 +29,6 @@ impl LdtkEntity for Flag {
         return Flag {
             next_level: level_index.clone() as usize,
         };
-    }
-}
-
-pub fn spawn_flag(
-    mut commands: Commands,
-    flag_query: Query<Entity, Added<Flag>>,
-    assets: Res<MyAssets>,
-) {
-    for entity in flag_query.iter() {
-        commands.entity(entity).insert((
-            RigidBody::Fixed,
-            Collider::cuboid(8.0, 8.0),
-            Sensor,
-            assets.flag.clone(),
-            TextureAtlasSprite::default(),
-        ));
     }
 }
 

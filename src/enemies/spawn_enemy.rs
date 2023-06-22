@@ -18,23 +18,16 @@ pub struct EnemyBundle {
     pub patrol: Patrol,
     #[ldtk_entity]
     pub health: Health,
+    soft_head: SoftHead,
 }
 
-pub fn spawn_enemy(
-    mut commands: Commands,
-    enemy_query: Query<Entity, Added<Enemy>>,
-    assets: Res<MyAssets>,
-) {
+pub fn spawn_enemy(mut commands: Commands, enemy_query: Query<Entity, Added<Enemy>>) {
     for entity in enemy_query.iter() {
         let bundle = (
-            assets.bushly_idle.clone(),
             Collider::cuboid(8.0, 8.0),
             Velocity::default(),
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
-            TextureAtlasSprite::default(),
-            AnimationTimer::new(8.0),
-            SoftHead,
         );
         commands.entity(entity).insert(bundle);
     }

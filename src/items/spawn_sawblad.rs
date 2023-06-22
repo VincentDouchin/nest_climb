@@ -29,12 +29,10 @@ pub fn spawn_sawblade(
         };
         transform.scale = Vec3::splat(1.0);
         commands.entity(entity).insert((
-            assets.sawblade.clone(),
+            AnimatedSpriteBundle::new(assets.sawblade.clone()),
             Collider::ball(24.0),
             Velocity::default(),
             LockedAxes::ROTATION_LOCKED,
-            TextureAtlasSprite::default(),
-            AnimationTimer::default(),
             Sensor,
         ));
     }

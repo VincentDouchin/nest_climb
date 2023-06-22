@@ -24,7 +24,7 @@ fn main() {
         // ! RUN
         .add_systems(
             (
-                collect_collectible,
+                collect_item,
                 patrol,
                 move_pendulum,
                 move_ghost,
@@ -51,7 +51,6 @@ fn main() {
         // ! LEVEL SELECT
         .add_system(select_level.in_set(OnUpdate(GameState::LevelSelect)))
         // ! FLAG
-        .add_system(spawn_flag.in_set(OnUpdate(GameState::Run)))
         .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
         .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
         // ! UI

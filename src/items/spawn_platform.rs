@@ -21,13 +21,12 @@ pub fn spawn_platforms(
     for (entity, mut transform) in query.iter_mut() {
         transform.scale = Vec3::splat(1.0);
         commands.entity(entity).insert((
-            assets.platform.clone(),
+            AnimatedSpriteBundle::new(assets.platform.clone()),
             Collider::cuboid(24.0, 8.0),
             Velocity::default(),
             RigidBody::Dynamic,
             KinematicCharacterController::default(),
             LockedAxes::ROTATION_LOCKED,
-            TextureAtlasSprite::default(),
             Ccd::default(),
         ));
     }
