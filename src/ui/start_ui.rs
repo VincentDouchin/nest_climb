@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use crate::{GameState, MyAssets, StateUi};
-
+use crate::{GameState, MenuButton, MyAssets, StateUi};
+use bevy_ui_navigation::prelude::*;
 #[derive(Component)]
 pub struct StartButton;
 
@@ -21,6 +21,8 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 ..default()
             },
             StartButton,
+            MenuButton::GoToGameState(GameState::LevelSelect),
+            Focusable::default(),
             StateUi(GameState::Start),
         ))
         .with_children(|parent| {
@@ -33,15 +35,4 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 },
             ));
         });
-}
-
-pub fn start_game(
-    interaction_query: Query<&Interaction, (Changed<Interaction>, With<StartButton>)>,
-    mut next_state: ResMut<NextState<GameState>>,
-) {
-    for interaction in interaction_query.iter() {
-        if interaction == &Interaction::Clicked {
-            next_state.set(GameState::LevelSelect)
-        }
-    }
 }

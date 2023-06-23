@@ -3,12 +3,12 @@ use bevy::{prelude::*, window::WindowFocused};
 use bevy_rapier2d::prelude::*;
 use leafwing_input_manager::prelude::ActionState;
 pub fn pause_game(
-    menu_inputs: Query<&ActionState<PlayerAction>>,
+    menu_inputs: Query<&ActionState<MenuAction>>,
     mut next_paused_state: ResMut<NextState<PauseState>>,
     current_paused_state: Res<State<PauseState>>,
 ) {
     for input in menu_inputs.iter() {
-        if input.just_pressed(PlayerAction::Pause) {
+        if input.just_pressed(MenuAction::Pause) {
             if current_paused_state.0 == PauseState::Paused {
                 next_paused_state.set(PauseState::NotPaused)
             } else if current_paused_state.0 == PauseState::NotPaused {

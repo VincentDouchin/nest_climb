@@ -31,6 +31,8 @@ mod global {
     pub use self::pause::*;
     mod inputs;
     pub use self::inputs::*;
+    mod navigation;
+    pub use self::navigation::*;
 }
 pub use global::*;
 

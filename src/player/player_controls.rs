@@ -8,8 +8,6 @@ pub enum PlayerAction {
     Run,
     Jump,
     Crouch,
-    Pause,
-    Select,
 }
 pub fn get_player_input_map() -> InputMap<PlayerAction> {
     use PlayerAction::*;
@@ -17,7 +15,7 @@ pub fn get_player_input_map() -> InputMap<PlayerAction> {
 
     // Jump
     input_map.insert(KeyCode::Space, Jump);
-    input_map.insert(GamepadButtonType::East, Jump);
+    input_map.insert(GamepadButtonType::South, Jump);
     // Move Left
     input_map.insert(KeyCode::Left, MoveLeft);
     input_map.insert(ScanCode(81), MoveLeft);
@@ -29,12 +27,6 @@ pub fn get_player_input_map() -> InputMap<PlayerAction> {
     // Crouch
     input_map.insert(KeyCode::Down, Crouch);
     input_map.insert(GamepadButtonType::DPadDown, Crouch);
-    // Pause
-    input_map.insert(KeyCode::Escape, Pause);
-    input_map.insert(GamepadButtonType::Start, Pause);
-    // Select
-    input_map.insert(KeyCode::Return, Select);
-    input_map.insert(GamepadButtonType::East, Select);
 
     return input_map;
 }

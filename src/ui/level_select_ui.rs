@@ -1,12 +1,7 @@
-use crate::{CurrentLevel, GameState, MyAssets, StateUi};
+use crate::{GameState, MenuButton, MyAssets, StateUi};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-
-#[derive(Component)]
-pub struct LevelSelector {
-    file: Handle<LdtkAsset>,
-    level: usize,
-}
+use bevy_ui_navigation::prelude::*;
 
 pub fn spawn_level_select_ui(
     mut commands: Commands,
@@ -83,7 +78,8 @@ pub fn spawn_level_select_ui(
                                     background_color: BackgroundColor(Color::GRAY),
                                     ..default()
                                 },
-                                LevelSelector {
+                                Focusable::default(),
+                                MenuButton::LevelSelect {
                                     file: assets.test_level.clone(),
                                     level: index,
                                 },
@@ -109,20 +105,4 @@ pub fn spawn_level_select_ui(
                 }
             });
         });
-}
-
-pub fn select_level(
-    mut commands: Commands,
-    level_button_query: Query<(&LevelSelector, &Interaction), With<Button>>,
-    mut next_state: ResMut<NextState<GameState>>,
-) {
-    for (level_selector, interaction) in level_button_query.iter() {
-        if interaction == &Interaction::Clicked {
-            commands.insert_resource(CurrentLevel {
-                file: Some(level_selector.file.clone()),
-            });
-            commands.insert_resource(LevelSelection::Index(level_selector.level));
-            next_state.set(GameState::Run);
-        }
-    }
 }

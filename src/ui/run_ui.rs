@@ -194,7 +194,7 @@ pub fn spawn_touch_buttons(
                         ..default()
                     },
                     ActionStateDriver {
-                        action: PlayerAction::Pause,
+                        action: MenuAction::Pause,
                         entity: player_entity,
                     },
                     ButtonImages {
@@ -290,6 +290,7 @@ pub fn multi_touch_button(
 }
 
 pub fn run_ui_plugin(app: &mut App) {
+    use bevy::ui::ui_focus_system;
     app.init_resource::<Score>()
         .init_resource::<IsTouchDevice>()
         .add_system(reset_score.in_schedule(OnEnter(GameState::LevelSelect)))
@@ -299,7 +300,7 @@ pub fn run_ui_plugin(app: &mut App) {
             .in_set(OnUpdate(GameState::Run))
             .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
     )
-    .add_system(multi_touch_button.before(move_player_system))
+    .add_system(multi_touch_button.after(ui_focus_system))
     .add_system(detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0))
     .add_system(press_button);
 }

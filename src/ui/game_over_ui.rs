@@ -1,6 +1,7 @@
 use bevy::prelude::*;
+use bevy_ui_navigation::prelude::Focusable;
 
-use crate::{GameState, GoToState, MyAssets, PauseState, StateUi};
+use crate::*;
 
 pub fn spawn_game_over_ui(mut commands: Commands, assets: Res<MyAssets>) {
     commands
@@ -32,23 +33,28 @@ pub fn spawn_game_over_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 ),
                 ..default()
             });
-            root.spawn((ButtonBundle::default(), GoToState(GameState::LevelSelect)))
-                .with_children(|button| {
-                    button.spawn(TextBundle {
-                        text: Text::from_section(
-                            "Go to level select",
-                            TextStyle {
-                                font: assets.default_font.clone(),
-                                font_size: 50.0,
-                                color: Color::BLACK,
-                            },
-                        ),
-                        ..default()
-                    });
-                });
             root.spawn((
                 ButtonBundle::default(),
-                GoToState(GameState::LevelTransition),
+                Focusable::default(),
+                MenuButton::GoToGameState(GameState::LevelSelect),
+            ))
+            .with_children(|button| {
+                button.spawn(TextBundle {
+                    text: Text::from_section(
+                        "Go to level select",
+                        TextStyle {
+                            font: assets.default_font.clone(),
+                            font_size: 50.0,
+                            color: Color::BLACK,
+                        },
+                    ),
+                    ..default()
+                });
+            });
+            root.spawn((
+                ButtonBundle::default(),
+                Focusable::default(),
+                MenuButton::GoToGameState(GameState::LevelTransition),
             ))
             .with_children(|button| {
                 button.spawn(TextBundle {

@@ -13,8 +13,6 @@ fn main() {
         .fn_plugin(pause_plugin)
         .add_system(despawn_state_ui::<GameState>)
         .add_system(despawn_state_ui::<PauseState>)
-        .add_system(go_to_state::<GameState>)
-        .add_system(go_to_state::<PauseState>)
         // ! Assets
         .fn_plugin(load_assets_plugin)
         // ! Camera
@@ -46,10 +44,12 @@ fn main() {
         .fn_plugin(run_timer_plugin)
         // ! Animation
         .fn_plugin(animation_plugin)
+        // ! NAVIGATION
+        .add_system(click_on_buttons)
         // ! START
-        .add_system(start_game.in_set(OnUpdate(GameState::Start)))
+        // .add_system(start_game.in_set(OnUpdate(GameState::Start)))
         // ! LEVEL SELECT
-        .add_system(select_level.in_set(OnUpdate(GameState::LevelSelect)))
+        // .add_system(select_level.in_set(:OnUpdate(GameState::LevelSelect)))
         // ! FLAG
         .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
         .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))

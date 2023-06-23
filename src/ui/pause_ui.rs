@@ -1,8 +1,6 @@
 use crate::*;
 use bevy::prelude::*;
-
-#[derive(Component)]
-pub struct GoToState<T: States>(pub T);
+use bevy_ui_navigation::prelude::Focusable;
 
 pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
     // ! ROOT
@@ -42,10 +40,49 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 ),
                 ..default()
             });
+            // ! Resume
+            root.spawn((
+                ButtonBundle { ..default() },
+                Focusable::default(),
+                MenuButton::GoToPausedState(PauseState::NotPaused),
+            ))
+            .with_children(|button| {
+                button.spawn(TextBundle {
+                    text: Text::from_section(
+                        "Resume",
+                        TextStyle {
+                            font: assets.default_font.clone(),
+                            font_size: 50.0,
+                            color: Color::BLACK,
+                        },
+                    ),
+                    ..default()
+                });
+            });
+            // ! Retry
+            root.spawn((
+                ButtonBundle { ..default() },
+                Focusable::default(),
+                MenuButton::GoToGameState(GameState::LevelTransition),
+            ))
+            .with_children(|button| {
+                button.spawn(TextBundle {
+                    text: Text::from_section(
+                        "Retry",
+                        TextStyle {
+                            font: assets.default_font.clone(),
+                            font_size: 50.0,
+                            color: Color::BLACK,
+                        },
+                    ),
+                    ..default()
+                });
+            });
             // ! LEVEL SELECT BUTTON
             root.spawn((
                 ButtonBundle { ..default() },
-                GoToState(GameState::LevelSelect),
+                Focusable::default(),
+                MenuButton::GoToGameState(GameState::LevelSelect),
             ))
             .with_children(|button| {
                 button.spawn(TextBundle {
@@ -61,15 +98,4 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 });
             });
         });
-}
-
-pub fn go_to_state<T: States>(
-    mut next_state: ResMut<NextState<T>>,
-    interaction_query: Query<(&Interaction, &GoToState<T>), Changed<Interaction>>,
-) {
-    for (interaction, state) in interaction_query.iter() {
-        if interaction == &Interaction::Clicked {
-            next_state.set(state.0.clone());
-        }
-    }
 }

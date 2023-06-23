@@ -4,6 +4,7 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
+use bevy_ui_navigation::prelude::*;
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
     // ! SAVING
@@ -20,9 +21,12 @@ pub fn initialize_libraries(app: &mut App) {
                 ..default()
             }),
     )
-    // ! Nine Slice
+    .add_system(button_system.after(NavRequestSystem))
+    // ! UI
+    .add_plugins(DefaultNavigationPlugins)
     // ! Leafwing inputs
     .add_plugin(InputManagerPlugin::<PlayerAction>::default())
+    .add_plugin(InputManagerPlugin::<MenuAction>::default())
     // ! LDTK levels
     .add_plugin(LdtkPlugin)
     // ! Rapier physics engine
