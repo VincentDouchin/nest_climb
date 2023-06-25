@@ -22,7 +22,6 @@ pub fn get_menu_input_map() -> InputMap<MenuAction> {
 }
 
 pub fn spawn_inputs(mut commands: Commands) {
-    dbg!(get_menu_input_map());
     commands.spawn(InputManagerBundle::<MenuAction> {
         input_map: get_menu_input_map(),
         ..default()

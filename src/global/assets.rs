@@ -34,10 +34,26 @@ pub struct MyAssets {
     pub heart_empty: Handle<Image>,
     #[asset(path = "ui/heart_full.png")]
     pub heart_full: Handle<Image>,
-    #[asset(path = "ui/button_normal.png")]
-    pub button_normal: Handle<Image>,
-    #[asset(path = "ui/button_pressed.png")]
-    pub button_pressed: Handle<Image>,
+    #[asset(path = "ui/buttons/button_left.png")]
+    pub button_left: Handle<Image>,
+    #[asset(path = "ui/buttons/button_left_pressed.png")]
+    pub button_left_pressed: Handle<Image>,
+    #[asset(path = "ui/buttons/button_right.png")]
+    pub button_right: Handle<Image>,
+    #[asset(path = "ui/buttons/button_right_pressed.png")]
+    pub button_right_pressed: Handle<Image>,
+    #[asset(path = "ui/buttons/button_down.png")]
+    pub button_down: Handle<Image>,
+    #[asset(path = "ui/buttons/button_down_pressed.png")]
+    pub button_down_pressed: Handle<Image>,
+    #[asset(path = "ui/buttons/button_pause.png")]
+    pub button_pause: Handle<Image>,
+    #[asset(path = "ui/buttons/button_pause_pressed.png")]
+    pub button_pause_pressed: Handle<Image>,
+    #[asset(path = "ui/buttons/button_up.png")]
+    pub button_up: Handle<Image>,
+    #[asset(path = "ui/buttons/button_up_pressed.png")]
+    pub button_up_pressed: Handle<Image>,
     // ! Fonts
     #[asset(path = "fonts/monogram.ttf")]
     pub default_font: Handle<Font>,

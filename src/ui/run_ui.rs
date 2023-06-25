@@ -1,6 +1,6 @@
 use crate::*;
 use bevy::prelude::*;
-use leafwing_input_manager::prelude::ActionStateDriver;
+use leafwing_input_manager::prelude::*;
 #[derive(Component)]
 pub struct HeartContainer;
 #[derive(Resource, Default)]
@@ -160,6 +160,7 @@ pub fn spawn_touch_buttons(
     mut commands: Commands,
     assets: Res<MyAssets>,
     player_query: Query<Entity, Added<Player>>,
+    menu_input_query: Query<Entity, With<ActionState<MenuAction>>>,
 ) {
     if let Ok(player_entity) = player_query.get_single() {
         commands
@@ -176,55 +177,76 @@ pub fn spawn_touch_buttons(
                 StateUi(GameState::Run),
             ))
             .with_children(|root| {
-                root.spawn((
-                    ButtonBundle {
-                        image: UiImage::new(assets.button_normal.clone()),
-                        style: Style {
-                            position_type: PositionType::Absolute,
-                            margin: UiRect {
-                                left: Val::Auto,
-                                top: Val::Px(50.0),
-                                right: Val::Px(0.0),
-                                bottom: Val::Px(0.0),
+                if let Ok(menu_input) = menu_input_query.get_single() {
+                    root.spawn((
+                        // ! PAUSE
+                        ButtonBundle {
+                            image: UiImage::new(assets.button_pause.clone()),
+                            style: Style {
+                                position_type: PositionType::Absolute,
+                                margin: UiRect {
+                                    left: Val::Auto,
+                                    top: Val::Px(50.0),
+                                    right: Val::Px(0.0),
+                                    bottom: Val::Px(0.0),
+                                },
+                                size: Size::new(Val::Px(50.), Val::Px(50.)),
+                                ..Default::default()
                             },
-                            size: Size::new(Val::Px(50.), Val::Px(50.)),
-                            ..Default::default()
-                        },
 
-                        ..default()
-                    },
-                    ActionStateDriver {
-                        action: MenuAction::Pause,
-                        entity: player_entity,
-                    },
-                    ButtonImages {
-                        normal: assets.button_normal.clone(),
-                        pressed: assets.button_pressed.clone(),
-                    },
-                ));
+                            ..default()
+                        },
+                        ActionStateDriver {
+                            action: MenuAction::Pause,
+                            entity: menu_input,
+                        },
+                        ButtonImages {
+                            normal: assets.button_pause.clone(),
+                            pressed: assets.button_pause_pressed.clone(),
+                        },
+                    ));
+                }
+
                 [
-                    PlayerAction::MoveLeft,
-                    PlayerAction::MoveRight,
-                    PlayerAction::Jump,
+                    (
+                        PlayerAction::MoveLeft,
+                        assets.button_left.clone(),
+                        assets.button_left_pressed.clone(),
+                    ),
+                    (
+                        PlayerAction::Crouch,
+                        assets.button_down.clone(),
+                        assets.button_down_pressed.clone(),
+                    ),
+                    (
+                        PlayerAction::MoveRight,
+                        assets.button_right.clone(),
+                        assets.button_right_pressed.clone(),
+                    ),
+                    (
+                        PlayerAction::Jump,
+                        assets.button_up.clone(),
+                        assets.button_up_pressed.clone(),
+                    ),
                 ]
                 .iter()
-                .for_each(|player_action| {
+                .for_each(|(player_action, button, button_pressed)| {
                     root.spawn((
                         ButtonBundle {
-                            image: UiImage::new(assets.button_normal.clone()),
+                            image: UiImage::new(button.clone()),
                             style: Style {
                                 align_self: AlignSelf::End,
                                 margin: if player_action == &PlayerAction::Jump {
                                     UiRect {
                                         left: Val::Auto,
-                                        right: Val::Px(50.0),
-                                        top: Val::Px(50.0),
-                                        bottom: Val::Px(50.0),
+                                        right: Val::Px(20.0),
+                                        top: Val::Px(20.0),
+                                        bottom: Val::Px(20.0),
                                     }
                                 } else {
-                                    UiRect::all(Val::Px(50.0))
+                                    UiRect::all(Val::Px(20.0))
                                 },
-                                size: Size::new(Val::Px(100.), Val::Px(100.)),
+                                size: Size::new(Val::Px(80.), Val::Px(80.)),
                                 ..Default::default()
                             },
 
@@ -235,8 +257,8 @@ pub fn spawn_touch_buttons(
                             entity: player_entity,
                         },
                         ButtonImages {
-                            normal: assets.button_normal.clone(),
-                            pressed: assets.button_pressed.clone(),
+                            normal: button.clone(),
+                            pressed: button_pressed.clone(),
                         },
                     ));
                 });
