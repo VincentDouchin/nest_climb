@@ -34,6 +34,14 @@ pub struct MyAssets {
     pub heart_empty: Handle<Image>,
     #[asset(path = "ui/heart_full.png")]
     pub heart_full: Handle<Image>,
+    // ! Frames
+    #[asset(path = "ui/frame_small.png")]
+    pub frame_small: Handle<Image>,
+    #[asset(path = "ui/frame_small_selected.png")]
+    pub frame_small_selected: Handle<Image>,
+    #[asset(path = "ui/frame_big.png")]
+    pub frame_big: Handle<Image>,
+    // ! Buttons
     #[asset(path = "ui/buttons/button_left.png")]
     pub button_left: Handle<Image>,
     #[asset(path = "ui/buttons/button_left_pressed.png")]

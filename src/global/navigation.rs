@@ -2,17 +2,6 @@ use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ui_navigation::prelude::*;
-pub fn button_system(
-    mut interaction_query: Query<(&Focusable, &mut BackgroundColor), Changed<Focusable>>,
-) {
-    for (focusable, mut material) in interaction_query.iter_mut() {
-        if let FocusState::Focused = focusable.state() {
-            *material = Color::ORANGE_RED.into();
-        } else {
-            *material = Color::DARK_GRAY.into();
-        }
-    }
-}
 
 #[derive(Component, Clone)]
 pub enum MenuButton {

@@ -1,10 +1,11 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_ninepatch::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
-use bevy_ui_navigation::prelude::*;
+use bevy_ui_navigation::{prelude::*, systems::InputMapping};
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
     // ! SAVING
@@ -21,9 +22,14 @@ pub fn initialize_libraries(app: &mut App) {
                 ..default()
             }),
     )
-    .add_system(button_system.after(NavRequestSystem))
+    // ! NINE PATCH
+    .add_plugin(NinePatchPlugin::<()>::default())
     // ! UI
     .add_plugins(DefaultNavigationPlugins)
+    .add_startup_system(|mut input_mapping: ResMut<InputMapping>| {
+        input_mapping.keyboard_navigation = true;
+        input_mapping.key_action = KeyCode::Return;
+    })
     // ! Leafwing inputs
     .add_plugin(InputManagerPlugin::<PlayerAction>::default())
     .add_plugin(InputManagerPlugin::<MenuAction>::default())

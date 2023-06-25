@@ -1,5 +1,6 @@
 use crate::*;
 use bevy::prelude::*;
+use bevy_ui_navigation::prelude::*;
 use leafwing_input_manager::prelude::*;
 #[derive(Component)]
 pub struct HeartContainer;
@@ -29,6 +30,14 @@ impl Default for Score {
 pub struct ButtonImages {
     pub normal: Handle<Image>,
     pub pressed: Handle<Image>,
+}
+impl ButtonImages {
+    pub fn new(normal: &Handle<Image>, pressed: &Handle<Image>) -> Self {
+        ButtonImages {
+            normal: normal.clone(),
+            pressed: pressed.clone(),
+        }
+    }
 }
 
 #[derive(Component)]
@@ -266,9 +275,18 @@ pub fn spawn_touch_buttons(
     }
 }
 
-pub fn press_button(mut button_query: Query<(&ButtonImages, &Interaction, &mut UiImage)>) {
-    for (button_images, interaction, mut image_handle) in button_query.iter_mut() {
-        let texture = if interaction == &Interaction::Clicked {
+pub fn press_button(
+    mut button_query: Query<(
+        &ButtonImages,
+        Option<&Interaction>,
+        Option<&Focusable>,
+        &mut UiImage,
+    )>,
+) {
+    for (button_images, interaction, focused, mut image_handle) in button_query.iter_mut() {
+        let texture = if interaction.map_or(false, |inter| inter == &Interaction::Clicked)
+            || focused.map_or(false, |focus| FocusState::Focused == focus.state())
+        {
             button_images.pressed.clone()
         } else {
             button_images.normal.clone()
