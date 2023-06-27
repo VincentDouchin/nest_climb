@@ -5,16 +5,17 @@ use seldom_fn_plugin::FnPluginExt;
 
 fn main() {
     App::new()
+        .add_state::<GameState>()
+        // ! Assets
+        .fn_plugin(load_assets_plugin)
         // ! Libraries
         .fn_plugin(initialize_libraries)
+        .fn_plugin(nine_slice_plugin)
         .add_startup_system(spawn_inputs)
         // ! States
-        .add_state::<GameState>()
         .fn_plugin(pause_plugin)
         .add_system(despawn_state_ui::<GameState>)
         .add_system(despawn_state_ui::<PauseState>)
-        // ! Assets
-        .fn_plugin(load_assets_plugin)
         // ! Camera
         .fn_plugin(camera_plugin)
         // ! Level

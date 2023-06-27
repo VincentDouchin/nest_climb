@@ -99,3 +99,9 @@ mod items {
     pub use self::spawn_heart::*;
 }
 pub use items::*;
+
+mod nine_slice {
+    mod nine_slice;
+    pub use self::nine_slice::*;
+}
+pub use nine_slice::*;

@@ -278,12 +278,15 @@ pub fn spawn_touch_buttons(
 pub fn press_button(
     mut button_query: Query<(
         &ButtonImages,
+        Option<&mut NineSlice>,
         Option<&Interaction>,
         Option<&Focusable>,
         &mut UiImage,
     )>,
 ) {
-    for (button_images, interaction, focused, mut image_handle) in button_query.iter_mut() {
+    for (button_images, maybe_nine_slice, interaction, focused, mut image_handle) in
+        button_query.iter_mut()
+    {
         let texture = if interaction.map_or(false, |inter| inter == &Interaction::Clicked)
             || focused.map_or(false, |focus| FocusState::Focused == focus.state())
         {
@@ -291,7 +294,11 @@ pub fn press_button(
         } else {
             button_images.normal.clone()
         };
-        if image_handle.texture != texture {
+        if let Some(mut nine_slice) = maybe_nine_slice {
+            if nine_slice.image_handle != texture {
+                nine_slice.image_handle = texture
+            }
+        } else if image_handle.texture != texture {
             image_handle.texture = texture
         }
     }

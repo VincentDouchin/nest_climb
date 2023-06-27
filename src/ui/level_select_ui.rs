@@ -1,4 +1,4 @@
-use crate::{ButtonImages, GameState, MenuButton, MyAssets, StateUi};
+use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ninepatch::*;
@@ -81,8 +81,12 @@ pub fn spawn_level_select_ui(
                                             size: Size::all(Val::Px(50.0)),
                                             ..default()
                                         },
-                                        image: UiImage::new(assets.frame_small.clone()),
+
                                         ..default()
+                                    },
+                                    NineSlice {
+                                        image_handle: assets.frame_small.clone(),
+                                        margins: Vec4::splat(8.0),
                                     },
                                     ButtonImages::new(
                                         &assets.frame_small,

@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 
-use crate::{GameState, MenuButton, MyAssets, StateUi};
+use crate::{GameState, MenuButton, MyAssets, NineSlice, StateUi};
 use bevy_ui_navigation::prelude::*;
-#[derive(Component)]
-pub struct StartButton;
 
 pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
     commands
@@ -11,19 +9,21 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
             ButtonBundle {
                 style: Style {
                     margin: UiRect::all(Val::Auto),
-                    // horizontally center child text
                     justify_content: JustifyContent::Center,
-                    // vertically center child text
                     align_items: AlignItems::Center,
+                    size: Size::new(Val::Px(256.0), Val::Px(64.0)),
                     ..default()
                 },
-                background_color: BackgroundColor(Color::RED),
+                // background_color: BackgroundColor(Color::NONE),
                 ..default()
             },
-            StartButton,
             MenuButton::GoToGameState(GameState::LevelSelect),
             Focusable::default(),
             StateUi(GameState::Start),
+            NineSlice {
+                image_handle: assets.frame_small.clone(),
+                margins: Vec4::splat(8.0),
+            },
         ))
         .with_children(|parent| {
             parent.spawn(TextBundle::from_section(
@@ -31,7 +31,7 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 TextStyle {
                     font: assets.default_font.clone(),
                     font_size: 40.0,
-                    color: Color::rgb(0.9, 0.9, 0.9),
+                    color: Color::BLACK,
                 },
             ));
         });
