@@ -28,12 +28,12 @@ pub fn spawn_level_select_ui(
                 NodeBundle {
                     style: Style {
                         size: Size {
-                            height: Val::Percent(20.0),
+                            height: Val::Percent(10.0),
                             ..default()
                         },
+                        padding: UiRect::all(Val::Px(64.0)),
                         ..default()
                     },
-
                     ..default()
                 },
                 NineSlice {

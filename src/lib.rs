@@ -50,6 +50,8 @@ mod debug;
 pub use debug::*;
 
 mod ui {
+    mod general_ui;
+    pub use self::general_ui::*;
     mod run_ui;
     pub use self::run_ui::*;
     mod pause_ui;
