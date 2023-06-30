@@ -1,35 +1,32 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ui_navigation::prelude::Focusable;
-
 pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
-    // ! ROOT
     commands
         .spawn((
             NodeBundle {
                 style: Style {
                     position_type: PositionType::Absolute,
                     flex_direction: FlexDirection::Column,
-                    align_items: AlignItems::Center,
                     justify_content: JustifyContent::FlexStart,
+                    padding: UiRect::all(Val::Px(100.0)),
+                    gap: Size::all(Val::Px(20.0)),
                     margin: UiRect::all(Val::Auto),
-                    size: Size {
-                        width: Val::Percent(30.0),
-                        height: Val::Percent(50.0),
-                    },
-
                     ..default()
                 },
                 background_color: BackgroundColor(Color::WHITE),
                 ..default()
             },
+            NineSlice {
+                image_handle: assets.frame_big.clone(),
+                margins: Vec4::splat(32.0),
+                scale: 3.0,
+                ..default()
+            },
             StateUi(PauseState::Paused),
         ))
         .with_children(|root| {
-            // ! GAME PAUSED TEXT
             root.spawn(TextBundle {
-                style: Style { ..default() },
-
                 text: Text::from_section(
                     "Game paused",
                     TextStyle {
@@ -37,64 +34,57 @@ pub fn spawn_pause_ui(mut commands: Commands, assets: Res<MyAssets>) {
                         font_size: 50.0,
                         color: Color::BLACK,
                     },
-                ),
+                )
+                .with_alignment(TextAlignment::Center),
                 ..default()
             });
-            // ! Resume
-            root.spawn((
-                ButtonBundle { ..default() },
-                Focusable::default(),
-                MenuButton::GoToPausedState(PauseState::NotPaused),
-            ))
-            .with_children(|button| {
-                button.spawn(TextBundle {
-                    text: Text::from_section(
-                        "Resume",
-                        TextStyle {
-                            font: assets.default_font.clone(),
-                            font_size: 50.0,
-                            color: Color::BLACK,
+            [
+                ("Resume", MenuButton::GoToPausedState(PauseState::NotPaused)),
+                (
+                    "Retry",
+                    MenuButton::GoToGameState(GameState::LevelTransition),
+                ),
+                (
+                    "Choose level",
+                    MenuButton::GoToGameState(GameState::LevelSelect),
+                ),
+            ]
+            .iter()
+            .for_each(|(text, menu_button)| {
+                root.spawn((
+                    ButtonBundle {
+                        style: Style {
+                            padding: UiRect::all(Val::Px(10.0)),
+                            ..default()
                         },
-                    ),
-                    ..default()
-                });
-            });
-            // ! Retry
-            root.spawn((
-                ButtonBundle { ..default() },
-                Focusable::default(),
-                MenuButton::GoToGameState(GameState::LevelTransition),
-            ))
-            .with_children(|button| {
-                button.spawn(TextBundle {
-                    text: Text::from_section(
-                        "Retry",
-                        TextStyle {
-                            font: assets.default_font.clone(),
-                            font_size: 50.0,
-                            color: Color::BLACK,
+                        ..default()
+                    },
+                    Focusable::default(),
+                    menu_button.to_owned(),
+                    ButtonImages::new(&assets.frame_small, &assets.frame_small_selected),
+                    NineSlice {
+                        image_handle: assets.frame_small.clone(),
+                        margins: Vec4::splat(8.0),
+                        ..default()
+                    },
+                ))
+                .with_children(|button| {
+                    button.spawn(TextBundle {
+                        style: Style {
+                            size: Size::width(Val::Percent(100.0)),
+                            ..default()
                         },
-                    ),
-                    ..default()
-                });
-            });
-            // ! LEVEL SELECT BUTTON
-            root.spawn((
-                ButtonBundle { ..default() },
-                Focusable::default(),
-                MenuButton::GoToGameState(GameState::LevelSelect),
-            ))
-            .with_children(|button| {
-                button.spawn(TextBundle {
-                    text: Text::from_section(
-                        "Go back to menu",
-                        TextStyle {
-                            font: assets.default_font.clone(),
-                            font_size: 50.0,
-                            color: Color::BLACK,
-                        },
-                    ),
-                    ..default()
+                        text: Text::from_section(
+                            text.clone(),
+                            TextStyle {
+                                font: assets.default_font.clone(),
+                                font_size: 30.0,
+                                color: Color::BLACK,
+                            },
+                        )
+                        .with_alignment(TextAlignment::Right),
+                        ..default()
+                    });
                 });
             });
         });

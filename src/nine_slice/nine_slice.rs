@@ -8,9 +8,11 @@ use bevy::{
             AsBindGroup, Extent3d, ShaderRef, TextureDescriptor, TextureDimension, TextureFormat,
             TextureUsages,
         },
+        texture::DEFAULT_IMAGE_HANDLE,
         view::RenderLayers,
     },
     sprite::{Material2d, Material2dPlugin, MaterialMesh2dBundle},
+    window::PrimaryWindow,
 };
 
 #[derive(Component)]
@@ -40,6 +42,18 @@ impl Material2d for NineSliceMaterial {
 pub struct NineSlice {
     pub image_handle: Handle<Image>,
     pub margins: Vec4,
+    pub layer: u8,
+    pub scale: f32,
+}
+impl Default for NineSlice {
+    fn default() -> Self {
+        NineSlice {
+            image_handle: DEFAULT_IMAGE_HANDLE.typed(),
+            margins: Vec4::splat(0.0),
+            layer: 1,
+            scale: 1.0,
+        }
+    }
 }
 #[derive(Component)]
 pub struct NineSliceLoaded;
@@ -50,81 +64,95 @@ pub fn create_nine_slice(
     mut images: ResMut<Assets<Image>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<NineSliceMaterial>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
-    for (entity, node, transform, nine_slice) in query.iter_mut() {
-        let nine_slice_size = node.size();
-        if nine_slice_size.x == 0.0 || nine_slice_size.y == 0.0 {
-            continue;
-        }
-        let size_vec = images
-            .get(&nine_slice.image_handle)
-            .expect("get image from handle")
-            .size();
-        let size = Extent3d {
-            width: nine_slice_size.x as u32,
-            height: nine_slice_size.y as u32,
-            ..default()
-        };
-        let mut image = Image {
-            texture_descriptor: TextureDescriptor {
-                label: None,
-                size,
-                dimension: TextureDimension::D2,
-                format: TextureFormat::Bgra8UnormSrgb,
-                mip_level_count: 1,
-                sample_count: 1,
-                usage: TextureUsages::TEXTURE_BINDING
-                    | TextureUsages::COPY_DST
-                    | TextureUsages::RENDER_ATTACHMENT,
-                view_formats: &[],
-            },
-            ..default()
-        };
-        image.resize(size);
-
-        let image_handle = images.add(image);
-        let first_pass_layer = RenderLayers::layer(1);
-        let material_handle = materials.add(NineSliceMaterial {
-            margins: nine_slice.margins,
-            size: size_vec,
-            scale: Vec2::new(nine_slice_size.x / nine_slice_size.y, 1.0),
-            color_texture: nine_slice.image_handle.clone(),
-        });
-        commands.spawn((
-            MaterialMesh2dBundle {
-                mesh: meshes.add(Mesh::from(shape::Quad::default())).into(),
-                transform: Transform::from_translation(transform.translation)
-                    .with_scale(Vec3::new(nine_slice_size.x, nine_slice_size.y, 0.0)),
-                material: material_handle,
-                ..Default::default()
-            },
-            first_pass_layer,
-            LinkedEntity(entity),
-        ));
-        commands.spawn((
-            Camera2dBundle {
-                camera_2d: Camera2d {
-                    clear_color: ClearColorConfig::Custom(Color::NONE),
-                    ..default()
-                },
-                camera: Camera {
-                    // render before the "main pass" camera
-                    order: -1,
-                    target: RenderTarget::Image(image_handle.clone()),
-                    ..default()
-                },
-                transform: Transform::from_translation(transform.translation + Vec3::Z)
-                    .looking_at(transform.translation, Vec3::Y),
+    if let Ok(window) = window_query.get_single() {
+        for (entity, node, original_transform, nine_slice) in query.iter_mut() {
+            let translation = original_transform.translation + Vec3::new(10000.0, 10000.0, 0.0);
+            let nine_slice_size = node.size();
+            if nine_slice_size.x == 0.0 || nine_slice_size.y == 0.0 {
+                continue;
+            }
+            let size_vec = images
+                .get(&nine_slice.image_handle)
+                .expect("get image from handle")
+                .size();
+            let size = Extent3d {
+                width: nine_slice_size.x as u32,
+                height: nine_slice_size.y as u32,
                 ..default()
-            },
-            first_pass_layer,
-            LinkedEntity(entity),
-        ));
+            };
+            let mut image = Image {
+                texture_descriptor: TextureDescriptor {
+                    label: None,
+                    size,
+                    dimension: TextureDimension::D2,
+                    format: TextureFormat::Bgra8UnormSrgb,
+                    mip_level_count: 1,
+                    sample_count: 1,
+                    usage: TextureUsages::TEXTURE_BINDING
+                        | TextureUsages::COPY_DST
+                        | TextureUsages::RENDER_ATTACHMENT,
+                    view_formats: &[],
+                },
+                ..default()
+            };
+            image.resize(size);
 
-        commands
-            .entity(entity)
-            .insert(NineSliceLoaded)
-            .insert(UiImage::new(image_handle));
+            let image_handle = images.add(image);
+            let first_pass_layer = RenderLayers::layer(nine_slice.layer);
+            let material_handle = materials.add(NineSliceMaterial {
+                margins: nine_slice.margins,
+                size: size_vec,
+                scale: Vec2::new(
+                    nine_slice_size.x / size_vec.x / nine_slice.scale,
+                    nine_slice_size.y / size_vec.y / nine_slice.scale,
+                ),
+                color_texture: nine_slice.image_handle.clone(),
+            });
+            commands.spawn((
+                MaterialMesh2dBundle {
+                    mesh: meshes.add(Mesh::from(shape::Quad::default())).into(),
+                    transform: Transform::from_translation(translation).with_scale(Vec3::new(
+                        nine_slice_size.x,
+                        nine_slice_size.y,
+                        0.0,
+                    )),
+
+                    material: material_handle,
+                    ..Default::default()
+                },
+                first_pass_layer,
+                LinkedEntity(entity),
+            ));
+            commands.spawn((
+                Camera2dBundle {
+                    camera_2d: Camera2d {
+                        clear_color: ClearColorConfig::Custom(Color::NONE),
+                        ..default()
+                    },
+
+                    camera: Camera {
+                        // render before the "main pass" camera
+                        order: -1,
+                        target: RenderTarget::Image(image_handle.clone()),
+                        ..default()
+                    },
+                    transform: Transform::from_translation(translation + Vec3::Z)
+                        .looking_at(translation, Vec3::Y),
+                    ..default()
+                },
+                UiCameraConfig { show_ui: false },
+                first_pass_layer,
+                LinkedEntity(entity),
+            ));
+
+            commands
+                .entity(entity)
+                .insert(NineSliceLoaded)
+                .insert(BackgroundColor(Color::WHITE))
+                .insert(UiImage::new(image_handle));
+        }
     }
 }
 

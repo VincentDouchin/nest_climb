@@ -23,6 +23,7 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
             NineSlice {
                 image_handle: assets.frame_small.clone(),
                 margins: Vec4::splat(8.0),
+                ..default()
             },
         ))
         .with_children(|parent| {
