@@ -11,7 +11,7 @@
 	"iid": "b38111a0-ed50-11ed-b45b-3d60761c2154",
 	"jsonVersion": "1.3.3",
 	"appBuildId": 467698,
-	"nextUid": 89,
+	"nextUid": 90,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -1323,6 +1323,39 @@
 					"tilesetUid": null
 				}
 			]
+		},
+		{
+			"identifier": "Trampoline",
+			"uid": 89,
+			"tags": [],
+			"exportToToc": false,
+			"doc": null,
+			"width": 16,
+			"height": 8,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#63C74D",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileRenderMode": "FitInside",
+			"tileRect": null,
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 1,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -6704,7 +6737,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "Player",
-							"__grid": [7,161],
+							"__grid": [5,161],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
 							"__tile": { "tilesetUid": 65, "x": 0, "y": 240, "w": 16, "h": 16 },
@@ -6713,7 +6746,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 38,
-							"px": [120,2584],
+							"px": [88,2584],
 							"fieldInstances": []
 						},
 						{
@@ -6855,6 +6888,51 @@
 							"defUid": 44,
 							"px": [184,2248],
 							"fieldInstances": [{ "__identifier": "Collectible", "__type": "LocalEnum.Collectible", "__value": "Coin", "__tile": null, "defUid": 48, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Enemy",
+							"__grid": [13,162],
+							"__pivot": [0.5,0.5],
+							"__tags": [],
+							"__tile": { "tilesetUid": 65, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#D77643",
+							"iid": "d7cb83e0-1460-11ee-9846-370a862eb004",
+							"width": 16,
+							"height": 16,
+							"defUid": 40,
+							"px": [216,2600],
+							"fieldInstances": [
+								{ "__identifier": "patrol", "__type": "Array<Point>", "__value": [], "__tile": null, "defUid": 42, "realEditorValues": [] },
+								{ "__identifier": "health", "__type": "Int", "__value": 1, "__tile": null, "defUid": 43, "realEditorValues": [] }
+							]
+						},
+						{
+							"__identifier": "Heart",
+							"__grid": [13,159],
+							"__pivot": [0.5,0.5],
+							"__tags": [],
+							"__tile": { "tilesetUid": 65, "x": 16, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FEAE34",
+							"iid": "0b5032b0-1460-11ee-9846-7b17f94637fa",
+							"width": 16,
+							"height": 16,
+							"defUid": 84,
+							"px": [216,2552],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Trampoline",
+							"__grid": [8,161],
+							"__pivot": [0.5,1],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#63C74D",
+							"iid": "750fb700-1460-11ee-9846-6757a3ab229e",
+							"width": 16,
+							"height": 8,
+							"defUid": 89,
+							"px": [136,2592],
+							"fieldInstances": []
 						}
 					]
 				},
@@ -7055,7 +7133,7 @@
 						0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,
 						3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 						0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,
-						0,0,0,0,0,0,0,0,3,3,3,3,0,0,2,2,2,0,0,0,2,2,2,0,0,0,2,2,2,3,3,0,0,0,0,
+						0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,2,2,0,0,0,2,2,2,0,0,0,2,2,2,3,3,0,0,0,0,
 						0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,
 						0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,2,2,0,0,0,0,0,0,
@@ -7226,7 +7304,6 @@
 						{ "px": [560,2400], "src": [128,272], "f": 0, "t": 433, "d": [29,6035], "a": 1 },
 						{ "px": [576,2400], "src": [128,272], "f": 0, "t": 433, "d": [29,6036], "a": 1 },
 						{ "px": [592,2400], "src": [112,272], "f": 0, "t": 432, "d": [29,6037], "a": 1 },
-						{ "px": [80,2496], "src": [128,272], "f": 0, "t": 433, "d": [29,6245], "a": 1 },
 						{ "px": [176,2496], "src": [112,272], "f": 0, "t": 432, "d": [29,6251], "a": 1 },
 						{ "px": [272,2496], "src": [112,272], "f": 0, "t": 432, "d": [29,6257], "a": 1 },
 						{ "px": [288,2496], "src": [128,272], "f": 0, "t": 433, "d": [29,6258], "a": 1 },
@@ -7250,7 +7327,7 @@
 						{ "px": [336,2400], "src": [96,272], "f": 0, "t": 431, "d": [36,6021], "a": 1 },
 						{ "px": [432,2400], "src": [96,272], "f": 0, "t": 431, "d": [36,6027], "a": 1 },
 						{ "px": [528,2400], "src": [96,272], "f": 0, "t": 431, "d": [36,6033], "a": 1 },
-						{ "px": [64,2496], "src": [96,272], "f": 0, "t": 431, "d": [36,6244], "a": 1 },
+						{ "px": [80,2496], "src": [96,272], "f": 0, "t": 431, "d": [36,6245], "a": 1 },
 						{ "px": [160,2496], "src": [96,272], "f": 0, "t": 431, "d": [36,6250], "a": 1 },
 						{ "px": [256,2496], "src": [96,272], "f": 0, "t": 431, "d": [36,6256], "a": 1 },
 						{ "px": [560,2352], "src": [240,288], "f": 0, "t": 465, "d": [53,5915], "a": 1 },
