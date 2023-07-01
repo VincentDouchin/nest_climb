@@ -27,7 +27,7 @@ pub fn spawn_player(
             TnuaPlatformerBundle {
                 config: TnuaPlatformerConfig {
                     full_speed: 100.0,
-                    full_jump_height: 100.0,
+                    full_jump_height: 50.0,
                     up: Vec3::Y,
                     forward: Vec3::X,
                     float_height: 0.5,

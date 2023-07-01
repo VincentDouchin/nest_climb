@@ -1,6 +1,7 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+
 #[derive(Component)]
 pub struct Level;
 
@@ -20,6 +21,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<SawbladeBundle>("Sawblade")
         .register_ldtk_entity::<PendulumBundle>("Pendulum")
         .register_ldtk_entity::<HeartBundle>("Heart")
+        .register_ldtk_entity::<TrampolineBundle>("Trampoline")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::FromLevelBackground,
             ..Default::default()
@@ -35,7 +37,9 @@ pub fn map_plugin(app: &mut App) {
                 spawn_platforms,
                 spawn_sawblade,
                 spawn_pendulum,
-                add_sprites_to_entities,
+                spawn_flag,
+                spawn_heart,
+                spawn_trampoline,
             )
                 .in_set(OnUpdate(GameState::Run)),
         );
@@ -61,25 +65,5 @@ pub fn spawn_map(mut commands: Commands, maybe_current_level: Res<CurrentLevel>)
 pub fn despawn_map(mut commands: Commands, map_query: Query<Entity, With<Level>>) {
     for entity in map_query.iter() {
         commands.entity(entity).despawn_recursive()
-    }
-}
-
-pub fn add_sprites_to_entities(
-    query: Query<(Entity, &EntityInstance), Added<EntityInstance>>,
-    assets: Res<MyAssets>,
-    mut commands: Commands,
-) {
-    for (entity, entity_instance) in query.iter() {
-        let sprite = match entity_instance.identifier.as_str() {
-            "Heart" => Some(&assets.heart),
-            "Flag" => Some(&assets.flag),
-            "Enemy" => Some(&assets.bushly_idle),
-            _ => None,
-        };
-        if let Some(handle) = sprite {
-            commands
-                .entity(entity)
-                .insert(AnimatedSpriteBundle::new(handle.clone()));
-        }
     }
 }

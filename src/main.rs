@@ -31,6 +31,7 @@ fn main() {
                 kill_entity,
                 detect_health_changed,
                 jump_throught_platforms,
+                bounce_on_trampoline.after(move_player_system),
             )
                 .in_set(OnUpdate(GameState::Run))
                 .distributive_run_if(in_state(PauseState::NotPaused)),

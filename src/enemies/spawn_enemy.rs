@@ -21,13 +21,18 @@ pub struct EnemyBundle {
     soft_head: SoftHead,
 }
 
-pub fn spawn_enemy(mut commands: Commands, enemy_query: Query<Entity, Added<Enemy>>) {
+pub fn spawn_enemy(
+    mut commands: Commands,
+    enemy_query: Query<Entity, Added<Enemy>>,
+    assets: Res<MyAssets>,
+) {
     for entity in enemy_query.iter() {
         let bundle = (
             Collider::cuboid(8.0, 8.0),
             Velocity::default(),
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
+            AnimatedSpriteBundle::new(assets.bushly_idle.clone()),
         );
         commands.entity(entity).insert(bundle);
     }

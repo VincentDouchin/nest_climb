@@ -20,6 +20,8 @@ pub fn spawn_heart(
     mut commands: Commands,
 ) {
     for entity in query.iter() {
-        commands.entity(entity).insert(assets.heart.clone());
+        commands
+            .entity(entity)
+            .insert(AnimatedSpriteBundle::new(assets.heart.clone()));
     }
 }

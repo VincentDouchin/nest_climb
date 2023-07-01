@@ -99,6 +99,8 @@ mod items {
     pub use self::spawn_pendulum::*;
     mod spawn_heart;
     pub use self::spawn_heart::*;
+    mod spawn_trampoline;
+    pub use self::spawn_trampoline::*;
 }
 pub use items::*;
 

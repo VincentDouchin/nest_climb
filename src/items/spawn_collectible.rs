@@ -78,19 +78,22 @@ pub fn spawn_collectibles(
 
 pub fn collect_item(
     mut commands: Commands,
-    collectible_query: Query<(Entity, Option<&CollectibleType>), With<Pickup>>,
-    player_query: Query<Entity, With<Player>>,
+    collectible_query: Query<(Entity, Option<&CollectibleType>, Option<&Heart>), With<Pickup>>,
+    mut player_query: Query<(Entity, &mut Health), With<Player>>,
     rapier_context: Res<RapierContext>,
     mut score: ResMut<Score>,
 ) {
-    for (collectible_entity, maybe_collectible) in collectible_query.iter() {
-        for player_entity in player_query.iter() {
+    for (collectible_entity, maybe_collectible, maybe_heart) in collectible_query.iter() {
+        for (player_entity, mut player_health) in player_query.iter_mut() {
             if rapier_context
                 .intersection_pair(collectible_entity, player_entity)
                 .is_some()
             {
                 if let Some(collectible_value) = maybe_collectible {
                     score.collectibles += collectible_value.clone() as u32;
+                }
+                if maybe_heart.is_some() {
+                    player_health.current_health += 1
                 }
 
                 commands.entity(collectible_entity).despawn_recursive()

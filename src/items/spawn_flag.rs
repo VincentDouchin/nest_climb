@@ -31,6 +31,17 @@ impl LdtkEntity for Flag {
         };
     }
 }
+pub fn spawn_flag(
+    assets: Res<MyAssets>,
+    query: Query<Entity, Added<Flag>>,
+    mut commands: Commands,
+) {
+    for entity in query.iter() {
+        commands
+            .entity(entity)
+            .insert(AnimatedSpriteBundle::new(assets.flag.clone()));
+    }
+}
 
 pub fn level_transition(mut next_state: ResMut<NextState<GameState>>) {
     next_state.set(GameState::Run);
