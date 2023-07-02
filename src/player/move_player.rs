@@ -2,16 +2,17 @@ use bevy::prelude::*;
 use bevy_tnua::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{DirectionComponent, PlayerAction, SpriteDirection};
+use crate::{BouncingOnTrampoline, DirectionComponent, PlayerAction, SpriteDirection};
 
 pub fn move_player_system(
     mut player_query: Query<(
         &mut TnuaPlatformerControls,
         &mut DirectionComponent,
         &ActionState<PlayerAction>,
+        &BouncingOnTrampoline,
     )>,
 ) {
-    for (mut controls, mut direction, actions) in player_query.iter_mut() {
+    for (mut controls, mut direction, actions, bouncing) in player_query.iter_mut() {
         // ! Movement
         if actions.pressed(PlayerAction::MoveLeft) {
             controls.desired_forward = Vec3::NEG_X;
@@ -26,11 +27,12 @@ pub fn move_player_system(
         }
 
         // ! Jump
-
-        controls.jump = if actions.pressed(PlayerAction::Jump) {
-            Some(1.0)
-        } else {
-            None
-        };
+        if bouncing.0.is_none() {
+            controls.jump = if actions.pressed(PlayerAction::Jump) {
+                Some(1.0)
+            } else {
+                None
+            };
+        }
     }
 }
