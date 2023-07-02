@@ -147,8 +147,15 @@ pub fn create_nine_slice(
         commands
             .entity(entity)
             .insert(NineSliceLoaded)
-            .insert(BackgroundColor(Color::WHITE))
             .insert(UiImage::new(image_handle));
+    }
+}
+
+pub fn display_nine_slice(query: Query<Entity, Added<NineSliceLoaded>>, mut commands: Commands) {
+    for entity in query.iter() {
+        commands
+            .entity(entity)
+            .insert(BackgroundColor(Color::WHITE));
     }
 }
 
@@ -177,8 +184,9 @@ pub fn update_nine_slice(
 }
 
 pub fn nine_slice_plugin(app: &mut App) {
-    app.add_plugin(Material2dPlugin::<NineSliceMaterial>::default());
-    app.add_system(create_nine_slice);
-    app.add_system(update_nine_slice);
-    app.add_system(despawn_nine_slice);
+    app.add_plugin(Material2dPlugin::<NineSliceMaterial>::default())
+        .add_system(create_nine_slice)
+        .add_system(display_nine_slice)
+        .add_system(update_nine_slice)
+        .add_system(despawn_nine_slice);
 }
