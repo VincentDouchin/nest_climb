@@ -21,8 +21,9 @@ pub fn pause_game(
 pub fn pause_game_on_unfocus(
     mut events: EventReader<WindowFocused>,
     mut paused_state: ResMut<NextState<PauseState>>,
+    mut current_paused_state: Res<State<PauseState>>,
 ) {
-    if events.iter().any(|event| !event.focused) {
+    if events.iter().any(|event| !event.focused) && current_paused_state.0 != PauseState::Paused {
         paused_state.set(PauseState::Paused)
     }
 }
