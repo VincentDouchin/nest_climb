@@ -18,7 +18,7 @@ pub fn spawn_player(
     assets: Res<MyAssets>,
 ) {
     for entity in player_query.iter() {
-        let collider = Collider::cuboid(7.0, 10.0);
+        let collider = Collider::capsule(Vec2::new(0.0, -4.0), Vec2::new(0.0, 5.0), 7.0);
 
         let tnua_bundle = (
             TnuaPlatformerAnimatingOutput::default(),
@@ -70,7 +70,7 @@ pub fn spawn_player(
                 hurt: assets.bird_hurt.clone(),
             },
             TextureAtlasSprite {
-                anchor: Anchor::Custom(Vec2::new(0.0, (-10.5 / 32.0) / 2.0)),
+                anchor: Anchor::Custom(Vec2::new(0.0, (-10.0 / 32.0) / 2.0)),
                 ..default()
             },
         );
