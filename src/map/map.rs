@@ -23,7 +23,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<HeartBundle>("Heart")
         .register_ldtk_entity::<TrampolineBundle>("Trampoline")
         .insert_resource(LdtkSettings {
-            set_clear_color: SetClearColor::FromLevelBackground,
+            set_clear_color: SetClearColor::No,
             ..Default::default()
         })
         .add_system(spawn_map.in_schedule(OnEnter(GameState::Run)))

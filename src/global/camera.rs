@@ -1,5 +1,5 @@
 use crate::*;
-use bevy::{prelude::*, window::*};
+use bevy::{core_pipeline::clear_color::ClearColorConfig, prelude::*, window::*};
 use bevy_ecs_ldtk::prelude::*;
 #[derive(Component)]
 pub struct MainCamera;
@@ -20,6 +20,10 @@ fn spawn_camera(mut commands: Commands) {
         Camera2dBundle {
             projection: OrthographicProjection {
                 scale: 0.5,
+                ..default()
+            },
+            camera_2d: Camera2d {
+                clear_color: ClearColorConfig::Custom(Color::NONE),
                 ..default()
             },
             ..default()

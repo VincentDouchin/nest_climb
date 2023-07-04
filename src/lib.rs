@@ -109,3 +109,11 @@ mod nine_slice {
     pub use self::nine_slice::*;
 }
 pub use nine_slice::*;
+
+mod background {
+    mod spawn_background;
+    pub use self::spawn_background::*;
+    mod spawn_title_screen;
+    pub use self::spawn_title_screen::*;
+}
+pub use background::*;

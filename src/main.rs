@@ -16,6 +16,10 @@ fn main() {
         .fn_plugin(pause_plugin)
         .add_system(despawn_state_ui::<GameState>)
         .add_system(despawn_state_ui::<PauseState>)
+        // ! Background
+        .fn_plugin(background_plugin)
+        // ! Title
+        // .fn_plugin(title_plugin)
         // ! Camera
         .fn_plugin(camera_plugin)
         // ! Level

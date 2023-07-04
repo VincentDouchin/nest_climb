@@ -92,12 +92,13 @@ pub struct MyAssets {
     #[asset(path = "items/trampoline.png")]
     pub trampoline: Handle<TextureAtlas>,
     // ! Background
-    #[asset(path = "background/back.png")]
-    pub parallax_back: Handle<Image>,
-    #[asset(path = "background/middle.png")]
-    pub parallax_middle: Handle<Image>,
-    #[asset(path = "background/far.png")]
-    pub parallax_far: Handle<Image>,
+    #[asset(path = "background/background.png")]
+    pub background: Handle<Image>,
+    // ! Title
+    #[asset(path = "background/title_nest.png")]
+    pub title_nest: Handle<Image>,
+    #[asset(path = "background/title_text.png")]
+    pub title_text: Handle<Image>,
 }
 pub fn load_assets_plugin(app: &mut App) {
     app.add_loading_state(
