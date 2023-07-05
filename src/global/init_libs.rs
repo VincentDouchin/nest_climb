@@ -1,5 +1,6 @@
 use crate::*;
 use bevy::prelude::*;
+use bevy_easings::EasingsPlugin;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ninepatch::*;
 use bevy_pkv::PkvStore;
@@ -8,6 +9,8 @@ use bevy_tnua::*;
 use bevy_ui_navigation::{prelude::*, systems::InputMapping};
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
+    // ! EASING
+    app.add_plugin(EasingsPlugin);
     // ! SAVING
     app.insert_resource(PkvStore::new("NestClimb", "savedata"));
     // ! Default plugins
@@ -29,6 +32,7 @@ pub fn initialize_libraries(app: &mut App) {
     .add_startup_system(|mut input_mapping: ResMut<InputMapping>| {
         input_mapping.keyboard_navigation = true;
         input_mapping.key_action = KeyCode::Return;
+        input_mapping.focus_follows_mouse = true;
     })
     // ! Leafwing inputs
     .add_plugin(InputManagerPlugin::<PlayerAction>::default())

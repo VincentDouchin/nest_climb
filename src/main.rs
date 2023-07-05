@@ -19,7 +19,7 @@ fn main() {
         // ! Background
         .fn_plugin(background_plugin)
         // ! Title
-        // .fn_plugin(title_plugin)
+        .fn_plugin(title_plugin)
         // ! Camera
         .fn_plugin(camera_plugin)
         // ! Level
@@ -60,6 +60,7 @@ fn main() {
         .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
         .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
         // ! UI
+        .fn_plugin(selector_plugin)
         .fn_plugin(run_ui_plugin)
         .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_system(spawn_start_ui.in_schedule(OnEnter(GameState::Start)))

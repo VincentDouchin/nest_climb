@@ -41,6 +41,12 @@ pub struct MyAssets {
     pub frame_small_selected: Handle<Image>,
     #[asset(path = "ui/frame_big.png")]
     pub frame_big: Handle<Image>,
+    #[asset(path = "ui/button_big.png")]
+    pub button_big: Handle<Image>,
+    #[asset(path = "ui/button_big_pressed.png")]
+    pub button_big_pressed: Handle<Image>,
+    #[asset(path = "ui/selector.png")]
+    pub selector: Handle<Image>,
     // ! Buttons
     #[asset(path = "ui/buttons/button_left.png")]
     pub button_left: Handle<Image>,
@@ -94,6 +100,13 @@ pub struct MyAssets {
     // ! Background
     #[asset(path = "background/background.png")]
     pub background: Handle<Image>,
+    #[asset(path = "background/cloud_1.png")]
+    pub cloud_1: Handle<Image>,
+    #[asset(path = "background/cloud_2.png")]
+    pub cloud_2: Handle<Image>,
+    #[asset(path = "background/cloud_3.png")]
+    pub cloud_3: Handle<Image>,
+
     // ! Title
     #[asset(path = "background/title_nest.png")]
     pub title_nest: Handle<Image>,

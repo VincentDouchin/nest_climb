@@ -89,20 +89,18 @@ pub fn spawn_level_select_ui(
                                 ButtonBundle {
                                     style: Style {
                                         size: Size::all(Val::Px(50.0)),
+                                        padding: UiRect::all(Val::Px(32.0)),
                                         ..default()
                                     },
 
                                     ..default()
                                 },
                                 NineSlice {
-                                    image_handle: assets.frame_small.clone(),
-                                    margins: Vec4::splat(8.0),
+                                    image_handle: assets.button_big.clone(),
+                                    margins: Vec4::splat(16.0),
                                     ..default()
                                 },
-                                ButtonImages::new(
-                                    &assets.frame_small,
-                                    &assets.frame_small_selected,
-                                ),
+                                ButtonImages::new(&assets.button_big, &assets.button_big_pressed),
                                 Focusable::default(),
                                 MenuButton::LevelSelect {
                                     file: assets.test_level.clone(),

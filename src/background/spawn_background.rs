@@ -1,42 +1,28 @@
-use bevy::{
-    prelude::*,
-    window::{PrimaryWindow, WindowResized},
-};
+use bevy::prelude::*;
 
 use crate::*;
 
 #[derive(Component)]
 pub struct Background;
 
-pub fn spawn_background(
-    mut commands: Commands,
-    assets: Res<MyAssets>,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-) {
-    if let Ok(window) = window_query.get_single() {
-        commands.spawn((
-            SpriteBundle {
-                sprite: Sprite {
-                    custom_size: Some(Vec2::new(window.width(), window.height())),
-                    ..default()
-                },
-                texture: assets.background.clone(),
-                ..default()
-            },
-            Background,
-        ));
-    }
+pub fn spawn_background(mut commands: Commands, assets: Res<MyAssets>) {
+    commands.spawn((
+        SpriteBundle {
+            texture: assets.background.clone(),
+            ..default()
+        },
+        Background,
+    ));
 }
+
 pub fn resize_background(
-    events: EventReader<WindowResized>,
-    mut background_query: Query<&mut Sprite, With<Background>>,
-    window_query: Query<&Window, With<PrimaryWindow>>,
+    mut background_query: Query<&mut Sprite, Changed<Background>>,
+    camera_query: Query<&OrthographicProjection, With<MainCamera>>,
 ) {
-    if events.len() > 0 {
-        if let Ok(window) = window_query.get_single() {
-            for mut background_sprite in background_query.iter_mut() {
-                background_sprite.custom_size = Some(Vec2::new(window.width(), window.height()))
-            }
+    for mut background_sprite in background_query.iter_mut() {
+        if let Ok(camera) = camera_query.get_single() {
+            background_sprite.custom_size =
+                Some(Vec2::new(camera.area.width(), camera.area.width()))
         }
     }
 }

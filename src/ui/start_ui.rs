@@ -11,6 +11,7 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
                     margin: UiRect::all(Val::Auto),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
+                    padding: UiRect::all(Val::Px(16.0)),
                     size: Size::new(Val::Px(256.0), Val::Px(64.0)),
                     ..default()
                 },
@@ -21,8 +22,8 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
             Focusable::default(),
             StateUi(GameState::Start),
             NineSlice {
-                image_handle: assets.frame_small.clone(),
-                margins: Vec4::splat(8.0),
+                image_handle: assets.button_big.clone(),
+                margins: Vec4::splat(16.0),
                 ..default()
             },
         ))
