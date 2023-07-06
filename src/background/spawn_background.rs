@@ -16,8 +16,11 @@ pub fn spawn_background(mut commands: Commands, assets: Res<MyAssets>) {
 }
 
 pub fn resize_background(
-    mut background_query: Query<&mut Sprite, Changed<Background>>,
-    camera_query: Query<&OrthographicProjection, With<MainCamera>>,
+    mut background_query: Query<&mut Sprite, With<Background>>,
+    camera_query: Query<
+        &OrthographicProjection,
+        (With<MainCamera>, Changed<OrthographicProjection>),
+    >,
 ) {
     for mut background_sprite in background_query.iter_mut() {
         if let Ok(camera) = camera_query.get_single() {

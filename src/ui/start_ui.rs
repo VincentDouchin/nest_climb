@@ -15,7 +15,7 @@ pub fn spawn_start_ui(mut commands: Commands, assets: Res<MyAssets>) {
                     size: Size::new(Val::Px(256.0), Val::Px(64.0)),
                     ..default()
                 },
-                // background_color: BackgroundColor(Color::NONE),
+                z_index: ZIndex::Global(3),
                 ..default()
             },
             MenuButton::GoToGameState(GameState::LevelSelect),

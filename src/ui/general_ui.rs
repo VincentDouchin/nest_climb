@@ -1,5 +1,8 @@
+use std::time::Duration;
+
 use crate::*;
 use bevy::prelude::{Vec2, *};
+use bevy_easings::{Ease, EaseFunction};
 use bevy_ui_navigation::prelude::*;
 pub fn spawn_menu<T: Component + Clone, U: States>(
     mut commands: Commands,
@@ -106,10 +109,10 @@ impl CompareToNode for Vec2 {
     }
 }
 
-#[derive(Component, Default)]
+#[derive(Component)]
 pub struct Selector {
-    pub target_position: Vec2,
     pub target_size: Vec2,
+    pub target_position: Vec2,
 }
 impl Selector {
     fn is_different(&self, size: &Vec2, position: &Vec2) -> bool {
@@ -117,25 +120,21 @@ impl Selector {
     }
     fn new(size: Vec2, position: Vec2) -> Self {
         Selector {
-            target_size: size,
             target_position: position,
+            target_size: size,
         }
     }
 }
 
-trait ToVec2 {
-    fn to_vec2(&self) -> Vec2;
-}
-
 pub fn focus_selector(
     focus_query: Query<(&Node, &GlobalTransform), (With<Focused>, Without<Selector>)>,
-    mut selector_query: Query<(Entity, &mut Selector), With<Selector>>,
+    mut selector_query: Query<(Entity, &mut Selector, &Style), With<Selector>>,
     mut commands: Commands,
     assets: Res<MyAssets>,
 ) {
     let focus = focus_query.get_single().ok();
     let selector = selector_query.get_single_mut().ok();
-    if let Some((selector_entity, _)) = selector {
+    if let Some((selector_entity, _, _)) = selector {
         if focus.is_none() {
             commands.entity(selector_entity).despawn_recursive();
         }
@@ -145,10 +144,24 @@ pub fn focus_selector(
         let (focus_position, focus_size) =
             get_selector_components(focus_node, focus_transform, 16.0);
 
-        if let Some((_entity, mut selector)) = selector {
+        if let Some((selector_entity, mut selector, selector_style)) = selector {
             if selector.is_different(&focus_size, &focus_position) {
-                selector.target_position = focus_position;
                 selector.target_size = focus_size;
+                selector.target_position = focus_position;
+                commands
+                    .entity(selector_entity)
+                    .insert(selector_style.clone().ease_to(
+                        Style {
+                            position_type: PositionType::Absolute,
+                            position: focus_position.to_ui_rect(),
+                            size: focus_size.to_size(),
+                            ..default()
+                        },
+                        EaseFunction::CubicInOut,
+                        bevy_easings::EasingType::Once {
+                            duration: Duration::from_millis(500),
+                        },
+                    ));
             }
         } else {
             commands.spawn((
@@ -174,25 +187,6 @@ pub fn focus_selector(
     }
 }
 
-pub fn move_selector(mut selector_query: Query<(&mut Style, &Node, &GlobalTransform, &Selector)>) {
-    for (mut selector_style, selector_node, selector_transform, selector) in
-        selector_query.iter_mut()
-    {
-        let (current_position, current_size) =
-            get_selector_components(selector_node, selector_transform, 0.0);
-        if selector.target_size != current_size {
-            selector_style.size =
-                (current_size + ((selector.target_size - current_size) / 10.0)).to_size();
-        }
-        if selector.target_position != current_position {
-            selector_style.position = (current_position
-                + (selector.target_position - current_position) / 10.0)
-                .to_ui_rect()
-        }
-    }
-}
-
 pub fn selector_plugin(app: &mut App) {
-    app.add_system(move_selector.run_if(not(in_state(GameState::AssetLoading))));
     app.add_system(focus_selector.run_if(not(in_state(GameState::AssetLoading))));
 }
