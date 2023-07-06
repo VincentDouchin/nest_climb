@@ -1,13 +1,28 @@
 use bevy::prelude::*;
 
+#[derive(Clone, Eq, PartialEq)]
+pub enum AnimationTimerState {
+    Stopped,
+    Repeating,
+    Once,
+}
+
 #[derive(Component, Clone)]
 pub struct AnimationTimer {
     pub timer: Timer,
+    pub state: AnimationTimerState,
 }
 impl AnimationTimer {
     pub fn new(fps: f32) -> Self {
         AnimationTimer {
             timer: Timer::from_seconds(1.0 / fps, TimerMode::Repeating),
+            state: AnimationTimerState::Repeating,
+        }
+    }
+    pub fn stopped() -> Self {
+        AnimationTimer {
+            state: AnimationTimerState::Stopped,
+            ..default()
         }
     }
 }
@@ -15,6 +30,7 @@ impl Default for AnimationTimer {
     fn default() -> Self {
         AnimationTimer {
             timer: Timer::from_seconds(1.0 / 12.0, TimerMode::Repeating),
+            state: AnimationTimerState::Repeating,
         }
     }
 }

@@ -78,11 +78,20 @@ pub fn animate_sprites(
     texture_atlases: Res<Assets<TextureAtlas>>,
 ) {
     for (texture_atlas_handle, mut sprite, mut animation_timer) in query.iter_mut() {
-        let texture_atlas = texture_atlases.get(&texture_atlas_handle).unwrap();
-        animation_timer.timer.tick(time.delta());
+        if animation_timer.state != AnimationTimerState::Stopped {
+            let texture_atlas = texture_atlases.get(&texture_atlas_handle).unwrap();
+            animation_timer.timer.tick(time.delta());
 
-        if animation_timer.timer.just_finished() {
-            sprite.index = (sprite.index + 1) % texture_atlas.len();
+            if animation_timer.state == AnimationTimerState::Once
+                && sprite.index >= texture_atlas.len() - 1
+            {
+                animation_timer.state = AnimationTimerState::Stopped;
+                sprite.index = 0;
+                continue;
+            }
+            if animation_timer.timer.just_finished() {
+                sprite.index = (sprite.index + 1) % texture_atlas.len();
+            }
         }
     }
 }
