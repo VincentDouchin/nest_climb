@@ -14,7 +14,7 @@ pub fn spawn_level_select_ui(
             NodeBundle {
                 style: Style {
                     size: Size::all(Val::Percent(100.0)),
-                    padding: UiRect::all(Val::Px(50.0)),
+                    padding: UiRect::all(Val::Percent(3.0)),
                     flex_direction: FlexDirection::Column,
                     ..default()
                 },
