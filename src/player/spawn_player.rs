@@ -73,7 +73,7 @@ pub fn spawn_player(
             TextureAtlasSprite {
                 anchor: Anchor::Custom(Vec2::new(
                     0.0,
-                    ((-player_size.y / 2.0) / player_size.y) / 2.0,
+                    ((-player_size.y / 2.0) / image_size.y) / 2.0,
                 )),
                 ..default()
             },
