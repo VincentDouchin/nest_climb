@@ -18,8 +18,6 @@ fn main() {
         .add_system(despawn_state_ui::<PauseState>)
         // ! Background
         .fn_plugin(background_plugin)
-        // ! Title
-        .fn_plugin(title_plugin)
         // ! Camera
         .fn_plugin(camera_plugin)
         // ! Level
@@ -64,6 +62,7 @@ fn main() {
         .fn_plugin(run_ui_plugin)
         .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_system(spawn_start_ui.in_schedule(OnEnter(GameState::Start)))
+        .add_system(move_clouds)
         .add_system(spawn_level_select_ui.in_schedule(OnEnter(GameState::LevelSelect)))
         .add_system(spawn_pause_ui.in_schedule(OnEnter(PauseState::Paused)))
         .add_system(spawn_game_over_ui.in_schedule(OnEnter(PauseState::GameOver)))
