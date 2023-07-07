@@ -147,6 +147,7 @@ pub fn create_nine_slice(
         commands
             .entity(entity)
             .insert(NineSliceLoaded)
+            .insert(BackgroundColor(Color::NONE))
             .insert(UiImage::new(image_handle));
     }
 }
