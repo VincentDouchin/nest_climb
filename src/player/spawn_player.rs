@@ -18,8 +18,9 @@ pub fn spawn_player(
     assets: Res<MyAssets>,
 ) {
     for entity in player_query.iter() {
-        let collider = Collider::capsule(Vec2::new(0.0, -4.0), Vec2::new(0.0, 5.0), 7.0);
-
+        let image_size = Vec2::splat(32.0);
+        let player_size = Vec2::new(14.0 / 2.0, 24.0 / 2.0);
+        let collider = Collider::cuboid(player_size.x, player_size.y);
         let tnua_bundle = (
             TnuaPlatformerAnimatingOutput::default(),
             TnuaRapier2dIOBundle::default(),
@@ -30,9 +31,9 @@ pub fn spawn_player(
                     full_jump_height: 50.0,
                     up: Vec3::Y,
                     forward: Vec3::X,
-                    float_height: 0.5,
+                    float_height: 1.0,
                     cling_distance: 1.0,
-                    spring_strengh: 100.0,
+                    spring_strengh: 500.0,
                     spring_dampening: 0.4,
                     acceleration: 200.0,
                     air_acceleration: 100.0,
@@ -70,7 +71,10 @@ pub fn spawn_player(
                 hurt: assets.bird_hurt.clone(),
             },
             TextureAtlasSprite {
-                anchor: Anchor::Custom(Vec2::new(0.0, (-10.0 / 32.0) / 2.0)),
+                anchor: Anchor::Custom(Vec2::new(
+                    0.0,
+                    ((-player_size.y / 2.0) / player_size.y) / 2.0,
+                )),
                 ..default()
             },
         );
