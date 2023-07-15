@@ -5,6 +5,11 @@ use crate::*;
 #[derive(Component)]
 pub struct Background;
 
+#[derive(Component, Default)]
+pub struct FollowCamera {
+    pub offset: Vec2,
+}
+
 pub fn spawn_background(mut commands: Commands, assets: Res<MyAssets>) {
     commands.spawn((
         SpriteBundle {
@@ -12,6 +17,7 @@ pub fn spawn_background(mut commands: Commands, assets: Res<MyAssets>) {
             ..default()
         },
         Background,
+        FollowCamera::default(),
     ));
 }
 
@@ -30,13 +36,18 @@ pub fn resize_background(
     }
 }
 pub fn background_follow_camera(
-    mut background_query: Query<&mut Transform, (With<Background>, Without<MainCamera>)>,
-    camera_query: Query<&Transform, (With<MainCamera>, Without<Background>)>,
+    mut background_query: Query<(&mut Transform, &FollowCamera), Without<MainCamera>>,
+    camera_query: Query<
+        (&Transform, &OrthographicProjection),
+        (With<MainCamera>, Without<FollowCamera>),
+    >,
 ) {
-    if let Ok(camera_transform) = camera_query.get_single() {
-        for mut background_transform in background_query.iter_mut() {
-            background_transform.translation.x = camera_transform.translation.x;
-            background_transform.translation.y = camera_transform.translation.y;
+    if let Ok((camera_transform, projection)) = camera_query.get_single() {
+        for (mut background_transform, follow_camera) in background_query.iter_mut() {
+            background_transform.translation.x =
+                camera_transform.translation.x + projection.area.width() * follow_camera.offset.x;
+            background_transform.translation.y =
+                camera_transform.translation.y + projection.area.height() * follow_camera.offset.y;
         }
     }
 }

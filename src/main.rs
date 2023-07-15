@@ -66,6 +66,8 @@ fn main() {
         .add_system(spawn_level_select_ui.in_schedule(OnEnter(GameState::LevelSelect)))
         .add_system(spawn_pause_ui.in_schedule(OnEnter(PauseState::Paused)))
         .add_system(spawn_game_over_ui.in_schedule(OnEnter(PauseState::GameOver)))
+        // ! Parallax
+        .add_system(spawn_parallax.in_schedule(OnEnter(GameState::Run)))
         // ! Debug
         .fn_plugin(debug_plugin)
         .run();

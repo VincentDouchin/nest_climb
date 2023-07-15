@@ -104,6 +104,14 @@ pub struct MyAssets {
     pub cloud_1: Handle<Image>,
     #[asset(path = "background/cloud_2.png")]
     pub cloud_2: Handle<Image>,
+    #[asset(path = "background/tree_1.png")]
+    pub tree_1: Handle<Image>,
+    #[asset(path = "background/tree_2.png")]
+    pub tree_2: Handle<Image>,
+    #[asset(path = "background/tree_3.png")]
+    pub tree_3: Handle<Image>,
+    #[asset(path = "background/tree_4.png")]
+    pub tree_4: Handle<Image>,
     #[asset(path = "background/cloud_3.png")]
     pub cloud_3: Handle<Image>,
 

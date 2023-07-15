@@ -115,3 +115,8 @@ mod background {
     pub use self::spawn_background::*;
 }
 pub use background::*;
+mod parallax {
+    mod parallax;
+    pub use self::parallax::*;
+}
+pub use parallax::*;

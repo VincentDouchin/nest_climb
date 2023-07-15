@@ -57,6 +57,63 @@ impl Default for NineSlice {
 #[derive(Component)]
 pub struct NineSliceLoaded;
 
+pub fn create_render_texture(
+    size: Vec2,
+    maybe_translation: Option<Vec3>,
+    layer: u8,
+    mut images: ResMut<Assets<Image>>,
+    commands: &mut Commands,
+) -> (Handle<Image>, RenderLayers, Entity) {
+    let translation = maybe_translation.unwrap_or(Vec3::splat(0.0));
+    let size = Extent3d {
+        width: size.x as u32,
+        height: size.y as u32,
+        ..default()
+    };
+    let mut image = Image {
+        texture_descriptor: TextureDescriptor {
+            label: None,
+            size,
+            dimension: TextureDimension::D2,
+            format: TextureFormat::Bgra8UnormSrgb,
+            mip_level_count: 1,
+            sample_count: 1,
+            usage: TextureUsages::TEXTURE_BINDING
+                | TextureUsages::COPY_DST
+                | TextureUsages::RENDER_ATTACHMENT,
+            view_formats: &[],
+        },
+        ..default()
+    };
+    image.resize(size);
+    let first_pass_layer = RenderLayers::layer(layer);
+    let image_handle = images.add(image);
+    let camera = commands
+        .spawn((
+            Camera2dBundle {
+                camera_2d: Camera2d {
+                    clear_color: ClearColorConfig::Custom(Color::NONE),
+                    ..default()
+                },
+
+                camera: Camera {
+                    // render before the "main pass" camera
+                    order: -1,
+                    target: RenderTarget::Image(image_handle.clone()),
+                    ..default()
+                },
+                transform: Transform::from_translation(translation + Vec3::Z)
+                    .looking_at(translation, Vec3::Y),
+                ..default()
+            },
+            UiCameraConfig { show_ui: false },
+            first_pass_layer,
+        ))
+        .id();
+
+    return (image_handle, first_pass_layer, camera);
+}
+
 pub fn create_nine_slice(
     mut commands: Commands,
     mut query: Query<(Entity, &Node, &Transform, &NineSlice), Without<NineSliceLoaded>>,
