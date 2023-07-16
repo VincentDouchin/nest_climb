@@ -39,7 +39,6 @@ impl LdtkEntity for LeafGenerator {
             entity_instance.pivot,
         )
         .y;
-        println!("{},{}", origin, limit);
         LeafGenerator {
             timer: Timer::from_seconds(speed.clone() as f32, TimerMode::Repeating),
             limit: origin - limit,
