@@ -68,6 +68,7 @@ fn main() {
         .add_system(spawn_game_over_ui.in_schedule(OnEnter(PauseState::GameOver)))
         // ! Parallax
         .add_system(spawn_parallax.in_schedule(OnEnter(GameState::Run)))
+        .add_system(move_parallax.in_set(OnUpdate(GameState::Run)))
         // ! Debug
         .fn_plugin(debug_plugin)
         .run();

@@ -34,19 +34,22 @@ pub fn spawn_parallax(
                     let image = images.get(tree_handle).unwrap();
                     let direction = if index % 2 == 0 { 1.0 } else { -1.0 };
                     origin
-                        .spawn((SpriteBundle {
-                            texture: tree_handle.clone(),
-                            sprite: Sprite {
-                                color: color.clone(),
+                        .spawn((
+                            SpriteBundle {
+                                texture: tree_handle.clone(),
+                                sprite: Sprite {
+                                    color: color.clone(),
+                                    ..default()
+                                },
+                                transform: Transform::from_translation(Vec3::new(
+                                    index as f32 * 70.0 * direction,
+                                    image.size().y / 2.0 + v_offset,
+                                    (index as f32 * 0.01) + 0.1,
+                                )),
                                 ..default()
                             },
-                            transform: Transform::from_translation(Vec3::new(
-                                index as f32 * 70.0 * direction,
-                                image.size().y / 2.0 + v_offset,
-                                0.1,
-                            )),
-                            ..default()
-                        },))
+                            Parallax(index as f32 * 0.05),
+                        ))
                         .with_children(|tree| {
                             tree.spawn(SpriteBundle {
                                 sprite: Sprite {
@@ -67,5 +70,25 @@ pub fn spawn_parallax(
                         });
                 }
             });
+    }
+}
+
+#[derive(Default)]
+pub struct LastPosition(pub f32);
+
+pub fn move_parallax(
+    mut parallax_query: Query<(&mut Transform, &Parallax), Without<MainCamera>>,
+    camera_query: Query<&Transform, With<MainCamera>>,
+    mut last_position: Local<LastPosition>,
+) {
+    if let Ok(camera_transform) = camera_query.get_single() {
+        if last_position.0 != 0.0 {
+            for (mut parallax_transform, parallax) in parallax_query.iter_mut() {
+                parallax_transform.translation.y -=
+                    (camera_transform.translation.y - last_position.0) * parallax.0;
+            }
+        }
+
+        last_position.0 = camera_transform.translation.y
     }
 }
