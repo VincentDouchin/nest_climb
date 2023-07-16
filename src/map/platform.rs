@@ -4,6 +4,29 @@ use bevy_rapier2d::prelude::*;
 use bevy_tnua::TnuaPlatformerAnimatingOutput;
 use leafwing_input_manager::prelude::*;
 
+#[derive(Component)]
+pub struct GhostPlatform;
+
+pub fn spawn_ghost_platforms(
+    platform_query: Query<(Entity, &Collider), (With<GhostPlatform>, Without<CollisionGroups>)>,
+    mut commands: Commands,
+) {
+    for (entity, collider) in platform_query.iter() {
+        commands
+            .entity(entity)
+            .insert(CollisionGroups::new(Group::GROUP_1, Group::ALL))
+            .with_children(|platform| {
+                platform.spawn((
+                    TransformBundle::default(),
+                    collider.clone(),
+                    RigidBody::Fixed,
+                    Wall::Platform,
+                    Sensor,
+                ));
+            });
+    }
+}
+
 pub fn jump_throught_platforms(
     mut player_query: Query<
         (

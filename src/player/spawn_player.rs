@@ -94,7 +94,7 @@ pub fn spawn_player(
                 input_map: get_player_input_map(),
             },
             Health::new(5),
-            BouncingOnTrampoline(None),
+            BouncingOnTrampoline::default(),
         );
         commands
             .entity(entity)

@@ -15,7 +15,12 @@ pub fn spawn_start_ui(
         .spawn((
             ButtonBundle {
                 style: Style {
-                    margin: UiRect::all(Val::Auto),
+                    margin: UiRect {
+                        left: Val::Auto,
+                        right: Val::Auto,
+                        top: Val::Percent(40.0),
+                        bottom: Val::Auto,
+                    },
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     padding: UiRect::all(Val::Px(16.0)),

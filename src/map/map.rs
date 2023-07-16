@@ -22,6 +22,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<PendulumBundle>("Pendulum")
         .register_ldtk_entity::<HeartBundle>("Heart")
         .register_ldtk_entity::<TrampolineBundle>("Trampoline")
+        .register_ldtk_entity::<LeafGeneratorBundle>("FallingLeaf")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::No,
             ..Default::default()
@@ -34,12 +35,14 @@ pub fn map_plugin(app: &mut App) {
                 spawn_walls,
                 spawn_enemy,
                 spawn_collectibles,
-                spawn_platforms,
+                spawn_ghost_platforms,
                 spawn_sawblade,
                 spawn_pendulum,
                 spawn_flag,
                 spawn_heart,
                 spawn_trampoline,
+                spawn_leafs,
+                despawn_fallen_leafs,
             )
                 .in_set(OnUpdate(GameState::Run)),
         );

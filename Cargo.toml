@@ -4,9 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[features]
-touch_controls = []
-
 [dependencies]
 bevy = { version = "0.10.1" }
 bevy_ecs_ldtk = { version = "0.7.0", features = ["atlas"] }
@@ -30,6 +27,8 @@ bevy_mod_ui_texture_atlas_image = "0.4.1"
 bevy_ninepatch = "0.10.0"
 bevy_easings = "0.10.0"
 rand = "0.8.5"
+strum = "0.25.0"
+strum_macros = "0.25.1"
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 bevy = { version = "0.10.1" }
 [target.'cfg(target_arch = "windows")'.dependencies]

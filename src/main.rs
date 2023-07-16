@@ -33,6 +33,7 @@ fn main() {
                 kill_entity,
                 detect_health_changed,
                 jump_throught_platforms,
+                spawn_ghost_platforms,
                 bounce_on_trampoline.before(move_player_system),
             )
                 .in_set(OnUpdate(GameState::Run))

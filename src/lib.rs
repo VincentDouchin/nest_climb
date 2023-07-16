@@ -90,7 +90,6 @@ mod items {
     pub use self::spawn_flag::*;
     mod spawn_collectible;
     pub use self::spawn_collectible::*;
-
     mod spawn_sawblad;
     pub use self::spawn_sawblad::*;
     mod spawn_feather;
@@ -101,6 +100,8 @@ mod items {
     pub use self::spawn_heart::*;
     mod spawn_trampoline;
     pub use self::spawn_trampoline::*;
+    mod spawn_leaf_generator;
+    pub use self::spawn_leaf_generator::*;
 }
 pub use items::*;
 

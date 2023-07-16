@@ -1,16 +1,18 @@
+use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::collections::{HashMap, HashSet};
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 
-use crate::DamagePlayer;
-
-#[derive(Copy, Clone, Eq, PartialEq, Default, Debug, Component, Hash)]
+#[derive(Copy, Clone, Eq, PartialEq, Default, Debug, Component, Hash, EnumIter)]
 pub enum Wall {
     #[default]
     Solid,
     Platform,
     Spike,
+    Branch,
 }
 
 #[derive(Clone, Debug, Bundle, LdtkIntCell)]
@@ -22,6 +24,7 @@ pub struct WallBundle {
 impl LdtkIntCell for Wall {
     fn bundle_int_cell(int_grid_cell: IntGridCell, _layer_instance: &LayerInstance) -> Self {
         return match int_grid_cell.value {
+            2 => Wall::Branch,
             4 => Wall::Platform,
             5 => Wall::Spike,
             _ => Wall::Solid,
@@ -115,11 +118,11 @@ pub fn spawn_walls(
                     let mut row_plates: Vec<Plate> = Vec::new();
                     let mut plate_start = None;
                     // + 1 to the width so the algorithm "terminates" plates that touch the right edge
-                    for wall_type in &[Wall::Solid, Wall::Platform, Wall::Spike] {
+                    for wall_type in Wall::iter() {
                         for x in 0..width + 1 {
                             match (
                                 (plate_start),
-                                level_walls.contains(&(GridCoords { x, y }, wall_type)),
+                                level_walls.contains(&(GridCoords { x, y }, &wall_type)),
                             ) {
                                 (Some(s), false) => {
                                     row_plates.push(Plate {
@@ -174,13 +177,20 @@ pub fn spawn_walls(
                     // 1. Adjusts the transforms to be relative to the level for free
                     // 2. the colliders will be despawned automatically when levels unload
                     for wall_rect in wall_rects {
+                        let vertical_size = if wall_rect.wall_type == Wall::Branch
+                            || wall_rect.wall_type == Wall::Platform
+                        {
+                            8.0
+                        } else {
+                            grid_size as f32
+                        };
                         let bundle = (
                             Collider::cuboid(
                                 (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
                                     * grid_size as f32
                                     / 2.,
                                 (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                    * grid_size as f32
+                                    * vertical_size
                                     / 2.,
                             ),
                             Transform::from_xyz(
@@ -197,11 +207,10 @@ pub fn spawn_walls(
 
                         match wall_rect.wall_type {
                             Wall::Platform => {
-                                wall.insert(CollisionGroups::new(Group::GROUP_1, Group::ALL));
-                                level.spawn(bundle.clone()).insert((Wall::Platform, Sensor));
+                                wall.insert(GhostPlatform);
                             }
                             Wall::Spike => {
-                                wall.insert((DamagePlayer, Sleeping::disabled(), Sensor));
+                                wall.insert((DamagePlayer, Sensor));
                             }
                             _ => {}
                         }
