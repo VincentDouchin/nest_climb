@@ -7,6 +7,9 @@ use leafwing_input_manager::prelude::*;
 #[derive(Component)]
 pub struct GhostPlatform;
 
+#[derive(Component, Default)]
+pub struct DisappearingPlatform(pub Option<Timer>);
+
 pub fn spawn_ghost_platforms(
     platform_query: Query<(Entity, &Collider), (With<GhostPlatform>, Without<CollisionGroups>)>,
     mut commands: Commands,
@@ -60,6 +63,30 @@ pub fn jump_throught_platforms(
             collision_groups.filters = Group::ALL - Group::GROUP_1;
         } else if !collide_with_platform_sensor() {
             collision_groups.filters = Group::ALL
+        }
+    }
+}
+
+pub fn disappear_platforms(
+    mut query: Query<(Entity, &mut DisappearingPlatform)>,
+    player_query: Query<Entity, With<Player>>,
+    mut commands: Commands,
+    time: Res<Time>,
+    rapier_context: Res<RapierContext>,
+) {
+    if let Ok(player_entity) = player_query.get_single() {
+        for (entity, mut disappearing_platform) in query.iter_mut() {
+            if disappearing_platform.0.is_none() {
+                if rapier_context.contact_pair(entity, player_entity).is_some() {
+                    disappearing_platform.0 = Some(Timer::from_seconds(3.0, TimerMode::Once));
+                }
+            }
+            if let Some(timer) = disappearing_platform.0.as_mut() {
+                timer.tick(time.delta());
+                if timer.finished() {
+                    commands.entity(entity).despawn_recursive()
+                }
+            }
         }
     }
 }

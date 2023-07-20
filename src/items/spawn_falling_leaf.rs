@@ -2,12 +2,12 @@ use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{prelude::*, utils::*};
 
-#[derive(Default, Bundle, LdtkEntity)]
-pub struct LeafGeneratorBundle {
+#[derive(Bundle, LdtkEntity)]
+pub struct FallingLeafBundle {
     #[ldtk_entity]
-    leaf_generator: LeafGenerator,
+    falling_leaf: FallingLeaf,
 }
-impl LdtkEntity for LeafGenerator {
+impl LdtkEntity for FallingLeaf {
     fn bundle_entity(
         entity_instance: &EntityInstance,
         layer_instance: &LayerInstance,
@@ -39,47 +39,51 @@ impl LdtkEntity for LeafGenerator {
             entity_instance.pivot,
         )
         .y;
-        LeafGenerator {
+        FallingLeaf {
             timer: Timer::from_seconds(speed.clone() as f32, TimerMode::Repeating),
             limit: origin - limit,
+            enabled: true,
         }
     }
 }
 
-#[derive(Component, Debug, Default)]
-pub struct LeafGenerator {
+#[derive(Component, Debug)]
+pub struct FallingLeaf {
     pub timer: Timer,
     pub limit: f32,
+    pub enabled: bool,
 }
 
 #[derive(Component)]
 pub struct Leaf(pub f32);
 
 pub fn spawn_leafs(
-    mut leaf_generators_query: Query<(Entity, &mut LeafGenerator)>,
+    mut leaf_generators_query: Query<(Entity, &mut FallingLeaf)>,
     mut commands: Commands,
     time: Res<Time>,
     assets: Res<MyAssets>,
 ) {
-    for (entity, mut leaf_generator) in leaf_generators_query.iter_mut() {
-        leaf_generator.timer.tick(time.delta());
-        if leaf_generator.timer.finished() {
-            commands.entity(entity).with_children(|generator| {
-                generator.spawn((
-                    assets.trampoline.clone(),
-                    TextureAtlasSprite::default(),
-                    TransformBundle::from_transform(Transform::from_translation(Vec3::Z)),
-                    VisibilityBundle::default(),
-                    Collider::cuboid(16.0, 8.0),
-                    GhostPlatform,
-                    RigidBody::KinematicVelocityBased,
-                    Velocity {
-                        linvel: Vec2::new(0.0, -10.0),
-                        ..default()
-                    },
-                    Leaf(leaf_generator.limit),
-                ));
-            });
+    for (entity, mut falling_leaf) in leaf_generators_query.iter_mut() {
+        if falling_leaf.enabled {
+            falling_leaf.timer.tick(time.delta());
+            if falling_leaf.timer.finished() {
+                commands.entity(entity).with_children(|generator| {
+                    generator.spawn((
+                        assets.trampoline.clone(),
+                        TextureAtlasSprite::default(),
+                        TransformBundle::from_transform(Transform::from_translation(Vec3::Z)),
+                        VisibilityBundle::default(),
+                        Collider::cuboid(16.0, 4.0),
+                        GhostPlatform,
+                        RigidBody::KinematicVelocityBased,
+                        Velocity {
+                            linvel: Vec2::new(0.0, -10.0),
+                            ..default()
+                        },
+                        Leaf(falling_leaf.limit),
+                    ));
+                });
+            }
         }
     }
 }

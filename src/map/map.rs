@@ -4,6 +4,22 @@ use bevy_ecs_ldtk::prelude::*;
 
 #[derive(Component)]
 pub struct Level;
+#[derive(Clone, Bundle)]
+pub struct EntityColliderBundle {
+    body: RigidBody,
+    collider: Collider,
+    sensor: Sensor,
+}
+
+impl Default for EntityColliderBundle {
+    fn default() -> Self {
+        EntityColliderBundle {
+            body: RigidBody::Fixed,
+            collider: Collider::cuboid(8.0, 8.0),
+            sensor: Sensor,
+        }
+    }
+}
 
 pub fn map_plugin(app: &mut App) {
     app.insert_resource(LevelSelection::Index(0))
@@ -13,6 +29,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_int_cell::<WallBundle>(3)
         .register_ldtk_int_cell::<WallBundle>(4)
         .register_ldtk_int_cell::<WallBundle>(5)
+        .register_ldtk_int_cell::<WallBundle>(8)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_entity::<EnemyBundle>("Enemy")
         .register_ldtk_entity::<CollectibleBundle>("Collectible")
@@ -22,7 +39,8 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<PendulumBundle>("Pendulum")
         .register_ldtk_entity::<HeartBundle>("Heart")
         .register_ldtk_entity::<TrampolineBundle>("Trampoline")
-        .register_ldtk_entity::<LeafGeneratorBundle>("FallingLeaf")
+        .register_ldtk_entity::<FallingLeafBundle>("FallingLeaf")
+        .register_ldtk_entity::<DeadLeafBundle>("DeadLeaf")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::No,
             ..Default::default()
@@ -43,6 +61,8 @@ pub fn map_plugin(app: &mut App) {
                 spawn_trampoline,
                 spawn_leafs,
                 despawn_fallen_leafs,
+                disappear_platforms,
+                spawn_dead_leaves,
             )
                 .in_set(OnUpdate(GameState::Run)),
         );

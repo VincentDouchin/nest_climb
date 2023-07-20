@@ -100,8 +100,10 @@ mod items {
     pub use self::spawn_heart::*;
     mod spawn_trampoline;
     pub use self::spawn_trampoline::*;
-    mod spawn_leaf_generator;
-    pub use self::spawn_leaf_generator::*;
+    mod spawn_falling_leaf;
+    pub use self::spawn_falling_leaf::*;
+    mod spawn_dead_leaves;
+    pub use self::spawn_dead_leaves::*;
 }
 pub use items::*;
 

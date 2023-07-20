@@ -6,23 +6,6 @@ use bevy_rapier2d::prelude::*;
 #[derive(Component, Clone, Default)]
 pub struct Pickup;
 
-#[derive(Clone, Bundle)]
-pub struct EntityColliderBundle {
-    body: RigidBody,
-    collider: Collider,
-    sensor: Sensor,
-}
-
-impl Default for EntityColliderBundle {
-    fn default() -> Self {
-        EntityColliderBundle {
-            body: RigidBody::Fixed,
-            collider: Collider::cuboid(8.0, 8.0),
-            sensor: Sensor,
-        }
-    }
-}
-
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct CollectibleBundle {
     #[bundle]
