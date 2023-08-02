@@ -77,6 +77,6 @@ pub fn set_camera_to_level_center(
 }
 
 pub fn camera_plugin(app: &mut App) {
-    app.add_startup_system(spawn_camera);
-    app.add_systems((move_camera, set_camera_to_level_center).chain());
+    app.add_systems(Startup, spawn_camera);
+    app.add_systems(Update, (move_camera, set_camera_to_level_center).chain());
 }

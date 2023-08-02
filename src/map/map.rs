@@ -22,9 +22,7 @@ impl Default for EntityColliderBundle {
 }
 
 pub fn map_plugin(app: &mut App) {
-    app.insert_resource(LevelSelection::Index(0))
-        .init_resource::<CurrentLevel>()
-        .register_ldtk_int_cell::<WallBundle>(1)
+    app.register_ldtk_int_cell::<WallBundle>(1)
         .register_ldtk_int_cell::<WallBundle>(2)
         .register_ldtk_int_cell::<WallBundle>(3)
         .register_ldtk_int_cell::<WallBundle>(4)
@@ -41,13 +39,10 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<TrampolineBundle>("Trampoline")
         .register_ldtk_entity::<FallingLeafBundle>("FallingLeaf")
         .register_ldtk_entity::<DeadLeafBundle>("DeadLeaf")
-        .insert_resource(LdtkSettings {
-            set_clear_color: SetClearColor::No,
-            ..Default::default()
-        })
-        .add_system(spawn_map.in_schedule(OnEnter(GameState::Run)))
-        .add_system(despawn_map.in_schedule(OnExit(GameState::Run)))
+        .add_systems(OnEnter(GameState::Run), spawn_map)
+        .add_systems(OnExit(GameState::Run), despawn_map)
         .add_systems(
+            Update,
             (
                 spawn_player,
                 spawn_walls,
@@ -64,7 +59,7 @@ pub fn map_plugin(app: &mut App) {
                 disappear_platforms,
                 spawn_dead_leaves,
             )
-                .in_set(OnUpdate(GameState::Run)),
+                .run_if(in_state(GameState::Run)),
         );
 }
 

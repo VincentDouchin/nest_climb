@@ -9,9 +9,9 @@ pub fn pause_game(
 ) {
     for input in menu_inputs.iter() {
         if input.just_pressed(MenuAction::Pause) {
-            if current_paused_state.0 == PauseState::Paused {
+            if current_paused_state.get() == &PauseState::Paused {
                 next_paused_state.set(PauseState::NotPaused)
-            } else if current_paused_state.0 == PauseState::NotPaused {
+            } else if current_paused_state.get() == &PauseState::NotPaused {
                 next_paused_state.set(PauseState::Paused)
             };
         }
@@ -23,7 +23,9 @@ pub fn pause_game_on_unfocus(
     mut paused_state: ResMut<NextState<PauseState>>,
     current_paused_state: Res<State<PauseState>>,
 ) {
-    if events.iter().any(|event| !event.focused) && current_paused_state.0 != PauseState::Paused {
+    if events.iter().any(|event| !event.focused)
+        && current_paused_state.get() != &PauseState::Paused
+    {
         paused_state.set(PauseState::Paused)
     }
 }
@@ -36,8 +38,11 @@ pub fn pause_physics<const PAUSE: bool>(mut rapier_config: ResMut<RapierConfigur
 
 pub fn pause_plugin(app: &mut App) {
     app.add_state::<PauseState>()
-        .add_system(pause_physics::<false>.in_schedule(OnExit(PauseState::NotPaused)))
-        .add_system(pause_physics::<true>.in_schedule(OnEnter(PauseState::NotPaused)))
-        .add_system(unpause_game.in_schedule(OnExit(GameState::Run)))
-        .add_systems((pause_game, pause_game_on_unfocus).in_set(OnUpdate(GameState::Run)));
+        .add_systems(OnExit(PauseState::NotPaused), pause_physics::<false>)
+        .add_systems(OnEnter(PauseState::NotPaused), pause_physics::<true>)
+        .add_systems(OnExit(GameState::Run), unpause_game)
+        .add_systems(
+            Update,
+            (pause_game, pause_game_on_unfocus).run_if(in_state(GameState::Run)),
+        );
 }

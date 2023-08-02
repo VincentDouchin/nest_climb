@@ -36,7 +36,7 @@ impl Default for DeadLeaf {
 pub struct DeadLeafBundle {
     dead_leaf: DeadLeaf,
     body: RigidBody,
-    #[bundle]
+    #[bundle()]
     visibility_bundle: VisibilityBundle,
 }
 

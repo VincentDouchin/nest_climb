@@ -2,7 +2,6 @@ use crate::*;
 use bevy::prelude::*;
 use bevy_easings::EasingsPlugin;
 use bevy_ecs_ldtk::prelude::*;
-use bevy_ninepatch::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
@@ -10,7 +9,7 @@ use bevy_ui_navigation::{prelude::*, systems::InputMapping};
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
     // ! EASING
-    app.add_plugin(EasingsPlugin);
+    app.add_plugins(EasingsPlugin);
     // ! SAVING
     app.insert_resource(PkvStore::new("NestClimb", "savedata"));
     // ! Default plugins
@@ -25,26 +24,31 @@ pub fn initialize_libraries(app: &mut App) {
                 ..default()
             }),
     )
-    // ! NINE PATCH
-    .add_plugin(NinePatchPlugin::<()>::default())
     // ! UI
     .add_plugins(DefaultNavigationPlugins)
-    .add_startup_system(|mut input_mapping: ResMut<InputMapping>| {
+    .add_systems(Startup, |mut input_mapping: ResMut<InputMapping>| {
         input_mapping.keyboard_navigation = true;
         input_mapping.key_action = KeyCode::Return;
         input_mapping.focus_follows_mouse = true;
     })
     // ! Leafwing inputs
-    .add_plugin(InputManagerPlugin::<PlayerAction>::default())
-    .add_plugin(InputManagerPlugin::<MenuAction>::default())
+    .add_plugins(InputManagerPlugin::<PlayerAction>::default())
+    .add_plugins(InputManagerPlugin::<MenuAction>::default())
     // ! LDTK levels
-    .add_plugin(LdtkPlugin)
+    .insert_resource(LevelSelection::Index(0))
+    .init_resource::<CurrentLevel>()
+    .insert_resource(LdtkSettings {
+        set_clear_color: SetClearColor::No,
+        level_background: LevelBackground::Nonexistent,
+        ..default()
+    })
+    .add_plugins(LdtkPlugin)
     // ! Rapier physics engine
-    .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-    .add_startup_system(|mut cfg: ResMut<RapierConfiguration>| {
+    .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+    .add_systems(Startup, |mut cfg: ResMut<RapierConfiguration>| {
         cfg.gravity = Vec2::Y * -250.0;
     })
     // ! Tnua platformer controls
-    .add_plugin(TnuaRapier2dPlugin)
-    .add_plugin(TnuaPlatformerPlugin);
+    .add_plugins(TnuaRapier2dPlugin)
+    .add_plugins(TnuaPlatformerPlugin);
 }

@@ -1,3 +1,4 @@
+#import bevy_pbr::mesh_vertex_output MeshVertexOutput
 struct CustomMaterial {
     margins: vec4<f32>,
     size: vec2<f32>,
@@ -27,13 +28,13 @@ fn process_axis( coord:f32, pixel:f32, texture_pixel:f32 , start:f32, end:f32) -
 
 @fragment
 fn fragment(
-    #import bevy_pbr::mesh_vertex_output
+    mesh: MeshVertexOutput,
 ) -> @location(0) vec4<f32> {
   	var pixel_size = (1.0 / material.size) / material.scale;
 
 	var mappedUV = vec2(
-		process_axis(uv.x, pixel_size.x, 1.0/material.size.x, material.margins.x, material.margins.y),
-		process_axis(uv.y, pixel_size.y, 1.0/material.size.y, material.margins.z,material.margins.w)
+		process_axis(mesh.uv.x, pixel_size.x, 1.0/material.size.x, material.margins.x, material.margins.y),
+		process_axis(mesh.uv.y, pixel_size.y, 1.0/material.size.y, material.margins.z,material.margins.w)
 	);
 	return textureSample(base_color_texture,base_color_sampler, mappedUV);
 }

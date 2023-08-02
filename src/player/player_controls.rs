@@ -1,7 +1,10 @@
-use bevy::prelude::{GamepadButtonType, KeyCode, ScanCode};
+use bevy::{
+    prelude::{GamepadButtonType, KeyCode, ScanCode},
+    reflect::Reflect,
+};
 use leafwing_input_manager::prelude::*;
 
-#[derive(Actionlike, PartialEq, Eq, Clone, Copy, Hash, Debug)]
+#[derive(Actionlike, Reflect, PartialEq, Eq, Clone, Copy, Hash, Debug)]
 pub enum PlayerAction {
     MoveLeft,
     MoveRight,

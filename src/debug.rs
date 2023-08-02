@@ -47,21 +47,21 @@ pub fn skip_start_screen(
     }
 }
 pub fn debug_plugin(app: &mut App) {
-    app.add_plugin(RapierDebugRenderPlugin::default());
-    app.add_system(save_debug);
+    app.add_plugins(RapierDebugRenderPlugin::default());
+    app.add_systems(Update, save_debug);
     app.insert_resource(ExampleUiTnuaActive(true));
     app.insert_resource(Debug {
         enabled: false,
         skip_start_screen: false,
     });
-    app.add_startup_system(set_debug);
-    app.add_system(skip_start_screen.in_schedule(OnEnter(GameState::Start)));
-    app.add_plugin(EguiPlugin);
-    app.add_system(toggle_debug);
-    app.add_system(debug_rendering);
-    app.add_system(ui_system.run_if(run_debug));
-    app.add_system(plot_source_rolling_update.run_if(run_debug));
-    app.add_system(track_player.run_if(run_debug));
+    app.add_systems(Startup, set_debug);
+    app.add_systems(OnEnter(GameState::Start), skip_start_screen);
+    app.add_plugins(EguiPlugin);
+    app.add_systems(Update, toggle_debug);
+    app.add_systems(Update, debug_rendering);
+    app.add_systems(Update, ui_system.run_if(run_debug));
+    app.add_systems(Update, plot_source_rolling_update.run_if(run_debug));
+    app.add_systems(Update, track_player.run_if(run_debug));
 }
 
 // ! UI
@@ -250,6 +250,9 @@ fn ui_system(
     mut commands: Commands,
     mut debug: ResMut<Debug>,
     mut is_touch_device: ResMut<IsTouchDevice>,
+    asset_server: Res<AssetServer>,
+    mut assets: ResMut<MyAssets>,
+    mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     for (entity, _, _, _, command_altering_selectors) in query.iter_mut() {
         if let Some(mut command_altering_selectors) = command_altering_selectors {
@@ -293,6 +296,12 @@ fn ui_system(
         {
             ui.horizontal(|ui| {
                 ui.vertical(|ui| {
+                    if ui.button("load level").clicked() {
+                        let new_level_handle: Handle<LdtkAsset> = asset_server.load("./level.ldtk");
+                        assets.test_level = new_level_handle;
+                        next_game_state.set(GameState::LevelTransition)
+                    }
+                    // ! LOAD LEVEL
                     // ! CAMERA
                     if let Ok(mut projection) = camera_query.get_single_mut() {
                         ui.add(egui::Slider::new(&mut projection.scale, 0.0..=10.0).text("Zoom"));

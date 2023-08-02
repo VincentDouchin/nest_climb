@@ -13,7 +13,7 @@ pub struct Flag {
 pub struct FlagBundle {
     #[ldtk_entity]
     pub flag: Flag,
-    #[bundle]
+    #[bundle()]
     entity_collider_bundle: EntityColliderBundle,
 }
 impl LdtkEntity for Flag {

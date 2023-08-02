@@ -11,11 +11,11 @@ fn main() {
         // ! Libraries
         .fn_plugin(initialize_libraries)
         .fn_plugin(nine_slice_plugin)
-        .add_startup_system(spawn_inputs)
+        .add_systems(Startup, spawn_inputs)
         // ! States
         .fn_plugin(pause_plugin)
-        .add_system(despawn_state_ui::<GameState>)
-        .add_system(despawn_state_ui::<PauseState>)
+        .add_systems(Update, despawn_state_ui::<GameState>)
+        .add_systems(Update, despawn_state_ui::<PauseState>)
         // ! Background
         .fn_plugin(background_plugin)
         // ! Camera
@@ -24,6 +24,7 @@ fn main() {
         .fn_plugin(map_plugin)
         // ! RUN
         .add_systems(
+            Update,
             (
                 collect_item,
                 patrol,
@@ -36,40 +37,44 @@ fn main() {
                 spawn_ghost_platforms,
                 bounce_on_trampoline.before(move_player_system),
             )
-                .in_set(OnUpdate(GameState::Run))
-                .distributive_run_if(in_state(PauseState::NotPaused)),
+                .run_if(in_state(PauseState::NotPaused))
+                .run_if(in_state(GameState::Run)),
         )
         // ! Movement
-        .add_system(
+        .add_systems(
+            Update,
             move_player_system
                 .before(move_camera)
-                .in_set(OnUpdate(GameState::Run)),
+                .run_if(in_state(GameState::Run)),
         )
         // ! Damage
         .fn_plugin(run_timer_plugin)
         // ! Animation
         .fn_plugin(animation_plugin)
         // ! NAVIGATION
-        .add_system(click_on_buttons)
+        .add_systems(Update, click_on_buttons)
         // ! START
-        // .add_system(start_game.in_set(OnUpdate(GameState::Start)))
+        // .add_systems(start_game.in_set(OnUpdate(GameState::Start)))
         // ! LEVEL SELECT
-        // .add_system(select_level.in_set(:OnUpdate(GameState::LevelSelect)))
+        // .add_systems(select_level.in_set(:OnUpdate(GameState::LevelSelect)))
         // ! FLAG
-        .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
-        .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
+        .add_systems(OnEnter(GameState::LevelTransition), level_transition)
+        .add_systems(
+            Update,
+            (move_to_next_level).run_if(in_state(GameState::Run)),
+        )
         // ! UI
         .fn_plugin(selector_plugin)
         .fn_plugin(run_ui_plugin)
-        .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
-        .add_system(spawn_start_ui.in_schedule(OnEnter(GameState::Start)))
-        .add_system(move_clouds)
-        .add_system(spawn_level_select_ui.in_schedule(OnEnter(GameState::LevelSelect)))
-        .add_system(spawn_pause_ui.in_schedule(OnEnter(PauseState::Paused)))
-        .add_system(spawn_game_over_ui.in_schedule(OnEnter(PauseState::GameOver)))
+        .add_systems(OnEnter(GameState::Run), spawn_run_ui)
+        .add_systems(OnEnter(GameState::Start), spawn_start_ui)
+        .add_systems(Update, move_clouds)
+        .add_systems(OnEnter(GameState::LevelSelect), spawn_level_select_ui)
+        .add_systems(OnEnter(PauseState::Paused), spawn_pause_ui)
+        .add_systems(OnEnter(PauseState::GameOver), spawn_game_over_ui)
         // ! Parallax
-        .add_system(spawn_parallax.in_schedule(OnEnter(GameState::Run)))
-        .add_system(move_parallax.in_set(OnUpdate(GameState::Run)))
+        .add_systems(OnEnter(GameState::Run), spawn_parallax)
+        .add_systems(Update, (move_parallax).run_if(in_state(GameState::Run)))
         // ! Debug
         .fn_plugin(debug_plugin)
         .run();

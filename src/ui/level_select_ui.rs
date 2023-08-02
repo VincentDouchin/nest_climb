@@ -13,7 +13,8 @@ pub fn spawn_level_select_ui(
             StateUi(GameState::LevelSelect),
             NodeBundle {
                 style: Style {
-                    size: Size::all(Val::Percent(100.0)),
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
                     padding: UiRect::all(Val::Percent(3.0)),
                     flex_direction: FlexDirection::Column,
                     ..default()
@@ -27,10 +28,7 @@ pub fn spawn_level_select_ui(
             root.spawn((
                 NodeBundle {
                     style: Style {
-                        size: Size {
-                            height: Val::Percent(10.0),
-                            ..default()
-                        },
+                        height: Val::Percent(10.0),
                         padding: UiRect::all(Val::Px(64.0)),
                         ..default()
                     },
@@ -66,7 +64,7 @@ pub fn spawn_level_select_ui(
                 NodeBundle {
                     style: Style {
                         padding: UiRect::all(Val::Px(50.0)),
-                        gap: Size::all(Val::Px(50.0)),
+                        // gap: Size::all(Val::Px(50.0)),
                         flex_grow: 1.0,
                         ..default()
                     },
@@ -88,7 +86,8 @@ pub fn spawn_level_select_ui(
                             .spawn((
                                 ButtonBundle {
                                     style: Style {
-                                        size: Size::all(Val::Px(50.0)),
+                                        width: Val::Px(50.0),
+                                        height: Val::Px(50.0),
                                         padding: UiRect::all(Val::Px(32.0)),
                                         ..default()
                                     },
