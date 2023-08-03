@@ -55,7 +55,7 @@ fn main() {
         // .add_system(start_game.in_set(OnUpdate(GameState::Start)))
         // ! LEVEL SELECT
         // .add_system(select_level.in_set(:OnUpdate(GameState::LevelSelect)))
-        // ! FLAG
+        // ! NEST
         .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
         .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
         // ! UI

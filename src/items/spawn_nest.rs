@@ -10,7 +10,7 @@ pub struct Flag {
 }
 
 #[derive(Clone, Default, Bundle, LdtkEntity)]
-pub struct FlagBundle {
+pub struct NestBundle {
     #[ldtk_entity]
     pub flag: Flag,
     #[bundle]
@@ -31,15 +31,16 @@ impl LdtkEntity for Flag {
         };
     }
 }
-pub fn spawn_flag(
+pub fn spawn_nest(
     assets: Res<MyAssets>,
-    query: Query<Entity, Added<Flag>>,
+    mut query: Query<(Entity, &mut Transform), Added<Flag>>,
     mut commands: Commands,
 ) {
-    for entity in query.iter() {
+    for (entity, mut transform) in query.iter_mut() {
+        transform.translation.y -= 8.0;
         commands
             .entity(entity)
-            .insert(AnimatedSpriteBundle::new(assets.flag.clone()));
+            .insert(AnimatedSpriteBundle::new(assets.nest.clone()));
     }
 }
 
@@ -48,17 +49,17 @@ pub fn level_transition(mut next_state: ResMut<NextState<GameState>>) {
 }
 
 pub fn move_to_next_level(
-    flag_query: Query<(Entity, &Flag)>,
+    nest_query: Query<(Entity, &Flag)>,
     player_query: Query<Entity, With<Player>>,
     mut next_state: ResMut<NextState<GameState>>,
     rapier_context: Res<RapierContext>,
     mut commands: Commands,
 ) {
-    for (flag_entity, flag) in flag_query.iter() {
+    for (nest_entity, nest) in nest_query.iter() {
         for player_entity in player_query.iter() {
-            if let Some(contact) = rapier_context.intersection_pair(flag_entity, player_entity) {
+            if let Some(contact) = rapier_context.intersection_pair(nest_entity, player_entity) {
                 if contact {
-                    commands.insert_resource(LevelSelection::Index(flag.next_level));
+                    commands.insert_resource(LevelSelection::Index(nest.next_level));
                     next_state.set(GameState::LevelTransition)
                 }
             }

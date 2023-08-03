@@ -1998,7 +1998,7 @@
 			]
 		},
 		{
-			"identifier": "Flag",
+			"identifier": "Nest",
 			"uid": 59,
 			"tags": [],
 			"exportToToc": false,
@@ -2019,9 +2019,9 @@
 			"color": "#E4A672",
 			"renderMode": "Tile",
 			"showName": true,
-			"tilesetId": 65,
+			"tilesetId": 1,
 			"tileRenderMode": "FitInside",
-			"tileRect": { "tilesetUid": 65, "x": 16, "y": 832, "w": 16, "h": 16 },
+			"tileRect": { "tilesetUid": 1, "x": 144, "y": 128, "w": 16, "h": 16 },
 			"nineSliceBorders": [],
 			"maxCount": 0,
 			"limitScope": "PerLevel",
@@ -2846,11 +2846,11 @@
 							"fieldInstances": []
 						},
 						{
-							"__identifier": "Flag",
+							"__identifier": "Nest",
 							"__grid": [36,22],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 65, "x": 16, "y": 832, "w": 16, "h": 16 },
+							"__tile": { "tilesetUid": 1, "x": 144, "y": 128, "w": 16, "h": 16 },
 							"__smartColor": "#E4A672",
 							"iid": "86777d00-1460-11ee-b806-df1e38b12a39",
 							"width": 16,
@@ -3444,11 +3444,11 @@
 							"fieldInstances": []
 						},
 						{
-							"__identifier": "Flag",
+							"__identifier": "Nest",
 							"__grid": [23,1],
 							"__pivot": [0,0],
 							"__tags": [],
-							"__tile": { "tilesetUid": 65, "x": 16, "y": 832, "w": 16, "h": 16 },
+							"__tile": { "tilesetUid": 1, "x": 144, "y": 128, "w": 16, "h": 16 },
 							"__smartColor": "#E4A672",
 							"iid": "09b93a00-1460-11ee-b806-5d28d93622fe",
 							"width": 16,

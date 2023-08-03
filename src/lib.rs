@@ -86,8 +86,8 @@ pub use enemies::*;
 mod items {
     mod spawn_platform;
     pub use self::spawn_platform::*;
-    mod spawn_flag;
-    pub use self::spawn_flag::*;
+    mod spawn_nest;
+    pub use self::spawn_nest::*;
     mod spawn_collectible;
     pub use self::spawn_collectible::*;
     mod spawn_sawblad;

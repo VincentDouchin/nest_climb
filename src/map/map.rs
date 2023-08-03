@@ -33,7 +33,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_entity::<EnemyBundle>("Enemy")
         .register_ldtk_entity::<CollectibleBundle>("Collectible")
-        .register_ldtk_entity::<FlagBundle>("Flag")
+        .register_ldtk_entity::<NestBundle>("Nest")
         .register_ldtk_entity::<PlatformBundle>("Platform")
         .register_ldtk_entity::<SawbladeBundle>("Sawblade")
         .register_ldtk_entity::<PendulumBundle>("Pendulum")
@@ -56,7 +56,7 @@ pub fn map_plugin(app: &mut App) {
                 spawn_ghost_platforms,
                 spawn_sawblade,
                 spawn_pendulum,
-                spawn_flag,
+                spawn_nest,
                 spawn_heart,
                 spawn_trampoline,
                 spawn_leafs,
