@@ -74,7 +74,7 @@ pub fn spawn_leafs(
                         TransformBundle::from_transform(Transform::from_translation(Vec3::Z)),
                         VisibilityBundle::default(),
                         Collider::cuboid(16.0, 4.0),
-                        GhostPlatform,
+                        // GhostPlatform,
                         RigidBody::KinematicVelocityBased,
                         Velocity {
                             linvel: Vec2::new(0.0, -10.0),

@@ -1,3 +1,4 @@
+use crate::*;
 use bevy::prelude::*;
 use bevy_tnua::*;
 use leafwing_input_manager::prelude::*;
@@ -10,29 +11,48 @@ pub fn move_player_system(
         &mut DirectionComponent,
         &ActionState<PlayerAction>,
         &BouncingOnTrampoline,
+        &mut Climber,
+        &mut Velocity,
     )>,
 ) {
-    for (mut controls, mut direction, actions, bouncing) in player_query.iter_mut() {
-        // ! Movement
-        if actions.pressed(PlayerAction::MoveLeft) {
-            controls.desired_forward = Vec3::NEG_X;
-            controls.desired_velocity = Vec3::NEG_X;
-            direction.0 = SpriteDirection::Left;
-        } else if actions.pressed(PlayerAction::MoveRight) {
-            controls.desired_forward = Vec3::X;
-            controls.desired_velocity = Vec3::X;
-            direction.0 = SpriteDirection::Right;
+    for (mut controls, mut direction, actions, bouncing, mut climber, mut velocity) in
+        player_query.iter_mut()
+    {
+        if climber.is_climbing {
+            if actions.pressed(PlayerAction::MoveUp) {
+                velocity.linvel.y += 1.0;
+            }
+            if actions.pressed(PlayerAction::Jump) {
+                climber.is_climbing = false;
+            }
         } else {
-            controls.desired_velocity = Vec3::ZERO
-        }
-
-        // ! Jump
-        if bouncing.0.is_none() {
-            controls.jump = if actions.pressed(PlayerAction::Jump) {
-                Some(1.0)
+            if climber.can_climb
+                && (actions.pressed(PlayerAction::MoveUp)
+                    || actions.pressed(PlayerAction::MoveDown))
+            {
+                climber.is_climbing = true;
+            }
+            // ! Movement
+            if actions.pressed(PlayerAction::MoveLeft) {
+                controls.desired_forward = Vec3::NEG_X;
+                controls.desired_velocity = Vec3::NEG_X;
+                direction.0 = SpriteDirection::Left;
+            } else if actions.pressed(PlayerAction::MoveRight) {
+                controls.desired_forward = Vec3::X;
+                controls.desired_velocity = Vec3::X;
+                direction.0 = SpriteDirection::Right;
             } else {
-                None
-            };
+                controls.desired_velocity = Vec3::ZERO
+            }
+
+            // ! Jump
+            if bouncing.0.is_none() {
+                controls.jump = if actions.pressed(PlayerAction::Jump) {
+                    Some(1.0)
+                } else {
+                    None
+                };
+            }
         }
     }
 }

@@ -4,6 +4,8 @@ use leafwing_input_manager::prelude::*;
 #[derive(Actionlike, PartialEq, Eq, Clone, Copy, Hash, Debug)]
 pub enum PlayerAction {
     MoveLeft,
+    MoveUp,
+    MoveDown,
     MoveRight,
     Run,
     Jump,
@@ -24,6 +26,10 @@ pub fn get_player_input_map() -> InputMap<PlayerAction> {
     input_map.insert(KeyCode::Right, MoveRight);
     input_map.insert(ScanCode(68), MoveRight);
     input_map.insert(GamepadButtonType::DPadRight, MoveRight);
+    // Move Up
+    input_map.insert(KeyCode::Up, MoveUp);
+    input_map.insert(GamepadButtonType::DPadUp, MoveUp);
+
     // Crouch
     input_map.insert(KeyCode::Down, Crouch);
     input_map.insert(GamepadButtonType::DPadDown, Crouch);

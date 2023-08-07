@@ -30,6 +30,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_int_cell::<WallBundle>(4)
         .register_ldtk_int_cell::<WallBundle>(5)
         .register_ldtk_int_cell::<WallBundle>(8)
+        .register_ldtk_int_cell::<WallBundle>(9)
         .register_ldtk_entity::<PlayerBundle>("Player")
         .register_ldtk_entity::<EnemyBundle>("Enemy")
         .register_ldtk_entity::<CollectibleBundle>("Collectible")
@@ -53,7 +54,7 @@ pub fn map_plugin(app: &mut App) {
                 spawn_walls,
                 spawn_enemy,
                 spawn_collectibles,
-                spawn_ghost_platforms,
+                // spawn_ghost_platforms,
                 spawn_sawblade,
                 spawn_pendulum,
                 spawn_nest,

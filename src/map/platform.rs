@@ -4,31 +4,31 @@ use bevy_rapier2d::prelude::*;
 use bevy_tnua::TnuaPlatformerAnimatingOutput;
 use leafwing_input_manager::prelude::*;
 
-#[derive(Component)]
-pub struct GhostPlatform;
+// #[derive(Component, Default)]
+// pub struct GhostPlatform;
 
 #[derive(Component, Default)]
 pub struct DisappearingPlatform(pub Option<Timer>);
 
-pub fn spawn_ghost_platforms(
-    platform_query: Query<(Entity, &Collider), (With<GhostPlatform>, Without<CollisionGroups>)>,
-    mut commands: Commands,
-) {
-    for (entity, collider) in platform_query.iter() {
-        commands
-            .entity(entity)
-            .insert(CollisionGroups::new(Group::GROUP_1, Group::ALL))
-            .with_children(|platform| {
-                platform.spawn((
-                    TransformBundle::default(),
-                    collider.clone(),
-                    RigidBody::Fixed,
-                    Wall::Platform,
-                    Sensor,
-                ));
-            });
-    }
-}
+// pub fn spawn_ghost_platforms(
+//     platform_query: Query<(Entity, &Collider), (With<GhostPlatform>, Without<Sensor>)>,
+//     mut commands: Commands,
+// ) {
+// for (entity, collider) in platform_query.iter() {
+//     commands
+//         .entity(entity)
+//         .insert(Sensor)
+//         .with_children(|platform| {
+//             platform.spawn((
+//                 TransformBundle::default(),
+//                 collider.clone(),
+//                 RigidBody::Fixed,
+//                 Wall::Platform,
+//                 CollisionGroups::new(Group::GROUP_1, Group::ALL),
+//             ));
+//         });
+// }
+// }
 
 pub fn jump_throught_platforms(
     mut player_query: Query<
