@@ -23,6 +23,10 @@ pub fn initialize_libraries(app: &mut App) {
                     ..default()
                 }),
                 ..default()
+            })
+            .set(AssetPlugin {
+                watch_for_changes: true,
+                ..Default::default()
             }),
     )
     // ! NINE PATCH
