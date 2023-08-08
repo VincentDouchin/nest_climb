@@ -13,6 +13,7 @@ pub enum Wall {
     Platform,
     Spike,
     Branch,
+    Ladder,
 }
 
 #[derive(Clone, Debug, Bundle, LdtkIntCell)]
@@ -27,6 +28,7 @@ impl LdtkIntCell for Wall {
             2 => Wall::Branch,
             4 => Wall::Platform,
             5 => Wall::Spike,
+            8 => Wall::Ladder,
             _ => Wall::Solid,
         };
     }
@@ -206,11 +208,14 @@ pub fn spawn_walls(
                         let mut wall = level.spawn(bundle.clone());
 
                         match wall_rect.wall_type {
-                            Wall::Platform => {
-                                wall.insert(GhostPlatform);
-                            }
+                            // Wall::Platform => {
+                            //     wall.insert(GhostPlatform);
+                            // }
                             Wall::Spike => {
                                 wall.insert((DamagePlayer, Sensor));
+                            }
+                            Wall::Ladder => {
+                                wall.insert((Sensor, Climbable));
                             }
                             _ => {}
                         }

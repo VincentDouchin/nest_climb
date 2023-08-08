@@ -233,7 +233,7 @@ pub fn update_nine_slice(
     for (changed_entity, changed_nine_slice) in changed_query.iter() {
         for (nine_slice_material, linked_entity) in nine_slice_query.iter_mut() {
             if changed_entity == linked_entity.0 {
-                if let Some(mut material) = materials.get_mut(&nine_slice_material) {
+                if let Some(material) = materials.get_mut(&nine_slice_material) {
                     material.color_texture = changed_nine_slice.image_handle.clone();
                 }
             }

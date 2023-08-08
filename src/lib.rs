@@ -104,6 +104,8 @@ mod items {
     pub use self::spawn_falling_leaf::*;
     mod spawn_dead_leaves;
     pub use self::spawn_dead_leaves::*;
+    mod spawn_ladder;
+    pub use self::spawn_ladder::*;
 }
 pub use items::*;
 

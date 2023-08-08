@@ -22,6 +22,7 @@ pub fn spawn_player(
         let player_size = Vec2::new(14.0 / 2.0, 24.0 / 2.0);
         let collider = Collider::cuboid(player_size.x, player_size.y);
         let tnua_bundle = (
+            TnuaToggle::default(),
             TnuaPlatformerAnimatingOutput::default(),
             TnuaRapier2dIOBundle::default(),
             TnuaRapier2dSensorShape(collider.clone()),
@@ -79,6 +80,7 @@ pub fn spawn_player(
             },
         );
         let physics_bundle = (
+            GravityScale::default(),
             RigidBody::Dynamic,
             LockedAxes::ROTATION_LOCKED,
             collider,
@@ -95,6 +97,7 @@ pub fn spawn_player(
             },
             Health::new(5),
             BouncingOnTrampoline::default(),
+            Climber::default(),
         );
         commands
             .entity(entity)

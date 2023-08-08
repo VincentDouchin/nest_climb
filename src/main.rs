@@ -58,6 +58,8 @@ fn main() {
         // ! NEST
         .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
         .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
+        // ! CLIMBING
+        .add_systems((ignore_gravity_if_climbing, detect_can_climb))
         // ! UI
         .fn_plugin(selector_plugin)
         .fn_plugin(run_ui_plugin)
