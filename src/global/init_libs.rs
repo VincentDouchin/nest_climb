@@ -1,5 +1,5 @@
 use crate::*;
-use bevy::prelude::*;
+use bevy::{prelude::*, window::PresentMode};
 use bevy_easings::EasingsPlugin;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ninepatch::*;
@@ -20,8 +20,10 @@ pub fn initialize_libraries(app: &mut App) {
             .set(WindowPlugin {
                 primary_window: Some(Window {
                     fit_canvas_to_parent: true,
+                    present_mode: PresentMode::Fifo,
                     ..default()
                 }),
+
                 ..default()
             })
             .set(AssetPlugin {
