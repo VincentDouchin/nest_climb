@@ -6,11 +6,14 @@ use bevy_ninepatch::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
+use bevy_tweening::*;
 use bevy_ui_navigation::{prelude::*, systems::InputMapping};
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
     // ! EASING
     app.add_plugin(EasingsPlugin);
+    // ! TWEENING
+    app.add_plugin(TweeningPlugin);
     // ! SAVING
     app.insert_resource(PkvStore::new("NestClimb", "savedata"));
     // ! Default plugins

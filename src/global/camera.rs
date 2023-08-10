@@ -1,6 +1,7 @@
 use crate::*;
 use bevy::{core_pipeline::clear_color::ClearColorConfig, prelude::*, window::*};
 use bevy_ecs_ldtk::prelude::*;
+use bevy_tweening::*;
 #[derive(Component)]
 pub struct MainCamera;
 
@@ -33,17 +34,35 @@ fn spawn_camera(mut commands: Commands) {
 }
 
 pub fn move_camera(
-    mut camera_query: Query<&mut Transform, (With<MainCamera>, Without<CameraTarget>)>,
+    mut camera_query: Query<(Entity, &mut Transform), (With<MainCamera>, Without<CameraTarget>)>,
     target_query: Query<(&Transform, &CameraTarget), Without<MainCamera>>,
+    mut commands: Commands,
 ) {
     for (target_transform, camera_target) in target_query.iter() {
-        for mut camera_transform in camera_query.iter_mut() {
+        for (entity, camera_transform) in camera_query.iter_mut() {
+            let mut destination = camera_transform.translation.clone();
             if camera_target.x {
-                camera_transform.translation.x = target_transform.translation.x;
+                destination.x = target_transform.translation.x;
             }
             if camera_target.y {
-                camera_transform.translation.y = target_transform.translation.y;
+                destination.y = target_transform.translation.y;
             }
+            // Create a single animation (tween) to move an entity.
+            let tween = Tween::new(
+                // Use a quadratic easing on both endpoints.
+                EaseFunction::QuadraticInOut,
+                // Animation time (one way only; for ping-pong it takes 2 seconds
+                // to come back to start).
+                Duration::from_secs(0.05),
+                // The lens gives the Animator access to the Transform component,
+                // to animate it. It also contains the start and end values associated
+                // with the animation ratios 0. and 1.
+                TransformPositionLens {
+                    start: camera.translation.clone(),
+                    end: destination,
+                },
+            );
+            commands.entity(entity).insert(Animator::new(tween));
         }
     }
 }
