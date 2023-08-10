@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_tnua::*;
 use nest_climb::*;
 use seldom_fn_plugin::FnPluginExt;
 
@@ -32,7 +31,7 @@ fn main() {
                 player_enemy_interaction,
                 kill_entity,
                 detect_health_changed,
-                // jump_throught_platforms,
+                jump_through_platforms,
                 // bounce_on_trampoline.before(move_player_system),
             )
                 .in_set(OnUpdate(GameState::Run))
@@ -51,15 +50,11 @@ fn main() {
         .fn_plugin(animation_plugin)
         // ! NAVIGATION
         .add_system(click_on_buttons)
-        // ! START
-        // .add_system(start_game.in_set(OnUpdate(GameState::Start)))
-        // ! LEVEL SELECT
-        // .add_system(select_level.in_set(:OnUpdate(GameState::LevelSelect)))
         // ! NEST
         .add_system(level_transition.in_schedule(OnEnter(GameState::LevelTransition)))
         .add_system(move_to_next_level.in_set(OnUpdate(GameState::Run)))
         // ! CLIMBING
-        // .add_systems((ignore_gravity_if_climbing, detect_can_climb))
+        .add_system(detect_can_climb)
         // ! UI
         .fn_plugin(selector_plugin)
         .fn_plugin(run_ui_plugin)

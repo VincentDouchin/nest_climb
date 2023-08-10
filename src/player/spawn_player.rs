@@ -19,7 +19,7 @@ pub fn spawn_player(
     for entity in player_query.iter() {
         let image_size = Vec2::splat(32.0);
         let player_size = Vec2::new(14.0 / 2.0, 24.0 / 2.0);
-        let collider = Collider::cuboid(player_size.x, player_size.y);
+        let collider = Collider::capsule_y(player_size.y / 2.0, player_size.x);
         // let tnua_bundle = (
         //     // TnuaToggle::default(),
         //     // TnuaPlatformerAnimatingOutput::default(),

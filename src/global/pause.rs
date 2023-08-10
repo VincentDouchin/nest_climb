@@ -9,6 +9,7 @@ pub fn pause_game(
 ) {
     for input in menu_inputs.iter() {
         if input.just_pressed(MenuAction::Pause) {
+            println!("pause game");
             if current_paused_state.0 == PauseState::Paused {
                 next_paused_state.set(PauseState::NotPaused)
             } else if current_paused_state.0 == PauseState::NotPaused {
