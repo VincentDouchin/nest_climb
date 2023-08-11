@@ -24,8 +24,7 @@ pub fn spawn_platforms(
             AnimatedSpriteBundle::new(assets.platform.clone()),
             Collider::cuboid(24.0, 4.0),
             Velocity::default(),
-            RigidBody::Dynamic,
-            KinematicCharacterController::default(),
+            RigidBody::KinematicVelocityBased,
             LockedAxes::ROTATION_LOCKED,
         ));
     }
