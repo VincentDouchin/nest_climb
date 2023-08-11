@@ -2,7 +2,6 @@ use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
-use bevy_tnua::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
 pub struct Platform;
@@ -23,11 +22,12 @@ pub fn spawn_platforms(
         transform.scale = Vec3::splat(1.0);
         commands.entity(entity).insert((
             AnimatedSpriteBundle::new(assets.platform.clone()),
-            Collider::cuboid(24.0, 8.0),
+            Collider::cuboid(24.0, 4.0),
             Velocity::default(),
             RigidBody::Dynamic,
             KinematicCharacterController::default(),
             LockedAxes::ROTATION_LOCKED,
+            GhostPlatform::default(),
         ));
     }
 }
