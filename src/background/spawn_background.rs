@@ -55,5 +55,5 @@ pub fn background_follow_camera(
 pub fn background_plugin(app: &mut App) {
     app.add_system(spawn_background.in_schedule(OnExit(GameState::AssetLoading)))
         .add_system(resize_background)
-        .add_system(background_follow_camera);
+        .add_system(background_follow_camera.after(move_camera));
 }
