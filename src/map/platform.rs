@@ -4,8 +4,8 @@ use bevy_rapier2d::prelude::*;
 use bevy_tnua::TnuaPlatformerAnimatingOutput;
 use leafwing_input_manager::prelude::*;
 
-// #[derive(Component, Default)]
-// pub struct GhostPlatform;
+#[derive(Component, Default)]
+pub struct GhostPlatform;
 
 #[derive(Component, Default)]
 pub struct DisappearingPlatform(pub Option<Timer>);
