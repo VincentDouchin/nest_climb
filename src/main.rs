@@ -32,7 +32,7 @@ fn main() {
                 player_enemy_interaction,
                 kill_entity,
                 detect_health_changed,
-                jump_throught_platforms,
+                jump_through_platforms,
                 bounce_on_trampoline.before(move_player_system),
             )
                 .in_set(OnUpdate(GameState::Run))
