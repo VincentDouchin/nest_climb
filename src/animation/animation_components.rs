@@ -37,12 +37,14 @@ impl Default for AnimationTimer {
 #[derive(Component)]
 pub struct DespawnWhenAnimationFinished;
 
-#[derive(Eq, PartialEq, Component, Default)]
+#[derive(Eq, PartialEq)]
 pub enum SpriteDirection {
-    #[default]
-    Right,
     Left,
+    Right,
 }
+
+#[derive(Component)]
+pub struct DirectionComponent(pub SpriteDirection);
 
 #[derive(PartialEq)]
 pub enum AnimationStates {

@@ -208,9 +208,9 @@ pub fn spawn_walls(
                         let mut wall = level.spawn(bundle.clone());
 
                         match wall_rect.wall_type {
-                            Wall::Platform => {
-                                wall.insert(GhostPlatform);
-                            }
+                            // Wall::Platform => {
+                            //     wall.insert(GhostPlatform);
+                            // }
                             Wall::Spike => {
                                 wall.insert((DamagePlayer, Sensor));
                             }

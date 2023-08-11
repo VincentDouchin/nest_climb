@@ -1,27 +1,19 @@
 use crate::*;
 use bevy::prelude::*;
+use bevy_tnua::*;
 
 pub fn update_animation_state(
     mut query: Query<(
-        &Velocity,
-        &MovementControl,
+        &TnuaPlatformerAnimatingOutput,
         &mut AnimationState,
         &TextureAtlasSprite,
         &Handle<TextureAtlas>,
-        &mut SpriteDirection,
         Option<&Health>,
     )>,
     texture_atlases: Res<Assets<TextureAtlas>>,
 ) {
-    for (
-        velocity,
-        controls,
-        mut animation_state,
-        sprite,
-        texture_atlas_handle,
-        mut direction,
-        maybe_health,
-    ) in query.iter_mut()
+    for (animation_output, mut animation_state, sprite, texture_atlas_handle, maybe_health) in
+        query.iter_mut()
     {
         let texture_atlas = texture_atlases
             .get(texture_atlas_handle)
@@ -36,19 +28,16 @@ pub fn update_animation_state(
 
         let state = if lost_health {
             AnimationStates::Hurt
-        } else if velocity.linvel.y > 1.0 && !controls.grounded {
-            AnimationStates::JumpingUp
-        } else if velocity.linvel.y < -1.0 && !controls.grounded {
-            AnimationStates::JumpingDown
-        } else if velocity.linvel.x.abs() > 1.0 {
+        } else if let Some(jumping_velocity) = animation_output.jumping_velocity {
+            if jumping_velocity > 0.0 {
+                AnimationStates::JumpingUp
+            } else {
+                AnimationStates::JumpingDown
+            }
+        } else if animation_output.running_velocity.x.abs() > 0.0 {
             AnimationStates::Running
         } else {
             AnimationStates::Idle
-        };
-        if velocity.linvel.x > 1.0 {
-            *direction = SpriteDirection::Right
-        } else if velocity.linvel.x < -1.0 {
-            *direction = SpriteDirection::Left
         };
         if !(animation_state.state == AnimationStates::Hurt && !finished) {
             animation_state.state = state
@@ -107,9 +96,9 @@ pub fn animate_sprites(
     }
 }
 
-pub fn update_direction(mut query: Query<(&mut TextureAtlasSprite, &SpriteDirection)>) {
+pub fn update_direction(mut query: Query<(&mut TextureAtlasSprite, &DirectionComponent)>) {
     for (mut sprite, direction) in query.iter_mut() {
-        sprite.flip_x = direction == &SpriteDirection::Left
+        sprite.flip_x = direction.0 == SpriteDirection::Left
     }
 }
 
