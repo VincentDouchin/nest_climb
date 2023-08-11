@@ -5,6 +5,11 @@ use bevy_rapier2d::prelude::*;
 #[derive(Component, Default)]
 pub struct GhostPlatform(pub bool);
 
+#[derive(Component, Clone, Default)]
+pub struct MovingPlatform {
+    prev_position: Vec3,
+}
+
 #[derive(Component, Default)]
 pub struct DisappearingPlatform(pub Option<Timer>);
 
@@ -74,6 +79,24 @@ pub fn disappear_platforms(
                 if timer.finished() {
                     commands.entity(entity).despawn_recursive()
                 }
+            }
+        }
+    }
+}
+
+pub fn moving_platform(
+    mut query: Query<(Entity, &mut Velocity), Without<MovingPlatform>>,
+    platform_query: Query<(Entity, &Velocity), With<MovingPlatform>>,
+    rapier_context: Res<RapierContext>,
+    time: Res<Time>,
+) {
+    for (platform_entity, platform_velocity) in platform_query.iter() {
+        for (entity, mut velocity) in query.iter_mut() {
+            if rapier_context
+                .contact_pair(platform_entity, entity)
+                .is_some()
+            {
+                velocity.linvel += platform_velocity.linvel * time.delta_seconds();
             }
         }
     }

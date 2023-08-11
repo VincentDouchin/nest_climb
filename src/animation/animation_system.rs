@@ -40,7 +40,7 @@ pub fn update_animation_state(
             AnimationStates::JumpingUp
         } else if velocity.linvel.y < -1.0 && !controls.grounded {
             AnimationStates::JumpingDown
-        } else if velocity.linvel.x.abs() > 1.0 {
+        } else if controls.desired_velocity.x.abs() > 1.0 {
             AnimationStates::Running
         } else {
             AnimationStates::Idle

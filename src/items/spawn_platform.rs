@@ -9,6 +9,7 @@ pub struct Platform;
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct PlatformBundle {
     platform: Platform,
+    moving_platform: MovingPlatform,
     #[ldtk_entity]
     pub patrol: Patrol,
 }

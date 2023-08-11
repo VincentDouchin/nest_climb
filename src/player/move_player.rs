@@ -217,5 +217,10 @@ fn update_ground_sensor(
 }
 
 pub fn movement_plugin(app: &mut App) {
-    app.add_systems((apply_movement, update_ground_sensor, update_gravity_scale));
+    app.add_systems((
+        apply_movement,
+        update_ground_sensor,
+        update_gravity_scale,
+        moving_platform.after(patrol),
+    ));
 }
