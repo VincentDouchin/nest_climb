@@ -27,7 +27,7 @@ pub fn spawn_platforms(
             RigidBody::Dynamic,
             KinematicCharacterController::default(),
             LockedAxes::ROTATION_LOCKED,
-            GhostPlatform::default(),
+            // GhostPlatform::default(),
         ));
     }
 }
