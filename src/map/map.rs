@@ -54,7 +54,7 @@ pub fn map_plugin(app: &mut App) {
                 spawn_walls,
                 spawn_enemy,
                 spawn_collectibles,
-                // spawn_ghost_platforms,
+                spawn_ghost_platforms,
                 spawn_sawblade,
                 spawn_pendulum,
                 spawn_nest,

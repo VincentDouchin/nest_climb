@@ -33,6 +33,7 @@ pub fn jump_through_platforms(
                 contact_pair_view
                     .find_deepest_contact()
                     .map_or(true, |(deepest_contact, _)| {
+                        println!("{}", deepest_contact.normal().y);
                         deepest_contact.normal().y < 0.0
                     })
             });
