@@ -1,14 +1,11 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use bevy_tnua::*;
+use leafwing_input_manager::prelude::*;
 
 #[derive(Component, Default)]
-pub struct GhostPlatform(pub bool);
-
-#[derive(Component, Clone, Default)]
-pub struct MovingPlatform {
-    prev_position: Vec3,
-}
+pub struct GhostPlatform;
 
 #[derive(Component, Default)]
 pub struct DisappearingPlatform(pub Option<Timer>);
@@ -18,47 +15,72 @@ pub fn spawn_ghost_platforms(
     mut commands: Commands,
 ) {
     for entity in platform_query.iter() {
-        commands.entity(entity).insert(SolverGroups {
-            memberships: Group::ALL,
-            filters: Group::ALL,
-        });
+        println!("ok");
+        commands.entity(entity).insert((
+            SolverGroups {
+                // Or pick some other configuration - as long as it excludes the character
+                // that needs to jump or fall through this platform.
+                memberships: Group::empty(),
+                filters: Group::empty(),
+            },
+            TnuaGhostPlatform,
+        ));
+        // .insert(Sensor)
+        // .with_children(|platform| {
+        //     platform.spawn((
+        //         TransformBundle::default(),
+        //         collider.clone(),
+        //         RigidBody::Fixed,
+        //         Wall::Platform,
+        //         SolverGroups {
+        //             // Or pick some other configuration - as long as it excludes the character
+        //             // that needs to jump or fall through this platform.
+        //             memberships: Group::empty(),
+        //             filters: Group::empty(),
+        //         },
+        //         TnuaGhostPlatform,
+        //         // CollisionGroups::new(Group::GROUP_1, Group::ALL),
+        //     ));
+        // });
     }
 }
-pub fn jump_through_platforms(
-    player_query: Query<(Entity, &MovementControl), With<Player>>,
-    mut platform_query: Query<(Entity, &mut SolverGroups, &mut GhostPlatform)>,
-    rapier_context: Res<RapierContext>,
-) {
-    for (player_entity, controls) in player_query.iter() {
-        for (platform_entity, mut groups, mut platform) in platform_query.iter_mut() {
-            let contact = rapier_context.contact_pair(player_entity, platform_entity);
-            let is_contact = contact.is_some();
-            let coming_from_the_top = contact.map_or(false, |contact_pair_view| {
-                contact_pair_view
-                    .find_deepest_contact()
-                    .map_or(true, |(deepest_contact, _)| {
-                        deepest_contact.normal().y < 0.0
-                    })
-            });
-            let is_crouching = controls.crouching;
-            let should_collide = is_contact && !is_crouching && coming_from_the_top;
-            if !should_collide && is_contact {
-                platform.0 = true
-            }
-            if !is_contact {
-                platform.0 = false
-            }
 
-            // Update platform state and collision filtering
-
-            if should_collide && !platform.0 {
-                groups.filters = Group::ALL
-            } else {
-                groups.filters = Group::NONE
-            };
-        }
-    }
-}
+// pub fn jump_throught_platforms(
+//     mut player_query: Query<
+//         (
+//             Entity,
+//             &mut CollisionGroups,
+//             &ActionState<PlayerAction>,
+//             &TnuaPlatformerAnimatingOutput,
+//         ),
+//         With<Player>,
+//     >,
+//     platform_sensor_query: Query<(Entity, &Wall), With<Sensor>>,
+//     rapier_context: Res<RapierContext>,
+// ) {
+//     for (player_entity, mut collision_groups, action_state, tnua_output) in player_query.iter_mut()
+//     {
+//         let collide_with_platform_sensor = || {
+//             for (platform_entity, wall) in platform_sensor_query.iter() {
+//                 if let Some(contact_pair) =
+//                     rapier_context.intersection_pair(player_entity, platform_entity)
+//                 {
+//                     return contact_pair && wall == &Wall::Platform;
+//                 }
+//             }
+//             return false;
+//         };
+//         if action_state.pressed(PlayerAction::Crouch)
+//             || tnua_output
+//                 .jumping_velocity
+//                 .map_or(false, |jumping_velocity| jumping_velocity > 0.0)
+//         {
+//             collision_groups.filters = Group::ALL - Group::GROUP_1;
+//         } else if !collide_with_platform_sensor() {
+//             collision_groups.filters = Group::ALL
+//         }
+//     }
+// }
 
 pub fn disappear_platforms(
     mut query: Query<(Entity, &mut DisappearingPlatform)>,
@@ -79,24 +101,6 @@ pub fn disappear_platforms(
                 if timer.finished() {
                     commands.entity(entity).despawn_recursive()
                 }
-            }
-        }
-    }
-}
-
-pub fn moving_platform(
-    mut query: Query<(Entity, &mut Velocity), Without<MovingPlatform>>,
-    platform_query: Query<(Entity, &Velocity), With<MovingPlatform>>,
-    rapier_context: Res<RapierContext>,
-    time: Res<Time>,
-) {
-    for (platform_entity, platform_velocity) in platform_query.iter() {
-        for (entity, mut velocity) in query.iter_mut() {
-            if rapier_context
-                .contact_pair(platform_entity, entity)
-                .is_some()
-            {
-                velocity.linvel += platform_velocity.linvel * time.delta_seconds();
             }
         }
     }

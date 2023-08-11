@@ -70,8 +70,8 @@ pub fn spawn_walls(
     struct Rect {
         left: i32,
         right: i32,
-        top: f32,
-        bottom: f32,
+        top: i32,
+        bottom: i32,
         wall_type: Wall,
     }
 
@@ -161,12 +161,10 @@ pub fn spawn_walls(
                     for plate in &current_row {
                         rect_builder
                             .entry(plate.clone())
-                            .and_modify(|e| {
-                                e.top += 1.0;
-                            })
+                            .and_modify(|e| e.top += 1)
                             .or_insert(Rect {
-                                bottom: y as f32,
-                                top: y as f32,
+                                bottom: y as i32,
+                                top: y as i32,
                                 left: plate.left,
                                 right: plate.right,
                                 wall_type: plate.wall_type.clone(),
@@ -200,7 +198,7 @@ pub fn spawn_walls(
                             Transform::from_xyz(
                                 (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
                                     / 2.,
-                                (wall_rect.bottom + wall_rect.top + 1.0) as f32 * grid_size as f32
+                                (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
                                     / 2.,
                                 0.,
                             ),
@@ -211,13 +209,13 @@ pub fn spawn_walls(
 
                         match wall_rect.wall_type {
                             Wall::Platform => {
-                                wall.insert(GhostPlatform::default());
+                                wall.insert(GhostPlatform);
                             }
                             Wall::Spike => {
                                 wall.insert((DamagePlayer, Sensor));
                             }
                             Wall::Ladder => {
-                                wall.insert((Climbable, GhostPlatform::default()));
+                                wall.insert((Sensor, Climbable));
                             }
                             _ => {}
                         }
