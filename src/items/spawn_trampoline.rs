@@ -26,6 +26,7 @@ pub fn spawn_trampoline(
                 ..default()
             },
             Collider::cuboid(16.0, 8.0),
+            GhostPlatform::default(),
         ));
     }
 }
