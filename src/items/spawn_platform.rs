@@ -32,18 +32,18 @@ pub fn spawn_platforms(
     }
 }
 
-fn apply_tnua_fall_through_controls(
-    mut query: Query<(&mut TnuaProximitySensor, &TnuaGhostSensor)>,
-) {
-    for (mut proximity_sensor, ghost_sensor) in query.iter_mut() {
-        for ghost_platform in ghost_sensor.iter() {
-            if 12.0 <= ghost_platform.proximity {
-                proximity_sensor.output = Some(ghost_platform.clone());
-                break;
-            }
-        }
-    }
-}
+// fn apply_tnua_fall_through_controls(
+//     mut query: Query<(&mut TnuaProximitySensor, &TnuaGhostSensor)>,
+// ) {
+//     for (mut proximity_sensor, ghost_sensor) in query.iter_mut() {
+//         for ghost_platform in ghost_sensor.iter() {
+//             if 12.0 <= ghost_platform.proximity {
+//                 proximity_sensor.output = Some(ghost_platform.clone());
+//                 break;
+//             }
+//         }
+//     }
+// }
 // #[derive(Component, Default)]
 // pub struct TnuaSimpleFallThroughPlatformsHelper {
 //     currently_falling_through: HashSet<Entity>,
