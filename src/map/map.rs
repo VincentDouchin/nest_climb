@@ -55,15 +55,16 @@ pub fn map_plugin(app: &mut App) {
                 spawn_enemy,
                 spawn_collectibles,
                 spawn_ghost_platforms,
+                spawn_platforms,
                 spawn_sawblade,
                 spawn_pendulum,
                 spawn_nest,
                 spawn_heart,
                 spawn_trampoline,
                 spawn_leafs,
+                spawn_dead_leaves,
                 despawn_fallen_leafs,
                 disappear_platforms,
-                spawn_dead_leaves,
             )
                 .in_set(OnUpdate(GameState::Run)),
         );

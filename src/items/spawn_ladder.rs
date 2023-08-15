@@ -2,14 +2,23 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::TnuaToggle;
 
-use crate::*;
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
 pub struct Climbable;
 
-#[derive(Component, Default)]
+#[derive(Component)]
 pub struct Climber {
     pub is_climbing: bool,
     pub can_climb: bool,
+    pub climbing_speed: f32,
+}
+impl Climber {
+    pub fn new(speed: f32) -> Self {
+        Climber {
+            is_climbing: false,
+            can_climb: false,
+            climbing_speed: speed,
+        }
+    }
 }
 
 pub fn ignore_gravity_if_climbing(
@@ -35,9 +44,12 @@ pub fn detect_can_climb(
     for (climber_entity, mut climber) in climber_query.iter_mut() {
         climber.can_climb = climbable_query.iter().any(|climbable_entity| {
             return rapier_context
-                .intersection_pair(climber_entity, climbable_entity)
-                .unwrap_or(false);
+                .contact_pair(climber_entity, climbable_entity)
+                .is_some();
         });
+        if climber.can_climb {
+            dbg!(climber.can_climb);
+        }
         if !climber.can_climb && climber.is_climbing {
             climber.is_climbing = false
         }

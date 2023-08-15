@@ -85,9 +85,6 @@ pub fn spawn_player(
             LockedAxes::ROTATION_LOCKED,
             collider,
             Velocity::default(),
-            CollisionGroups::new(Group::GROUP_2, Group::ALL),
-            Sleeping::disabled(),
-            Ccd::default(),
         );
         let player_bundle = (
             CameraTarget::new(false, true),
@@ -96,8 +93,7 @@ pub fn spawn_player(
                 input_map: get_player_input_map(),
             },
             Health::new(5),
-            BouncingOnTrampoline::default(),
-            Climber::default(),
+            Climber::new(50.0),
         );
         commands
             .entity(entity)

@@ -3,25 +3,34 @@ use bevy::prelude::*;
 use bevy_tnua::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{BouncingOnTrampoline, DirectionComponent, PlayerAction, SpriteDirection};
+use crate::{DirectionComponent, PlayerAction, SpriteDirection};
 
 pub fn move_player_system(
     mut player_query: Query<(
         &mut TnuaPlatformerControls,
         &mut DirectionComponent,
         &ActionState<PlayerAction>,
-        &BouncingOnTrampoline,
         &mut Climber,
         &mut Velocity,
     )>,
 ) {
-    for (mut controls, mut direction, actions, bouncing, mut climber, mut velocity) in
-        player_query.iter_mut()
+    for (mut controls, mut direction, actions, mut climber, mut velocity) in player_query.iter_mut()
     {
         if climber.is_climbing {
-            if actions.pressed(PlayerAction::MoveUp) {
-                velocity.linvel.y += 1.0;
-            }
+            velocity.linvel = if actions.pressed(PlayerAction::MoveUp) {
+                Vec2::Y
+            } else if actions.pressed(PlayerAction::MoveUp) {
+                Vec2::NEG_Y
+            } else if actions.pressed(PlayerAction::MoveLeft) {
+                direction.0 = SpriteDirection::Left;
+                Vec2::NEG_X
+            } else if actions.pressed(PlayerAction::MoveRight) {
+                direction.0 = SpriteDirection::Right;
+                Vec2::X
+            } else {
+                Vec2::ZERO
+            } * climber.climbing_speed;
+
             if actions.pressed(PlayerAction::Jump) {
                 climber.is_climbing = false;
             }
@@ -46,13 +55,11 @@ pub fn move_player_system(
             }
 
             // ! Jump
-            if bouncing.0.is_none() {
-                controls.jump = if actions.pressed(PlayerAction::Jump) {
-                    Some(1.0)
-                } else {
-                    None
-                };
-            }
+            controls.jump = if actions.pressed(PlayerAction::Jump) {
+                Some(1.0)
+            } else {
+                None
+            };
         }
     }
 }

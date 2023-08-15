@@ -33,7 +33,6 @@ pub fn jump_through_platforms(
                 contact_pair_view
                     .find_deepest_contact()
                     .map_or(true, |(deepest_contact, _)| {
-                        println!("{}", deepest_contact.normal().y);
                         deepest_contact.normal().y < 0.0
                     })
             });
@@ -45,8 +44,6 @@ pub fn jump_through_platforms(
             if !is_contact {
                 platform.0 = false
             }
-
-            // Update platform state and collision filtering
 
             if should_collide && !platform.0 {
                 groups.filters = Group::ALL
