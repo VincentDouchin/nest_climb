@@ -85,6 +85,7 @@ pub fn spawn_player(
             LockedAxes::ROTATION_LOCKED,
             collider,
             Velocity::default(),
+            ExternalImpulse::default(),
         );
         let player_bundle = (
             CameraTarget::new(false, true),
