@@ -2,6 +2,7 @@ use crate::*;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ecs_tilemap::tiles::TileTextureIndex;
+use seldom_fn_plugin::FnPluginExt;
 
 #[derive(Component)]
 pub struct Level;
@@ -117,6 +118,7 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<HeartBundle>("Heart")
         .register_ldtk_entity::<TrampolineBundle>("Trampoline")
         .register_ldtk_entity::<FallingLeafBundle>("FallingLeaf")
+        .register_ldtk_entity::<FeatherBundle>("Feather")
         .register_ldtk_entity::<DeadLeafBundle>("DeadLeaf")
         .insert_resource(LdtkSettings {
             set_clear_color: SetClearColor::No,
@@ -125,6 +127,7 @@ pub fn map_plugin(app: &mut App) {
         .add_system(spawn_map.in_schedule(OnEnter(GameState::Run)))
         .add_system(despawn_map.in_schedule(OnExit(GameState::Run)))
         .add_systems((spawn_animated_tiles, animate_tiles))
+        .fn_plugin(feather_plugin)
         .add_systems(
             (
                 spawn_player,

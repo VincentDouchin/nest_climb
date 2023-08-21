@@ -82,10 +82,13 @@ pub struct MyAssets {
     #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 8.0, columns = 1, rows = 1))]
     #[asset(path = "items/nest.png")]
     pub nest: Handle<TextureAtlas>,
+    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 1, rows = 1))]
+    #[asset(path = "items/feather.png")]
+    pub feather: Handle<TextureAtlas>,
     #[asset(texture_atlas(tile_size_x = 48.0, tile_size_y = 8.0, columns = 1, rows = 1))]
     #[asset(path = "items/platform.png")]
     pub platform: Handle<TextureAtlas>,
-    #[asset(texture_atlas(tile_size_x = 48.0, tile_size_y = 48.0, columns = 8, rows = 1))]
+    #[asset(texture_atlas(tile_size_x = 55.0, tile_size_y = 56.0, columns = 8, rows = 1))]
     #[asset(path = "items/sawblade.png")]
     pub sawblade: Handle<TextureAtlas>,
     #[asset(texture_atlas(tile_size_x = 32.0, tile_size_y = 32.0, columns = 1, rows = 1))]

@@ -9,6 +9,7 @@ pub struct Patrol {
     pub points: Vec<Vec2>,
     pub index: usize,
     pub forward: bool,
+    pub speed: f32,
 }
 impl LdtkEntity for Patrol {
     fn bundle_entity(
@@ -30,7 +31,7 @@ impl LdtkEntity for Patrol {
         let ldtk_patrol_points = entity_instance
             .iter_points_field("patrol")
             .expect("patrol field should be correclty typed");
-
+        let patrol_speed = entity_instance.get_float_field("speed").unwrap_or(&1.0);
         for ldtk_point in ldtk_patrol_points {
             // The +0.5 is necessary here due to the pivot of the entities in the sample
             // file.
@@ -52,6 +53,7 @@ impl LdtkEntity for Patrol {
             points,
             index: 1,
             forward: true,
+            speed: *patrol_speed,
         }
     }
 }
@@ -85,6 +87,6 @@ pub fn patrol(mut query: Query<(&mut Transform, &mut Velocity, &mut Patrol)>) {
                 (patrol.points[patrol.index] - transform.translation.truncate()).normalize() * 75.;
         }
 
-        velocity.linvel = new_velocity;
+        velocity.linvel = new_velocity * patrol.speed;
     }
 }
