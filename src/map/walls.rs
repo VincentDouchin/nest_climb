@@ -16,7 +16,7 @@ pub enum Wall {
     Ladder,
 }
 
-#[derive(Clone, Debug, Bundle, LdtkIntCell)]
+#[derive(Clone, Bundle, LdtkIntCell)]
 pub struct WallBundle {
     #[ldtk_int_cell]
     wall: Wall,

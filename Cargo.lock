@@ -2661,6 +2661,7 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_easings",
  "bevy_ecs_ldtk",
+ "bevy_ecs_tilemap",
  "bevy_egui",
  "bevy_mod_ui_texture_atlas_image",
  "bevy_ninepatch",

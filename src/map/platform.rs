@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-#[derive(Component, Default)]
+#[derive(Component, Default, Clone)]
 pub struct GhostPlatform(pub bool);
 
 #[derive(Component, Default)]

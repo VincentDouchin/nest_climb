@@ -10,6 +10,7 @@ pub struct Trampoline;
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct TrampolineBundle {
     trampoline: Trampoline,
+    ghost_platform: GhostPlatform,
 }
 
 pub fn spawn_trampoline(

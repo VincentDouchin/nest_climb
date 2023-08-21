@@ -4,6 +4,35 @@ use bevy_egui::egui::plot::{Corner, Legend, Plot};
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use std::collections::VecDeque;
+
+use bevy::ecs::archetype::Archetypes;
+use bevy::ecs::component::*;
+pub fn get_components_for_entity<'a>(
+    entity: &Entity,
+    archetypes: &'a Archetypes,
+) -> Option<impl Iterator<Item = ComponentId> + 'a> {
+    for archetype in archetypes.iter() {
+        if archetype.entities().iter().any(|e| &e.entity() == entity) {
+            return Some(archetype.components());
+        }
+    }
+    None
+}
+pub fn _print_components(
+    query: Query<(Entity, &TileEnumTags)>,
+    archetypes: &Archetypes,
+    components: &Components,
+) {
+    println!("{}", query.iter().len());
+    for (entity, tile) in query.iter() {
+        for comp_id in get_components_for_entity(&entity, archetypes).unwrap() {
+            if let Some(comp_info) = components.get_info(comp_id) {
+                println!("Component: {:?}", comp_info.name());
+            }
+        }
+    }
+}
+
 pub fn debug_rendering(mut debug_config: ResMut<DebugRenderContext>, debug: Res<Debug>) {
     debug_config.enabled = debug.enabled
 }
@@ -62,6 +91,7 @@ pub fn debug_plugin(app: &mut App) {
     app.add_system(ui_system.run_if(run_debug));
     app.add_system(plot_source_rolling_update.run_if(run_debug));
     app.add_system(track_player.run_if(run_debug));
+    // app.add_system(_print_components);
 }
 
 // ! UI
