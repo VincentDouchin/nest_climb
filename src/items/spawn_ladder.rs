@@ -47,9 +47,6 @@ pub fn detect_can_climb(
                 .contact_pair(climber_entity, climbable_entity)
                 .is_some();
         });
-        if climber.can_climb {
-            dbg!(climber.can_climb);
-        }
         if !climber.can_climb && climber.is_climbing {
             climber.is_climbing = false
         }

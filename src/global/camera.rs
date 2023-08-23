@@ -1,5 +1,5 @@
 use crate::*;
-use bevy::{core_pipeline::clear_color::ClearColorConfig, prelude::*, utils::*, window::*};
+use bevy::{core_pipeline::clear_color::ClearColorConfig, prelude::*, window::*};
 use bevy_ecs_ldtk::prelude::*;
 use bevy_tweening::{lens::*, *};
 #[derive(Component)]
@@ -44,11 +44,11 @@ pub fn move_camera(
         (Entity, &mut Transform, &CameraBounds),
         (With<MainCamera>, Without<CameraTarget>),
     >,
-    target_query: Query<(&Transform, &CameraTarget), (Without<MainCamera>, Changed<Transform>)>,
+    target_query: Query<&Transform, (Without<MainCamera>, Changed<Transform>)>,
     mut commands: Commands,
     time: Res<Time>,
 ) {
-    for (target_transform, camera_target) in target_query.iter() {
+    for target_transform in target_query.iter() {
         for (entity, camera_transform, bounds) in camera_query.iter_mut() {
             let mut destination = camera_transform.translation.clone();
             destination.y = target_transform.translation.y.max(bounds.top);

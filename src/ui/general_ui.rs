@@ -66,10 +66,10 @@ pub fn spawn_menu<T: Component + Clone, U: States>(
                 .with_children(|button| {
                     button.spawn(TextBundle {
                         text: Text::from_section(
-                            text.clone(),
+                            text.to_string(),
                             TextStyle {
                                 font: assets.default_font.clone(),
-                                font_size: 30.0,
+                                font_size: 32.0,
                                 color: Color::BLACK,
                             },
                         ),
@@ -180,6 +180,7 @@ pub fn focus_selector(
                     margins: Vec4::splat(16.0),
                     layer: 3,
                     scale: 2.0,
+                    ..default()
                 },
                 Selector::new(focus_size, focus_position),
             ));

@@ -41,6 +41,7 @@ pub fn spawn_level_select_ui(
                     margins: Vec4::splat(32.0),
                     scale: 1.0,
                     layer: 2,
+                    ..default()
                 },
             ))
             .with_children(|toptext| {
@@ -77,6 +78,7 @@ pub fn spawn_level_select_ui(
                     margins: Vec4::splat(32.0),
                     scale: 1.0,
                     layer: 2,
+                    ..default()
                 },
             ))
             .with_children(|level_container| {

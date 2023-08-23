@@ -1,10 +1,23 @@
 use crate::*;
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::*};
 use bevy_easings::*;
+use bevy_tweening::{lens::*, *};
 use bevy_ui_navigation::prelude::*;
 use rand::*;
+
 #[derive(Component)]
 pub struct Cloud(f32);
+
+struct UiStretchLens {
+    start: f32,
+    end: f32,
+}
+
+impl Lens<Style> for UiStretchLens {
+    fn lerp(&mut self, target: &mut Style, ratio: f32) {
+        target.size.width = Val::Percent(&self.start + (&self.end - &self.start) * ratio);
+    }
+}
 
 pub fn spawn_start_ui(
     mut commands: Commands,
@@ -63,30 +76,30 @@ pub fn spawn_start_ui(
         },
         StateUi(GameState::Start),
     ));
+    // ! TEXT
+    let tween = Tween::new(
+        EaseFunction::BounceOut,
+        Duration::from_secs(3),
+        UiPositionLens {
+            start: UiRect::bottom(Val::Percent(100.0)),
+            end: UiRect::all(Val::Percent(0.0)),
+        },
+    )
+    .with_repeat_count(RepeatCount::Finite(1));
+
     commands.spawn((
         ImageBundle {
             image: UiImage::new(assets.title_text.clone()),
             z_index: ZIndex::Global(1),
-            ..default()
-        },
-        Style {
-            position_type: PositionType::Absolute,
-            size: Size::new(Val::Percent(100.0), Val::Auto),
-            position: UiRect::top(Val::Percent(-100.0)),
-            ..default()
-        }
-        .ease_to(
-            Style {
+            style: Style {
                 position_type: PositionType::Absolute,
                 size: Size::new(Val::Percent(100.0), Val::Auto),
                 position: UiRect::top(Val::Percent(0.0)),
                 ..default()
             },
-            EaseFunction::BounceOut,
-            EasingType::Once {
-                duration: std::time::Duration::from_secs(3),
-            },
-        ),
+            ..default()
+        },
+        Animator::new(tween),
         StateUi(GameState::Start),
     ));
     if let Ok(projection) = camera_query.get_single() {

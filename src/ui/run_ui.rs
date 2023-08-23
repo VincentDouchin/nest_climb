@@ -64,31 +64,72 @@ pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
             StateUi(GameState::Run),
         ))
         .with_children(|root| {
-            root.spawn((
-                NodeBundle {
-                    style: Style {
-                        display: Display::Flex,
-                        margin: UiRect::all(Val::Px(20.0)),
+            root.spawn(NodeBundle {
+                style: Style {
+                    display: Display::Flex,
+                    flex_direction: FlexDirection::Column,
+
+                    margin: UiRect::all(Val::Px(16.0)),
+                    ..default()
+                },
+                ..default()
+            })
+            .with_children(|display| {
+                display.spawn((
+                    NodeBundle {
+                        style: Style {
+                            display: Display::Flex,
+                            padding: UiRect::all(Val::Px(16.0)),
+
+                            ..default()
+                        },
                         ..default()
                     },
-                    ..default()
-                },
-                HeartContainer,
-            ));
-            root.spawn((
-                TextBundle {
-                    text: Text::from_section(
-                        0.to_string(),
-                        TextStyle {
-                            font: assets.default_font.clone(),
-                            font_size: 50.0,
-                            color: Color::BLACK,
+                    NineSlice {
+                        image_handle: assets.heart_container.clone(),
+                        margins: Vec4::splat(8.0),
+                        dynamic: true,
+                        scale: 3.0,
+                        ..default()
+                    },
+                    HeartContainer,
+                ));
+                display
+                    .spawn(ImageBundle {
+                        image: UiImage::new(assets.coin_container.clone()),
+                        style: Style {
+                            size: Size::new(Val::Px(41.0 * 3.0), Val::Px(23.0 * 3.0)),
+                            align_items: AlignItems::Center,
+                            ..default()
                         },
-                    ),
-                    ..default()
-                },
-                ScoreDisplay,
-            ));
+                        ..default()
+                    })
+                    .with_children(|coin_container| {
+                        coin_container.spawn((
+                            TextBundle {
+                                text: Text::from_section(
+                                    0.to_string(),
+                                    TextStyle {
+                                        font: assets.default_font.clone(),
+                                        font_size: 40.0,
+                                        color: Color::BLACK,
+                                    },
+                                ),
+                                style: Style {
+                                    margin: UiRect {
+                                        left: Val::Percent(35.0),
+                                        bottom: Val::Auto,
+                                        top: Val::Auto,
+                                        right: Val::Auto,
+                                    },
+                                    ..default()
+                                },
+                                ..default()
+                            },
+                            ScoreDisplay,
+                        ));
+                    });
+            });
         });
 }
 

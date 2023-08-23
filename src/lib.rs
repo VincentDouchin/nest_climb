@@ -64,6 +64,8 @@ mod ui {
     pub use self::level_select_ui::*;
     mod game_over_ui;
     pub use self::game_over_ui::*;
+    mod transition;
+    pub use self::transition::*;
 }
 pub use ui::*;
 

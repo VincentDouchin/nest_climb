@@ -2,6 +2,7 @@ use crate::*;
 use bevy::prelude::*;
 use bevy_easings::EasingsPlugin;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_mod_ui_texture_atlas_image::UiAtlasImagePlugin;
 use bevy_ninepatch::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
@@ -10,6 +11,8 @@ use bevy_tweening::*;
 use bevy_ui_navigation::{prelude::*, systems::InputMapping};
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
+    // ! UI ATLAS
+    app.add_plugin(UiAtlasImagePlugin);
     // ! EASING
     app.add_plugin(EasingsPlugin);
     // ! TWEENING

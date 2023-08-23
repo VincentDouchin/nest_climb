@@ -62,7 +62,7 @@ fn main() {
         // ! UI
         .fn_plugin(selector_plugin)
         .fn_plugin(run_ui_plugin)
-        .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
+        // .add_system(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
         .add_system(spawn_start_ui.in_schedule(OnEnter(GameState::Start)))
         .add_system(move_clouds)
         .add_system(spawn_level_select_ui.in_schedule(OnEnter(GameState::LevelSelect)))
@@ -73,5 +73,7 @@ fn main() {
         .add_system(move_parallax.in_set(OnUpdate(GameState::Run)))
         // ! Debug
         .fn_plugin(debug_plugin)
+        // ! Transitions
+        .fn_plugin(transition_plugin)
         .run();
 }

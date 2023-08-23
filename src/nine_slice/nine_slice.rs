@@ -17,6 +17,9 @@ use bevy::{
 #[derive(Component)]
 pub struct LinkedEntity(Entity);
 
+#[derive(Component)]
+pub struct NineSliceDynamic(pub Handle<NineSliceMaterial>);
+
 #[derive(AsBindGroup, TypeUuid, Debug, Clone)]
 #[uuid = "f690fdae-d598-45ab-8225-97e2a3f056e0"]
 pub struct NineSliceMaterial {
@@ -43,6 +46,7 @@ pub struct NineSlice {
     pub margins: Vec4,
     pub layer: u8,
     pub scale: f32,
+    pub dynamic: bool,
 }
 impl Default for NineSlice {
     fn default() -> Self {
@@ -51,6 +55,7 @@ impl Default for NineSlice {
             margins: Vec4::splat(0.0),
             layer: 1,
             scale: 1.0,
+            dynamic: false,
         }
     }
 }
@@ -164,6 +169,11 @@ pub fn create_nine_slice(
             ),
             color_texture: nine_slice.image_handle.clone(),
         });
+        if nine_slice.dynamic {
+            commands
+                .entity(entity)
+                .insert(NineSliceDynamic(material_handle.clone()));
+        }
         commands.spawn((
             MaterialMesh2dBundle {
                 mesh: meshes.add(Mesh::from(shape::Quad::default())).into(),
@@ -241,10 +251,45 @@ pub fn update_nine_slice(
     }
 }
 
+pub fn update_dynamic_nine_slice(
+    query: Query<(&Node, &NineSlice, &NineSliceDynamic, &UiImage)>,
+    mut mesh_query: Query<(&Handle<NineSliceMaterial>, &mut Transform)>,
+    mut materials: ResMut<Assets<NineSliceMaterial>>,
+    mut images: ResMut<Assets<Image>>,
+) {
+    for (node, nine_slice, nine_slice_dynamic, ui_image) in query.iter() {
+        let nine_slice_size = node.size();
+        let size_vec = images
+            .get(&nine_slice.image_handle)
+            .expect("get image from handle")
+            .size();
+        if let Some(material) = materials.get_mut(&nine_slice_dynamic.0) {
+            material.scale = Vec2::new(
+                nine_slice_size.x / size_vec.x / nine_slice.scale,
+                nine_slice_size.y / size_vec.y / nine_slice.scale,
+            );
+        }
+        if let Some(image) = images.get_mut(&ui_image.texture) {
+            let size = Extent3d {
+                width: nine_slice_size.x as u32,
+                height: nine_slice_size.y as u32,
+                ..default()
+            };
+            image.resize(size)
+        }
+        for (handle, mut transform) in mesh_query.iter_mut() {
+            if handle == &nine_slice_dynamic.0 {
+                transform.scale = Vec3::new(nine_slice_size.x, nine_slice_size.y, 0.0);
+            }
+        }
+    }
+}
+
 pub fn nine_slice_plugin(app: &mut App) {
     app.add_plugin(Material2dPlugin::<NineSliceMaterial>::default())
         .add_system(create_nine_slice)
         .add_system(display_nine_slice)
         .add_system(update_nine_slice)
+        .add_system(update_dynamic_nine_slice)
         .add_system(despawn_nine_slice);
 }
