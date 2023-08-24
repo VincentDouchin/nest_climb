@@ -14,6 +14,7 @@ pub fn spawn_background(mut commands: Commands, assets: Res<MyAssets>) {
     commands.spawn((
         SpriteBundle {
             texture: assets.background.clone(),
+            transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },
         Background,

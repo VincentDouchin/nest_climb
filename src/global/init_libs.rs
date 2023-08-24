@@ -50,6 +50,8 @@ pub fn initialize_libraries(app: &mut App) {
         level_background: LevelBackground::Nonexistent,
         ..default()
     })
+    .insert_resource(LevelSelection::Index(0))
+    .init_resource::<CurrentLevel>()
     // ! Rapier physics engine
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_systems(Startup, |mut cfg: ResMut<RapierConfiguration>| {

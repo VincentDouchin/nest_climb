@@ -98,9 +98,7 @@ pub fn animate_tiles(
     }
 }
 pub fn map_plugin(app: &mut App) {
-    app.insert_resource(LevelSelection::Index(0))
-        .init_resource::<CurrentLevel>()
-        .register_ldtk_int_cell::<WallBundle>(1)
+    app.register_ldtk_int_cell::<WallBundle>(1)
         .register_ldtk_int_cell::<WallBundle>(2)
         .register_ldtk_int_cell::<WallBundle>(3)
         .register_ldtk_int_cell::<WallBundle>(4)
