@@ -7,7 +7,7 @@ use bevy_tnua::*;
 pub struct FeatherBundle {
     pickup: Pickup,
     feather: Feather,
-    #[bundle]
+    #[bundle()]
     entity_collider_bundle: EntityColliderBundle,
 }
 
@@ -69,6 +69,7 @@ pub fn reset_feathered_gravity(
 
 pub fn feather_plugin(app: &mut App) {
     app.add_systems(
-        (spawn_feather, touch_feather, reset_feathered_gravity).in_set(OnUpdate(GameState::Run)),
+        Update,
+        (spawn_feather, touch_feather, reset_feathered_gravity).run_if(in_state(GameState::Run)),
     );
 }

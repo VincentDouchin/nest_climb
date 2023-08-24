@@ -20,7 +20,7 @@ pub struct LinkedEntity(Entity);
 #[derive(Component)]
 pub struct NineSliceDynamic(pub Handle<NineSliceMaterial>);
 
-#[derive(AsBindGroup, TypeUuid, Debug, Clone)]
+#[derive(AsBindGroup, TypeUuid, Debug, Clone, Reflect)]
 #[uuid = "f690fdae-d598-45ab-8225-97e2a3f056e0"]
 pub struct NineSliceMaterial {
     #[uniform(0)]
@@ -286,10 +286,15 @@ pub fn update_dynamic_nine_slice(
 }
 
 pub fn nine_slice_plugin(app: &mut App) {
-    app.add_plugin(Material2dPlugin::<NineSliceMaterial>::default())
-        .add_system(create_nine_slice)
-        .add_system(display_nine_slice)
-        .add_system(update_nine_slice)
-        .add_system(update_dynamic_nine_slice)
-        .add_system(despawn_nine_slice);
+    app.add_plugins(Material2dPlugin::<NineSliceMaterial>::default())
+        .add_systems(
+            Update,
+            (
+                update_dynamic_nine_slice,
+                update_nine_slice,
+                create_nine_slice,
+                display_nine_slice,
+                despawn_nine_slice,
+            ),
+        );
 }

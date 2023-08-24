@@ -8,7 +8,7 @@ pub struct Pickup;
 
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct CollectibleBundle {
-    #[bundle]
+    #[bundle()]
     entity_collider_bundle: EntityColliderBundle,
     pickup: Pickup,
     #[ldtk_entity]

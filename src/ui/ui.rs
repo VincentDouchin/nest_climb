@@ -15,6 +15,6 @@ pub fn despawn_state_ui<T: States>(
                 commands.entity(ui_entity).despawn_recursive()
             }
         }
-        *last_state = app_state.0.clone();
+        *last_state = app_state.get().clone();
     }
 }

@@ -19,7 +19,8 @@ pub fn spawn_menu<T: Component + Clone, U: States>(
                     flex_direction: FlexDirection::Column,
                     justify_content: JustifyContent::FlexStart,
                     padding: UiRect::all(Val::Px(96.0)),
-                    gap: Size::all(Val::Px(20.0)),
+                    row_gap: Val::Px(20.0),
+                    column_gap: Val::Px(20.0),
                     margin: UiRect::all(Val::Auto),
                     ..default()
                 },
@@ -90,16 +91,9 @@ fn get_selector_components(node: &Node, transform: &GlobalTransform, offset: f32
 }
 
 trait CompareToNode {
-    fn to_size(self) -> Size;
     fn to_ui_rect(self) -> UiRect;
 }
 impl CompareToNode for Vec2 {
-    fn to_size(self) -> Size {
-        return Size {
-            width: Val::Px(self.x),
-            height: Val::Px(self.y),
-        };
-    }
     fn to_ui_rect(self) -> UiRect {
         return UiRect {
             left: Val::Px(self.x),
@@ -153,8 +147,12 @@ pub fn focus_selector(
                     .insert(selector_style.clone().ease_to(
                         Style {
                             position_type: PositionType::Absolute,
-                            position: focus_position.to_ui_rect(),
-                            size: focus_size.to_size(),
+                            left: focus_position.to_ui_rect().left,
+                            right: focus_position.to_ui_rect().right,
+                            top: focus_position.to_ui_rect().top,
+                            bottom: focus_position.to_ui_rect().bottom,
+                            width: Val::Px(focus_size.x),
+                            height: Val::Px(focus_size.y),
                             ..default()
                         },
                         EaseFunction::CubicInOut,
@@ -168,8 +166,12 @@ pub fn focus_selector(
                 NodeBundle {
                     style: Style {
                         position_type: PositionType::Absolute,
-                        position: focus_position.to_ui_rect(),
-                        size: focus_size.to_size(),
+                        left: focus_position.to_ui_rect().left,
+                        right: focus_position.to_ui_rect().right,
+                        top: focus_position.to_ui_rect().top,
+                        bottom: focus_position.to_ui_rect().bottom,
+                        width: Val::Px(focus_size.x),
+                        height: Val::Px(focus_size.y),
                         ..default()
                     },
                     z_index: ZIndex::Global(32),
@@ -189,5 +191,8 @@ pub fn focus_selector(
 }
 
 pub fn selector_plugin(app: &mut App) {
-    app.add_system(focus_selector.run_if(not(in_state(GameState::AssetLoading))));
+    app.add_systems(
+        Update,
+        focus_selector.run_if(not(in_state(GameState::AssetLoading))),
+    );
 }

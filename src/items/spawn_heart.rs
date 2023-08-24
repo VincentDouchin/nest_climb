@@ -4,10 +4,10 @@ use bevy_ecs_ldtk::prelude::*;
 
 #[derive(Clone, Default, Bundle, LdtkEntity)]
 pub struct HeartBundle {
-    #[bundle]
+    #[bundle()]
     entity_collider_bundle: EntityColliderBundle,
     pickup: Pickup,
-    #[bundle]
+    #[bundle()]
     heart: Heart,
 }
 

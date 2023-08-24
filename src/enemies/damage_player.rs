@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
 
 pub fn run_timer_plugin(app: &mut App) {
-    app.add_system(update_health_timer.in_set(OnUpdate(GameState::Run)));
+    app.add_systems(Update, update_health_timer.run_if(in_state(GameState::Run)));
 }
 
 pub fn update_health_timer(mut health_query: Query<&mut Health>, time: Res<Time>) {

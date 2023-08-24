@@ -24,10 +24,7 @@ pub struct CameraBounds {
 fn spawn_camera(mut commands: Commands) {
     commands.spawn((
         Camera2dBundle {
-            projection: OrthographicProjection {
-                scale: 0.5,
-                ..default()
-            },
+            projection: OrthographicProjection { ..default() },
             camera_2d: Camera2d {
                 clear_color: ClearColorConfig::Custom(Color::NONE),
                 ..default()
@@ -103,6 +100,6 @@ pub fn set_camera_to_level_center(
 }
 
 pub fn camera_plugin(app: &mut App) {
-    app.add_startup_system(spawn_camera);
-    app.add_systems((set_camera_to_level_center, move_camera).chain());
+    app.add_systems(Startup, spawn_camera);
+    app.add_systems(Update, (set_camera_to_level_center, move_camera).chain());
 }

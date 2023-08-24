@@ -8,16 +8,16 @@ use rand::*;
 #[derive(Component)]
 pub struct Cloud(f32);
 
-struct UiStretchLens {
-    start: f32,
-    end: f32,
-}
+// struct UiStretchLens {
+//     start: f32,
+//     end: f32,
+// }
 
-impl Lens<Style> for UiStretchLens {
-    fn lerp(&mut self, target: &mut Style, ratio: f32) {
-        target.size.width = Val::Percent(&self.start + (&self.end - &self.start) * ratio);
-    }
-}
+// impl Lens<Style> for UiStretchLens {
+// fn lerp(&mut self, target: &mut Style, ratio: f32) {
+// target.size.width = Val::Percent(&self.start + (&self.end - &self.start) * ratio);
+// }
+// }
 
 pub fn spawn_start_ui(
     mut commands: Commands,
@@ -37,7 +37,8 @@ pub fn spawn_start_ui(
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     padding: UiRect::all(Val::Px(16.0)),
-                    size: Size::new(Val::Px(256.0), Val::Px(64.0)),
+                    width: Val::Px(256.0),
+                    height: Val::Px(64.0),
                     ..default()
                 },
                 z_index: ZIndex::Global(3),
@@ -67,7 +68,7 @@ pub fn spawn_start_ui(
             image: UiImage::new(assets.title_nest.clone()),
             style: Style {
                 position_type: PositionType::Absolute,
-                size: Size::new(Val::Percent(100.0), Val::Auto),
+                width: Val::Percent(100.0),
                 margin: UiRect::all(Val::Auto),
                 ..default()
             },
@@ -93,8 +94,9 @@ pub fn spawn_start_ui(
             z_index: ZIndex::Global(1),
             style: Style {
                 position_type: PositionType::Absolute,
-                size: Size::new(Val::Percent(100.0), Val::Auto),
-                position: UiRect::top(Val::Percent(0.0)),
+                width: Val::Percent(100.0),
+                height: Val::Auto,
+                top: Val::Percent(0.0),
                 ..default()
             },
             ..default()

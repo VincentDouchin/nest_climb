@@ -1,7 +1,7 @@
 use crate::*;
 use bevy::prelude::*;
 use bevy_ui_navigation::prelude::*;
-use leafwing_input_manager::prelude::*;
+use leafwing_input_manager::{action_state::ActionStateDriverTarget, prelude::*};
 #[derive(Component)]
 pub struct HeartContainer;
 #[derive(Resource, Default)]
@@ -53,10 +53,9 @@ pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
                 style: Style {
                     justify_content: JustifyContent::SpaceBetween,
                     position_type: PositionType::Absolute,
-                    size: Size {
-                        width: Val::Percent(100.0),
-                        height: Val::Auto,
-                    },
+
+                    width: Val::Percent(100.0),
+                    height: Val::Auto,
                     ..default()
                 },
                 ..default()
@@ -98,7 +97,8 @@ pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
                     .spawn(ImageBundle {
                         image: UiImage::new(assets.coin_container.clone()),
                         style: Style {
-                            size: Size::new(Val::Px(41.0 * 3.0), Val::Px(23.0 * 3.0)),
+                            width: Val::Px(41.0 * 3.0),
+                            height: Val::Px(23.0 * 3.0),
                             align_items: AlignItems::Center,
                             ..default()
                         },
@@ -172,7 +172,8 @@ pub fn update_health_ui(
                                     ..default()
                                 },
                                 style: Style {
-                                    size: Size::all(Val::Px(50.0)),
+                                    width: Val::Px(50.0),
+                                    height: Val::Px(50.0),
                                     ..default()
                                 },
                                 ..default()
@@ -217,7 +218,8 @@ pub fn spawn_touch_buttons(
             .spawn((
                 NodeBundle {
                     style: Style {
-                        size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(100.0),
 
                         ..default()
                     },
@@ -240,7 +242,8 @@ pub fn spawn_touch_buttons(
                                     right: Val::Px(0.0),
                                     bottom: Val::Px(0.0),
                                 },
-                                size: Size::new(Val::Px(50.), Val::Px(50.)),
+                                width: Val::Px(50.),
+                                height: Val::Px(50.),
                                 ..Default::default()
                             },
 
@@ -248,7 +251,7 @@ pub fn spawn_touch_buttons(
                         },
                         ActionStateDriver {
                             action: MenuAction::Pause,
-                            entity: menu_input,
+                            targets: ActionStateDriverTarget::Single(menu_input),
                         },
                         ButtonImages {
                             normal: assets.button_pause.clone(),
@@ -296,7 +299,8 @@ pub fn spawn_touch_buttons(
                                 } else {
                                     UiRect::all(Val::Px(20.0))
                                 },
-                                size: Size::new(Val::Px(80.), Val::Px(80.)),
+                                width: Val::Px(80.),
+                                height: Val::Px(80.),
                                 ..Default::default()
                             },
 
@@ -304,7 +308,7 @@ pub fn spawn_touch_buttons(
                         },
                         ActionStateDriver {
                             action: *player_action,
-                            entity: player_entity,
+                            targets: ActionStateDriverTarget::Single(player_entity),
                         },
                         ButtonImages {
                             normal: button.clone(),
@@ -328,7 +332,7 @@ pub fn press_button(
     for (button_images, maybe_nine_slice, interaction, focused, mut image_handle) in
         button_query.iter_mut()
     {
-        let texture = if interaction.map_or(false, |inter| inter == &Interaction::Clicked)
+        let texture = if interaction.map_or(false, |inter| inter == &Interaction::Pressed)
             || focused.map_or(false, |focus| FocusState::Focused == focus.state())
         {
             button_images.pressed.clone()
@@ -370,7 +374,7 @@ pub fn multi_touch_button(
             return (min_x..max_x).contains(&touch.position().x)
                 && (min_y..max_y).contains(&touch.position().y);
         }) {
-            Interaction::Clicked
+            Interaction::Pressed
         } else {
             Interaction::None
         };
@@ -381,14 +385,21 @@ pub fn run_ui_plugin(app: &mut App) {
     use bevy::ui::ui_focus_system;
     app.init_resource::<Score>()
         .init_resource::<IsTouchDevice>()
-        .add_system(reset_score.in_schedule(OnEnter(GameState::LevelSelect)))
-        .add_systems((update_health_ui, update_score).in_set(OnUpdate(GameState::Run)));
-    app.add_system(
+        .add_systems(OnEnter(GameState::LevelSelect), reset_score)
+        .add_systems(
+            Update,
+            (update_health_ui, update_score).run_if(in_state(GameState::Run)),
+        );
+    app.add_systems(
+        Update,
         spawn_touch_buttons
-            .in_set(OnUpdate(GameState::Run))
+            .run_if(in_state(GameState::Run))
             .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
     )
-    .add_system(multi_touch_button.after(ui_focus_system))
-    .add_system(detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0))
-    .add_system(press_button);
+    .add_systems(Update, multi_touch_button.after(ui_focus_system))
+    .add_systems(
+        Update,
+        detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0),
+    )
+    .add_systems(Update, press_button);
 }

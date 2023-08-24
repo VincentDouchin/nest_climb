@@ -130,16 +130,18 @@ pub fn despawn_entity_when_animation_finished(
 
 pub fn animation_plugin(app: &mut App) {
     app.add_systems(
+        Update,
         (change_animation_atlas, animate_sprites)
             .chain()
-            .in_set(OnUpdate(GameState::Run)),
+            .run_if(in_state(GameState::Run)),
     )
     .add_systems(
+        Update,
         (
             update_direction,
             despawn_entity_when_animation_finished,
             update_animation_state,
         )
-            .in_set(OnUpdate(GameState::Run)),
+            .run_if(in_state(GameState::Run)),
     );
 }

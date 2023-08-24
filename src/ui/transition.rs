@@ -1,9 +1,5 @@
-use std::time::Duration;
-
 use crate::{GameState, MyAssets};
 use bevy::prelude::*;
-use bevy_mod_ui_texture_atlas_image::{AtlasImageBundle, UiAtlasImage};
-use bevy_tweening::*;
 
 #[derive(Component)]
 pub struct TransitionContainer {
@@ -22,8 +18,12 @@ pub fn spawn_transition_container(mut commands: Commands) {
         NodeBundle {
             style: Style {
                 position_type: PositionType::Absolute,
-                position: UiRect::all(Val::Px(0.0)),
-                size: Size::all(Val::Percent(100.0)),
+                left: Val::Px(0.0),
+                right: Val::Px(0.0),
+                top: Val::Px(0.0),
+                bottom: Val::Px(0.0),
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
                 ..default()
             },
             z_index: ZIndex::Global(100),
@@ -33,24 +33,24 @@ pub fn spawn_transition_container(mut commands: Commands) {
     ));
 }
 
-pub struct AltasImageLens {
-    len: usize,
-}
+// pub struct AltasImageLens {
+//     len: usize,
+// }
 
-impl Lens<UiAtlasImage> for AltasImageLens {
-    fn lerp(&mut self, target: &mut UiAtlasImage, ratio: f32) {
-        target.index = (self.len as f32 * ratio).floor() as usize
-    }
-}
+// impl Lens<UiAtlasImage> for AltasImageLens {
+//     fn lerp(&mut self, target: &mut UiAtlasImage, ratio: f32) {
+//         target.index = (self.len as f32 * ratio).floor() as usize
+//     }
+// }
 
-impl AltasImageLens {
-    pub fn new(handle: &Handle<TextureAtlas>, atlases: &Res<Assets<TextureAtlas>>) -> Self {
-        let maybe_atlas = atlases.get(handle);
-        AltasImageLens {
-            len: maybe_atlas.map_or(0, |atlas| atlas.len()),
-        }
-    }
-}
+// impl AltasImageLens {
+//     pub fn new(handle: &Handle<TextureAtlas>, atlases: &Res<Assets<TextureAtlas>>) -> Self {
+//         let maybe_atlas = atlases.get(handle);
+//         AltasImageLens {
+//             len: maybe_atlas.map_or(0, |atlas| atlas.len()),
+//         }
+//     }
+// }
 
 pub fn spawn_transition(
     mut query: Query<(Entity, &mut TransitionContainer)>,
@@ -74,7 +74,7 @@ pub fn spawn_transition(
                 //     size: Size::all(Val::Px(64.0)),
                 //     ..default()
                 // },
-                atlas_image: UiAtlasImage::new(assets.transition.clone(), 5),
+                // atlas_image: UiAtlasImage::new(assets.transition.clone(), 5),
                 ..default()
             });
             // let tween = Tween::new(
@@ -107,6 +107,9 @@ pub fn spawn_transition(
 }
 
 pub fn transition_plugin(app: &mut App) {
-    app.add_system(spawn_transition_container.in_schedule(OnEnter(GameState::Run)))
-        .add_system(spawn_transition.run_if(not(in_state(GameState::AssetLoading))));
+    app.add_systems(OnEnter(GameState::Run), spawn_transition_container)
+        .add_systems(
+            Update,
+            spawn_transition.run_if(not(in_state(GameState::AssetLoading))),
+        );
 }

@@ -76,22 +76,22 @@ pub fn skip_start_screen(
     }
 }
 pub fn debug_plugin(app: &mut App) {
-    app.add_plugin(RapierDebugRenderPlugin::default());
-    app.add_system(save_debug);
+    app.add_plugins(RapierDebugRenderPlugin::default());
+    app.add_systems(Update, save_debug);
     app.insert_resource(ExampleUiTnuaActive(true));
     app.insert_resource(Debug {
         enabled: false,
         skip_start_screen: false,
     });
-    app.add_startup_system(set_debug);
-    app.add_system(skip_start_screen.in_schedule(OnEnter(GameState::Start)));
-    app.add_plugin(EguiPlugin);
-    app.add_system(toggle_debug);
-    app.add_system(debug_rendering);
-    app.add_system(ui_system.run_if(run_debug));
-    app.add_system(plot_source_rolling_update.run_if(run_debug));
-    app.add_system(track_player.run_if(run_debug));
-    // app.add_system(_print_components);
+    app.add_systems(Startup, set_debug);
+    app.add_systems(OnEnter(GameState::Start), skip_start_screen);
+    app.add_plugins(EguiPlugin);
+    app.add_systems(Update, toggle_debug);
+    app.add_systems(Update, debug_rendering);
+    app.add_systems(Update, ui_system.run_if(run_debug));
+    app.add_systems(Update, plot_source_rolling_update.run_if(run_debug));
+    app.add_systems(Update, track_player.run_if(run_debug));
+    // app.add_systems(_print_components);
 }
 
 // ! UI
