@@ -44,14 +44,14 @@ pub fn initialize_libraries(app: &mut App) {
     .add_plugins(InputManagerPlugin::<PlayerAction>::default())
     .add_plugins(InputManagerPlugin::<MenuAction>::default())
     // ! LDTK levels
-    .add_plugins(LdtkPlugin)
+    .insert_resource(LevelSelection::Index(0))
+    .init_resource::<CurrentLevel>()
     .insert_resource(LdtkSettings {
         set_clear_color: SetClearColor::No,
         level_background: LevelBackground::Nonexistent,
         ..default()
     })
-    .insert_resource(LevelSelection::Index(0))
-    .init_resource::<CurrentLevel>()
+    .add_plugins(LdtkPlugin)
     // ! Rapier physics engine
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_systems(Startup, |mut cfg: ResMut<RapierConfiguration>| {
