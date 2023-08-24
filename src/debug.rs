@@ -19,12 +19,12 @@ pub fn get_components_for_entity<'a>(
     None
 }
 pub fn _print_components(
-    query: Query<(Entity, &TileEnumTags)>,
+    query: Query<Entity, With<TileEnumTags>>,
     archetypes: &Archetypes,
     components: &Components,
 ) {
     println!("{}", query.iter().len());
-    for (entity, tile) in query.iter() {
+    for entity in query.iter() {
         for comp_id in get_components_for_entity(&entity, archetypes).unwrap() {
             if let Some(comp_info) = components.get_info(comp_id) {
                 println!("Component: {:?}", comp_info.name());
@@ -324,9 +324,9 @@ fn ui_system(
             ui.horizontal(|ui| {
                 ui.vertical(|ui| {
                     // ! CAMERA
-                    if let Ok(mut projection) = camera_query.get_single_mut() {
-                        ui.add(egui::Slider::new(&mut projection.scale, 0.0..=10.0).text("Zoom"));
-                    }
+                    // if let Ok(mut projection) = camera_query.get_single_mut() {
+                    //     ui.add(egui::Slider::new(&mut projection.scale, 0.0..=10.0).text("Zoom"));
+                    // }
                     // ! PLAYER
                     if let Ok((mut player_health, mut camera_target)) =
                         player_query.get_single_mut()
