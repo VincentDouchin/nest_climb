@@ -1,5 +1,9 @@
 use crate::*;
-use bevy::{core_pipeline::clear_color::ClearColorConfig, prelude::*, window::*};
+use bevy::{
+    core_pipeline::{clear_color::ClearColorConfig, Skybox},
+    prelude::*,
+    window::*,
+};
 use bevy_ecs_ldtk::prelude::*;
 #[derive(Component)]
 pub struct MainCamera;
@@ -19,7 +23,7 @@ fn spawn_camera(mut commands: Commands) {
     commands.spawn((
         Camera2dBundle {
             projection: OrthographicProjection {
-                scale: 0.5,
+                // scale: 0.5,
                 ..default()
             },
             camera_2d: Camera2d {
@@ -77,6 +81,6 @@ pub fn set_camera_to_level_center(
 }
 
 pub fn camera_plugin(app: &mut App) {
-    app.add_systems(Startup, spawn_camera);
+    app.add_systems(OnExit(GameState::AssetLoading), spawn_camera);
     app.add_systems(Update, (move_camera, set_camera_to_level_center).chain());
 }

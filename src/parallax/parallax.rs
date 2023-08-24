@@ -44,7 +44,7 @@ pub fn spawn_parallax(
                                 transform: Transform::from_translation(Vec3::new(
                                     index as f32 * 70.0 * direction,
                                     image.size().y / 2.0 + v_offset,
-                                    (index as f32 * 0.01) + 0.1,
+                                    0.0,
                                 )),
                                 ..default()
                             },

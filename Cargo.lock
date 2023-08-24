@@ -319,9 +319,9 @@ dependencies = [
 
 [[package]]
 name = "bevy-tnua"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5919e1805685f7a706618500570c10842a0a26bb9f9bbb59d25cf75a896d866"
+checksum = "b82e5fe165e2d15e1c8b2280c6187608fa8f059db61ac263a77a1ec17e53b855"
 dependencies = [
  "bevy",
  "bevy_rapier2d",
@@ -552,7 +552,8 @@ dependencies = [
 [[package]]
 name = "bevy_ecs_ldtk"
 version = "0.8.0"
-source = "git+https://github.com/Trouv/bevy_ecs_ldtk.git#9a10bc8dae321bfec798fc7b9ea140b4233ae177"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "037f862d30f5b74e3b5136acf435c8210b8e8f00c354d7b40234464f04f59fd7"
 dependencies = [
  "anyhow",
  "bevy",
@@ -569,7 +570,8 @@ dependencies = [
 [[package]]
 name = "bevy_ecs_ldtk_macros"
 version = "0.8.0"
-source = "git+https://github.com/Trouv/bevy_ecs_ldtk.git#9a10bc8dae321bfec798fc7b9ea140b4233ae177"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b84deb3aba5b9586df80f4f2a72510d586a12f936df71cebbe97b430a479379f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -591,8 +593,7 @@ dependencies = [
 [[package]]
 name = "bevy_ecs_tilemap"
 version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58f78b9b48e6fc4129b301ad29d450198d9ca0e29f7a3d267f76a02743f7843b"
+source = "git+http://github.com/StarArawn/bevy_ecs_tilemap?branch=main#fbda80c735bf7faaa2cc4d79524cfbf016044a0f"
 dependencies = [
  "bevy",
  "log",
