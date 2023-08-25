@@ -30,10 +30,11 @@ pub fn jump_through_platforms(
             let contact = rapier_context.contact_pair(player_entity, platform_entity);
             let is_contact = contact.is_some();
             let coming_from_the_top = contact.map_or(false, |contact_pair_view| {
+                let is_player_first = contact_pair_view.collider1() == player_entity;
                 contact_pair_view
                     .find_deepest_contact()
-                    .map_or(true, |(deepest_contact, _)| {
-                        deepest_contact.normal().y < 0.0
+                    .map_or(true, |(deepest_contact, _view)| {
+                        (deepest_contact.normal().y < 0.0) == is_player_first
                     })
             });
             let is_crouching = actions.pressed(PlayerAction::Crouch);

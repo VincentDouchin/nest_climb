@@ -12,8 +12,11 @@ fn main() {
         .fn_plugin(initialize_libraries)
         .fn_plugin(nine_slice_plugin)
         .add_systems(Startup, spawn_inputs)
+        .add_systems(Startup, spawn_inputs)
         // ! States
         .fn_plugin(pause_plugin)
+        .add_systems(Update, despawn_state_ui::<GameState>)
+        .add_systems(Update, despawn_state_ui::<PauseState>)
         .add_systems(Update, despawn_state_ui::<GameState>)
         .add_systems(Update, despawn_state_ui::<PauseState>)
         // ! Background
@@ -36,8 +39,8 @@ fn main() {
                 jump_through_platforms,
                 bounce_on_trampoline.before(move_player_system),
             )
-                .run_if(in_state(GameState::Run))
-                .run_if(in_state(PauseState::NotPaused)),
+                .run_if(in_state(PauseState::NotPaused))
+                .run_if(in_state(GameState::Run)),
         )
         // ! Movement
         .add_systems(
@@ -52,10 +55,6 @@ fn main() {
         .fn_plugin(animation_plugin)
         // ! NAVIGATION
         .add_systems(Update, click_on_buttons)
-        // ! START
-        // .add_systems(start_game.in_set(OnUpdate(GameState::Start)))
-        // ! LEVEL SELECT
-        // .add_systems(select_level.in_set(:OnUpdate(GameState::LevelSelect)))
         // ! NEST
         .add_systems(OnEnter(GameState::LevelTransition), level_transition)
         .add_systems(Update, move_to_next_level.run_if(in_state(GameState::Run)))
@@ -64,7 +63,7 @@ fn main() {
         // ! UI
         .fn_plugin(selector_plugin)
         .fn_plugin(run_ui_plugin)
-        // .add_systems(spawn_run_ui.in_schedule(OnEnter(GameState::Run)))
+        .add_systems(OnEnter(GameState::Run), spawn_run_ui)
         .add_systems(OnEnter(GameState::Start), spawn_start_ui)
         .add_systems(Update, move_clouds)
         .add_systems(OnEnter(GameState::LevelSelect), spawn_level_select_ui)
@@ -72,10 +71,10 @@ fn main() {
         .add_systems(OnEnter(PauseState::GameOver), spawn_game_over_ui)
         // ! Parallax
         .add_systems(OnEnter(GameState::Run), spawn_parallax)
-        .add_systems(Update, move_parallax.run_if(in_state(GameState::Run)))
+        .add_systems(Update, (move_parallax).run_if(in_state(GameState::Run)))
         // ! Debug
         .fn_plugin(debug_plugin)
         // ! Transitions
-        .fn_plugin(transition_plugin)
+        // .fn_plugin(transition_plugin)
         .run();
 }

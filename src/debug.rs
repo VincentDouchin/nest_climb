@@ -91,7 +91,6 @@ pub fn debug_plugin(app: &mut App) {
     app.add_systems(Update, ui_system.run_if(run_debug));
     app.add_systems(Update, plot_source_rolling_update.run_if(run_debug));
     app.add_systems(Update, track_player.run_if(run_debug));
-    // app.add_systems(_print_components);
 }
 
 // ! UI
@@ -274,12 +273,14 @@ fn ui_system(
         &mut TnuaPlatformerConfig,
         Option<&mut CommandAlteringSelectors>,
     )>,
-    mut camera_query: Query<&mut OrthographicProjection, With<MainCamera>>,
     mut rapier_config: ResMut<RapierConfiguration>,
     mut player_query: Query<(&mut Health, &mut CameraTarget), With<Player>>,
     mut commands: Commands,
     mut debug: ResMut<Debug>,
     mut is_touch_device: ResMut<IsTouchDevice>,
+    asset_server: Res<AssetServer>,
+    mut assets: ResMut<MyAssets>,
+    mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     for (entity, _, _, _, command_altering_selectors) in query.iter_mut() {
         if let Some(mut command_altering_selectors) = command_altering_selectors {
@@ -323,6 +324,12 @@ fn ui_system(
         {
             ui.horizontal(|ui| {
                 ui.vertical(|ui| {
+                    if ui.button("load level").clicked() {
+                        let new_level_handle: Handle<LdtkAsset> = asset_server.load("./level.ldtk");
+                        assets.test_level = new_level_handle;
+                        next_game_state.set(GameState::LevelTransition)
+                    }
+                    // ! LOAD LEVEL
                     // ! CAMERA
                     // if let Ok(mut projection) = camera_query.get_single_mut() {
                     //     ui.add(egui::Slider::new(&mut projection.scale, 0.0..=10.0).text("Zoom"));

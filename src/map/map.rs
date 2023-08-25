@@ -155,7 +155,7 @@ pub fn spawn_map(mut commands: Commands, maybe_current_level: Res<CurrentLevel>)
         commands.spawn((
             LdtkWorldBundle {
                 ldtk_handle: current_level.clone(),
-                transform: Transform::from_xyz(0.0, 0.0, 0.0),
+                transform: Transform::from_xyz(0.0, 0.0, 10.0),
                 ..default()
             },
             Level,

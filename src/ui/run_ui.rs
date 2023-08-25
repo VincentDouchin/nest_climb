@@ -89,6 +89,7 @@ pub fn spawn_run_ui(mut commands: Commands, assets: Res<MyAssets>) {
                         margins: Vec4::splat(8.0),
                         dynamic: true,
                         scale: 3.0,
+                        layer: 2,
                         ..default()
                     },
                     HeartContainer,
@@ -390,6 +391,7 @@ pub fn run_ui_plugin(app: &mut App) {
             Update,
             (update_health_ui, update_score).run_if(in_state(GameState::Run)),
         );
+
     app.add_systems(
         Update,
         spawn_touch_buttons
