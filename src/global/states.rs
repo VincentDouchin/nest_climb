@@ -6,7 +6,6 @@ pub enum GameState {
     Run,
     Start,
     LevelSelect,
-    LevelTransition,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
@@ -15,4 +14,12 @@ pub enum PauseState {
     NotPaused,
     Paused,
     GameOver,
+}
+
+#[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
+pub enum TransitionState {
+    #[default]
+    None,
+    In,
+    Out,
 }

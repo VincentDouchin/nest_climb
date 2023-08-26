@@ -37,17 +37,12 @@ fn main() {
                 kill_entity,
                 detect_health_changed,
                 jump_through_platforms,
-                bounce_on_trampoline.before(move_player_system),
+                bounce_on_trampoline,
+                move_player_system,
             )
                 .run_if(in_state(PauseState::NotPaused))
-                .run_if(in_state(GameState::Run)),
-        )
-        // ! Movement
-        .add_systems(
-            Update,
-            move_player_system
-                .before(move_camera)
-                .run_if(in_state(GameState::Run)),
+                .run_if(in_state(GameState::Run))
+                .run_if(in_state(TransitionState::None)),
         )
         // ! Damage
         .fn_plugin(run_timer_plugin)
@@ -56,7 +51,6 @@ fn main() {
         // ! NAVIGATION
         .add_systems(Update, click_on_buttons)
         // ! NEST
-        .add_systems(OnEnter(GameState::LevelTransition), level_transition)
         .add_systems(Update, move_to_next_level.run_if(in_state(GameState::Run)))
         // ! CLIMBING
         .add_systems(Update, (ignore_gravity_if_climbing, detect_can_climb))
@@ -75,6 +69,6 @@ fn main() {
         // ! Debug
         .fn_plugin(debug_plugin)
         // ! Transitions
-        // .fn_plugin(transition_plugin)
+        .fn_plugin(transition_plugin)
         .run();
 }

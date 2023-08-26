@@ -38,7 +38,7 @@ pub struct MyAssets {
     pub heart_container: Handle<Image>,
     #[asset(path = "ui/coin_container.png")]
     pub coin_container: Handle<Image>,
-    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 13, rows = 1))]
+    #[asset(texture_atlas(tile_size_x = 16.0, tile_size_y = 16.0, columns = 14, rows = 1))]
     #[asset(path = "ui/transition.png")]
     pub transition: Handle<TextureAtlas>,
     #[asset(path = "ui/transition.png")]

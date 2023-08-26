@@ -8,10 +8,7 @@ pub fn spawn_pause_ui(commands: Commands, assets: Res<MyAssets>) {
         StateUi(PauseState::Paused),
         [
             ("Resume", MenuButton::GoToPausedState(PauseState::NotPaused)),
-            (
-                "Retry",
-                MenuButton::GoToGameState(GameState::LevelTransition),
-            ),
+            ("Retry", MenuButton::Retry),
             (
                 "Choose level",
                 MenuButton::GoToGameState(GameState::LevelSelect),

@@ -8,10 +8,7 @@ pub fn spawn_game_over_ui(commands: Commands, assets: Res<MyAssets>) {
         "Game Over",
         StateUi(PauseState::GameOver),
         [
-            (
-                "Retry",
-                MenuButton::GoToGameState(GameState::LevelTransition),
-            ),
+            ("Retry", MenuButton::Retry),
             (
                 "Choose level",
                 MenuButton::GoToGameState(GameState::LevelSelect),

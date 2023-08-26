@@ -118,9 +118,8 @@ pub fn map_plugin(app: &mut App) {
         .register_ldtk_entity::<FallingLeafBundle>("FallingLeaf")
         .register_ldtk_entity::<FeatherBundle>("Feather")
         .register_ldtk_entity::<DeadLeafBundle>("DeadLeaf")
-        .add_systems(OnEnter(GameState::Run), spawn_map)
-        .add_systems(OnExit(GameState::Run), despawn_map)
         .add_systems(Update, (spawn_animated_tiles, animate_tiles))
+        .add_systems(OnExit(GameState::Run), despawn_map)
         .fn_plugin(feather_plugin)
         .add_systems(
             Update,

@@ -44,14 +44,10 @@ pub fn spawn_nest(
     }
 }
 
-pub fn level_transition(mut next_state: ResMut<NextState<GameState>>) {
-    next_state.set(GameState::Run);
-}
-
 pub fn move_to_next_level(
     nest_query: Query<(Entity, &Flag)>,
     player_query: Query<Entity, With<Player>>,
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_transition_state: ResMut<NextState<TransitionState>>,
     rapier_context: Res<RapierContext>,
     mut commands: Commands,
 ) {
@@ -59,8 +55,9 @@ pub fn move_to_next_level(
         for player_entity in player_query.iter() {
             if let Some(contact) = rapier_context.intersection_pair(nest_entity, player_entity) {
                 if contact {
-                    commands.insert_resource(LevelSelection::Index(nest.next_level));
-                    next_state.set(GameState::LevelTransition)
+                    commands.entity(player_entity).remove::<RigidBody>();
+                    commands.insert_resource(LevelToSet(nest.next_level));
+                    next_transition_state.set(TransitionState::In);
                 }
             }
         }
