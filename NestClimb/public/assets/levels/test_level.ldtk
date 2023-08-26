@@ -3401,7 +3401,7 @@
 						},
 						{
 							"__identifier": "Nest",
-							"__grid": [36,22],
+							"__grid": [7,33],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": { "tilesetUid": 1, "x": 144, "y": 128, "w": 16, "h": 16 },
@@ -3410,7 +3410,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 59,
-							"px": [576,352],
+							"px": [112,528],
 							"fieldInstances": [{ "__identifier": "Next_Level", "__type": "Int", "__value": 1, "__tile": null, "defUid": 60, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }]
 						},
 						{
