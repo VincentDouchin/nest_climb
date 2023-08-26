@@ -44,11 +44,7 @@ export default defineConfig(async () => {
 		base: '/',
 		build: {
 			target: 'esnext',
-			rollupOptions: {
-				output: {
-					entryFileNames: 'assets/[name].js',
-				},
-			},
+
 		},
 
 
