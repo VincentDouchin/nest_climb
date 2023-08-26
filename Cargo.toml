@@ -15,7 +15,6 @@ bevy_rapier2d = { version = "0.22.0", features = [
 leafwing-input-manager = "0.10.0"
 seldom_fn_plugin = "0.4.0"
 bevy_egui = "0.21.0"
-# bevy-ui-navigation = { version = "0.28.0" }
 bevy_pkv = { version = "0.8.0", git = "https://github.com/VincentDouchin/bevy_pkv.git" }
 bevy-ui-navigation = { version = "0.28.0", git = "https://github.com/VincentDouchin/ui-navigation.git" }
 bevy_easings = "0.11.1"
@@ -30,9 +29,7 @@ bevy_ecs_tilemap = { git = "http://github.com/StarArawn/bevy_ecs_tilemap", versi
 # [target.'cfg(target_arch = "wasm32")'.dependencies]
 # bevy = { version = "0.11.0" }
 # [target.'cfg(target_arch = "windows")'.dependencies]
-# bevy = { version = "0.11.0", features = [
-# 	"dynamic_linking",
-# ]}
+# bevy = { version = "0.11.0", features = ["dynamic_linking"] }
 
 [profile.dev.package."*"]
 opt-level = 3
