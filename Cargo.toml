@@ -15,9 +15,9 @@ bevy_rapier2d = { version = "0.22.0", features = [
 leafwing-input-manager = "0.10.0"
 seldom_fn_plugin = "0.4.0"
 bevy_egui = "0.21.0"
-bevy-ui-navigation = { version = "0.28.0" }
+# bevy-ui-navigation = { version = "0.28.0" }
 bevy_pkv = { version = "0.8.0", git = "https://github.com/VincentDouchin/bevy_pkv.git" }
-# bevy-ui-navigation = { version = "0.26.0", git = "https://github.com/VincentDouchin/ui-navigation.git" }
+bevy-ui-navigation = { version = "0.28.0", git = "https://github.com/VincentDouchin/ui-navigation.git" }
 bevy_easings = "0.11.1"
 rand = "0.8.5"
 strum = "0.25.0"
