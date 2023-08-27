@@ -836,15 +836,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_pixel_camera"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44e8b762591fc85d3063eca322b491de06456be6ae28cce0d55258e399860c65"
-dependencies = [
- "bevy",
-]
-
-[[package]]
 name = "bevy_pkv"
 version = "0.8.0"
 source = "git+https://github.com/VincentDouchin/bevy_pkv.git#33940b98cab11bd8cbf117bd5dc28dbd662abe18"
@@ -2738,7 +2729,6 @@ dependencies = [
  "bevy_ecs_ldtk",
  "bevy_ecs_tilemap",
  "bevy_egui",
- "bevy_pixel_camera",
  "bevy_pkv",
  "bevy_rapier2d",
  "bevy_tweening",

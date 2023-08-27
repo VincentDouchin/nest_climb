@@ -12,7 +12,6 @@ fn main() {
         .fn_plugin(initialize_libraries)
         .fn_plugin(nine_slice_plugin)
         .add_systems(Startup, spawn_inputs)
-        .add_systems(Startup, spawn_inputs)
         // ! States
         .fn_plugin(pause_plugin)
         .add_systems(Update, despawn_state_ui::<GameState>)

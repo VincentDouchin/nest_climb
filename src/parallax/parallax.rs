@@ -1,5 +1,3 @@
-use bevy_pixel_camera::PixelProjection;
-
 use crate::*;
 
 #[derive(Component)]
@@ -9,7 +7,7 @@ pub fn spawn_parallax(
     mut commands: Commands,
     assets: Res<MyAssets>,
     images: ResMut<Assets<Image>>,
-    camera_query: Query<&PixelProjection, With<MainCamera>>,
+    camera_query: Query<&OrthographicProjection, With<MainCamera>>,
 ) {
     if let Ok(projection) = camera_query.get_single() {
         commands
@@ -57,7 +55,7 @@ pub fn spawn_parallax(
                                 sprite: Sprite {
                                     color: color.clone(),
                                     custom_size: Some(Vec2::new(
-                                        projection.right - projection.left * 5.0,
+                                        projection.area.width() * 5.0,
                                         v_offset,
                                     )),
                                     ..default()

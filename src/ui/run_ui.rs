@@ -219,6 +219,7 @@ pub fn spawn_touch_buttons(
             .spawn((
                 NodeBundle {
                     style: Style {
+                        position_type: PositionType::Absolute,
                         width: Val::Percent(100.0),
                         height: Val::Percent(100.0),
 
@@ -237,12 +238,8 @@ pub fn spawn_touch_buttons(
                             image: UiImage::new(assets.button_pause.clone()),
                             style: Style {
                                 position_type: PositionType::Absolute,
-                                margin: UiRect {
-                                    left: Val::Auto,
-                                    top: Val::Px(50.0),
-                                    right: Val::Px(0.0),
-                                    bottom: Val::Px(0.0),
-                                },
+                                top: Val::Px(20.0),
+                                right: Val::Px(20.0),
                                 width: Val::Px(50.),
                                 height: Val::Px(50.),
                                 ..Default::default()

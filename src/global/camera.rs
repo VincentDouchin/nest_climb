@@ -1,7 +1,8 @@
 use crate::*;
-use bevy::{prelude::*, window::*};
+use bevy::{core_pipeline::clear_color::ClearColorConfig, prelude::*, window::*};
 use bevy_ecs_ldtk::prelude::*;
-use bevy_pixel_camera::*;
+use bevy_tweening::{lens::*, *};
+
 #[derive(Component)]
 pub struct MainCamera;
 
@@ -23,12 +24,17 @@ pub struct CameraBounds {
 
 fn spawn_camera(mut commands: Commands) {
     commands.spawn((
-        PixelCameraBundle::from_resolution(320, 240, false),
+        Camera2dBundle {
+            camera_2d: Camera2d {
+                clear_color: ClearColorConfig::Custom(Color::NONE),
+                ..default()
+            },
+            ..default()
+        },
         MainCamera,
         CameraBounds::default(),
     ));
 }
-
 pub fn move_camera(
     mut camera_query: Query<
         (&mut Transform, &CameraBounds),
@@ -38,7 +44,7 @@ pub fn move_camera(
 ) {
     for target_transform in target_query.iter() {
         for (mut camera_transform, bounds) in camera_query.iter_mut() {
-            camera_transform.translation.y = target_transform.translation.y.max(bounds.top)
+            camera_transform.translation.y = target_transform.translation.y.max(bounds.top);
         }
     }
 }
@@ -48,7 +54,11 @@ pub fn set_camera_to_level_center(
     files: Res<Assets<LdtkAsset>>,
     level_selection: Res<LevelSelection>,
     mut camera_query: Query<
-        (&mut Transform, &mut CameraBounds, &mut PixelProjection),
+        (
+            &mut Transform,
+            &mut CameraBounds,
+            &mut OrthographicProjection,
+        ),
         With<MainCamera>,
     >,
     window_query: Query<&Window, With<PrimaryWindow>>,
@@ -62,15 +72,12 @@ pub fn set_camera_to_level_center(
                 {
                     camera_transform.translation.x = level.px_wid as f32 / 2.0;
                     if let Ok(window) = window_query.get_single() {
-                        projection.desired_width = Some(level.px_wid);
-                        projection.desired_height =
-                            Some(level.px_wid * (window.height() / window.width()) as i32);
-                        let zoom = window.height() / window.width();
+                        projection.scale = level.px_wid as f32 / window.width();
                         for level_global_transform in level_query.iter() {
                             camera_bounds.top = level_global_transform.translation().y
-                                + window.height() / 2.0 * zoom as f32;
+                                + window.height() / 2.0 * projection.scale;
                             camera_bounds.bottom = level_global_transform.translation().y
-                                - window.height() / 2.0 * zoom as f32;
+                                - window.height() / 2.0 * projection.scale;
                         }
                     }
                 }

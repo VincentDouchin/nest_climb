@@ -4,7 +4,6 @@ use crate::*;
 use bevy::{asset::ChangeWatcher, prelude::*};
 use bevy_easings::EasingsPlugin;
 use bevy_ecs_ldtk::prelude::*;
-use bevy_pixel_camera::*;
 use bevy_pkv::PkvStore;
 use bevy_rapier2d::prelude::*;
 use bevy_tnua::*;
@@ -12,8 +11,6 @@ use bevy_tweening::*;
 use bevy_ui_navigation::{prelude::*, systems::InputMapping};
 use leafwing_input_manager::prelude::*;
 pub fn initialize_libraries(app: &mut App) {
-    // ! Pixel Camera
-    app.add_plugins(PixelCameraPlugin);
     // ! EASING
     app.add_plugins(EasingsPlugin);
     // ! TWEENING

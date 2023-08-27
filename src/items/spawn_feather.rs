@@ -15,7 +15,7 @@ pub struct FeatherBundle {
 pub struct Feather;
 
 #[derive(Component, Copy, Clone, PartialEq, Debug, Default)]
-pub struct Feathered(pub f32);
+pub struct Feathered;
 
 pub fn spawn_feather(
     mut commands: Commands,
@@ -30,38 +30,31 @@ pub fn spawn_feather(
 }
 
 pub fn touch_feather(
-    mut player_query: Query<(Entity, &mut TnuaPlatformerConfig), With<Player>>,
+    mut player_query: Query<(Entity, &mut ExternalForce), With<Player>>,
     feather_query: Query<Entity, With<Feather>>,
     rapier_context: Res<RapierContext>,
     mut commands: Commands,
 ) {
-    for (player_entity, mut config) in player_query.iter_mut() {
+    for (player_entity, mut external_force) in player_query.iter_mut() {
         for feather_entity in feather_query.iter() {
             if rapier_context
                 .intersection_pair(player_entity, feather_entity)
                 .is_some()
             {
-                commands
-                    .entity(player_entity)
-                    .insert(Feathered(config.jump_fall_extra_gravity));
-                config.jump_fall_extra_gravity = -250.0
+                external_force.force += Vec2::Y * 250.0;
+                commands.entity(player_entity).insert(Feathered);
             }
         }
     }
 }
 
 pub fn reset_feathered_gravity(
-    mut query: Query<(
-        Entity,
-        &TnuaProximitySensor,
-        &mut TnuaPlatformerConfig,
-        &Feathered,
-    )>,
+    mut query: Query<(Entity, &TnuaProximitySensor, &mut ExternalForce), With<Feathered>>,
     mut commands: Commands,
 ) {
-    for (entity, output, mut config, feather) in query.iter_mut() {
+    for (entity, output, mut external_force) in query.iter_mut() {
         if output.output.is_some() {
-            config.jump_fall_extra_gravity = feather.0;
+            external_force.force -= Vec2::Y * 250.0;
             commands.entity(entity).remove::<Feathered>();
         }
     }
