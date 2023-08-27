@@ -234,7 +234,7 @@ pub fn spawn_touch_buttons(
                 if let Ok(menu_input) = menu_input_query.get_single() {
                     root.spawn((
                         // ! PAUSE
-                        ButtonBundle {
+                        ImageBundle {
                             image: UiImage::new(assets.button_pause.clone()),
                             style: Style {
                                 position_type: PositionType::Absolute,
@@ -247,6 +247,7 @@ pub fn spawn_touch_buttons(
 
                             ..default()
                         },
+                        Interaction::None,
                         ActionStateDriver {
                             action: MenuAction::Pause,
                             targets: ActionStateDriverTarget::Single(menu_input),
@@ -395,7 +396,7 @@ pub fn run_ui_plugin(app: &mut App) {
             .run_if(in_state(GameState::Run))
             .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
     )
-    .add_systems(Update, multi_touch_button.after(ui_focus_system))
+    .add_systems(Update, multi_touch_button.before(ui_focus_system))
     .add_systems(
         Update,
         detect_touch.run_if(|is_touch_device: Res<IsTouchDevice>| !is_touch_device.0),

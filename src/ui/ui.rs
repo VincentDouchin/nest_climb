@@ -18,3 +18,6 @@ pub fn despawn_state_ui<T: States>(
         *last_state = app_state.get().clone();
     }
 }
+
+#[derive(Component)]
+pub struct MultiTouchButton;

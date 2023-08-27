@@ -8,12 +8,15 @@ pub fn pause_game(
     current_paused_state: Res<State<PauseState>>,
 ) {
     for input in menu_inputs.iter() {
-        if input.just_pressed(MenuAction::Pause) {
-            if current_paused_state.get() == &PauseState::Paused {
-                next_paused_state.set(PauseState::NotPaused)
-            } else if current_paused_state.get() == &PauseState::NotPaused {
-                next_paused_state.set(PauseState::Paused)
-            };
+        if input.just_pressed(MenuAction::UnPause)
+            && current_paused_state.get() == &PauseState::Paused
+        {
+            next_paused_state.set(PauseState::NotPaused)
+        }
+        if input.just_pressed(MenuAction::Pause)
+            && current_paused_state.get() == &PauseState::NotPaused
+        {
+            next_paused_state.set(PauseState::Paused)
         }
     }
 }

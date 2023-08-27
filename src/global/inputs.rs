@@ -8,6 +8,7 @@ pub enum MenuAction {
     Up,
     Down,
     Pause,
+    UnPause,
     Select,
 }
 pub fn get_menu_input_map() -> InputMap<MenuAction> {
@@ -17,6 +18,8 @@ pub fn get_menu_input_map() -> InputMap<MenuAction> {
     // Pause
     input_map.insert(KeyCode::Escape, Pause);
     input_map.insert(GamepadButtonType::Start, Pause);
+    input_map.insert(KeyCode::Escape, UnPause);
+    input_map.insert(GamepadButtonType::Start, UnPause);
 
     return input_map;
 }

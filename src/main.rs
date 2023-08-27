@@ -16,8 +16,6 @@ fn main() {
         .fn_plugin(pause_plugin)
         .add_systems(Update, despawn_state_ui::<GameState>)
         .add_systems(Update, despawn_state_ui::<PauseState>)
-        .add_systems(Update, despawn_state_ui::<GameState>)
-        .add_systems(Update, despawn_state_ui::<PauseState>)
         // ! Background
         .fn_plugin(background_plugin)
         // ! Camera
