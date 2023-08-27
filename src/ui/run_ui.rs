@@ -208,6 +208,18 @@ pub fn reset_score(mut score: ResMut<Score>) {
     score.enemies_killed = 0;
 }
 
+pub fn despawn_player_buttons(
+    player_query: Query<Entity, With<Player>>,
+    buttons_query: Query<Entity, With<PlayerButtons>>,
+    mut commands: Commands,
+) {
+    if player_query.iter().len() == 0 {
+        for button in buttons_query.iter() {
+            commands.entity(button).despawn_recursive()
+        }
+    }
+}
+
 pub fn spawn_touch_buttons(
     mut commands: Commands,
     assets: Res<MyAssets>,
@@ -394,8 +406,10 @@ pub fn run_ui_plugin(app: &mut App) {
         Update,
         spawn_touch_buttons
             .run_if(in_state(GameState::Run))
-            .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0),
+            .run_if(|is_touch_device: Res<IsTouchDevice>| is_touch_device.0)
+            .run_if(|query: Query<&ActionStateDriver<PlayerAction>>| query.iter().len() == 0),
     )
+    .add_systems(Update, despawn_player_buttons)
     .add_systems(Update, multi_touch_button.before(ui_focus_system))
     .add_systems(
         Update,
