@@ -54,6 +54,7 @@ pub fn spawn_transition_container(
                         width: Val::Percent(100.0),
                         display: Display::Flex,
                         flex_wrap: FlexWrap::Wrap,
+                        overflow: Overflow::clip(),
                         ..default()
                     },
                     z_index: ZIndex::Global(100),
